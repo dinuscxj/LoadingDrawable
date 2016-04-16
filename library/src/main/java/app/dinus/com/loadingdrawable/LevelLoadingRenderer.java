@@ -16,17 +16,21 @@ import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
 public class LevelLoadingRenderer extends LoadingRenderer{
+  private static final Interpolator LINEAR_INTERPOLATOR = new LinearInterpolator();
   private static final Interpolator MATERIAL_INTERPOLATOR = new FastOutSlowInInterpolator();
   private static final Interpolator ACCELERATE_INTERPOLATOR = new AccelerateInterpolator();
-  private static final Interpolator LINEAR_INTERPOLATOR = new LinearInterpolator();
   private static final Interpolator DECELERATE_INTERPOLATOR = new DecelerateInterpolator();
 
+  private static final int NUM_POINTS = 5;
+  private static final int DEGREE_360 = 360;
+
+  private static final float FULL_ROTATION = 1080.0f;
+  private static final float ROTATION_FACTOR = 0.25f;
+  private static final float MAX_PROGRESS_ARC = 0.8f;
+  private static final float LEVEL2_SWEEP_ANGLE_OFFSET = 7.0f / 8.0f;
+  private static final float LEVEL3_SWEEP_ANGLE_OFFSET = 5.0f / 8.0f;
   private static final float START_TRIM_DURATION_OFFSET = 0.5f;
   private static final float END_TRIM_START_DELAY_OFFSET = 0.5f;
-
-  private static final float NUM_POINTS = 5f;
-  private static final float FULL_ROTATION = 1080.0f;
-  private static final float MAX_PROGRESS_ARC = 0.8f;
 
   private static final int DEFAULT_COLOR = Color.WHITE;
 
@@ -50,21 +54,19 @@ public class LevelLoadingRenderer extends LoadingRenderer{
     }
   };
 
-  private float mStrokeInset = 2.5f;
-
-  private float mEndTrim = 0.0f;
-  private float mRotation = 0.0f;
-  private float mStartTrim = 0.0f;
-
   private boolean mIsRenderingFirstHalf;
 
-  private int mBottomColor;
-  private int mMiddleColor;
-  private int mTopColor;
+  private int mLevel1Color;
+  private int mLevel2Color;
+  private int mLevel3Color;
 
+  private float mStrokeInset;
+
+  private float mEndTrim;
+  private float mRotation;
+  private float mStartTrim;
   private float mRotationCount;
   private float mGroupRotation;
-
   private float mOriginEndTrim;
   private float mOriginRotation;
   private float mOriginStartTrim;
@@ -76,9 +78,9 @@ public class LevelLoadingRenderer extends LoadingRenderer{
   }
 
   private void setupPaint() {
-    mBottomColor = oneThirdAlphaColor(DEFAULT_COLOR);
-    mMiddleColor = twoThirdAlphaColor(DEFAULT_COLOR);
-    mTopColor = DEFAULT_COLOR;
+    mLevel1Color = oneThirdAlphaColor(DEFAULT_COLOR);
+    mLevel2Color = twoThirdAlphaColor(DEFAULT_COLOR);
+    mLevel3Color = DEFAULT_COLOR;
 
     mPaint.setAntiAlias(true);
     mPaint.setStrokeWidth(getStrokeWidth());
@@ -97,13 +99,13 @@ public class LevelLoadingRenderer extends LoadingRenderer{
     arcBounds.set(bounds);
     arcBounds.inset(mStrokeInset, mStrokeInset);
 
-    float startAngle = (mStartTrim + mRotation) * 360;
-    float endAngle = (mEndTrim + mRotation) * 360;
-    float sweepAngle = endAngle - startAngle;
-
-    if (sweepAngle == 0) {
-      return;
+    if (mStartTrim == mEndTrim) {
+      mStartTrim = mEndTrim + getMinProgressArc();
     }
+
+    float startAngle = (mStartTrim + mRotation) * DEGREE_360;
+    float endAngle = (mEndTrim + mRotation) * DEGREE_360;
+    float sweepAngle = endAngle - startAngle;
 
     if (mIsRenderingFirstHalf) {
       float renderPercentage = Math.abs(mStartTrim - mEndTrim) / MAX_PROGRESS_ARC;
@@ -111,33 +113,33 @@ public class LevelLoadingRenderer extends LoadingRenderer{
       float topIncrement = DECELERATE_INTERPOLATOR.getInterpolation(renderPercentage) - LINEAR_INTERPOLATOR.getInterpolation(renderPercentage);
       float bottomIncrement = ACCELERATE_INTERPOLATOR.getInterpolation(renderPercentage) - LINEAR_INTERPOLATOR.getInterpolation(renderPercentage);
 
-      mPaint.setColor(mBottomColor);
+      mPaint.setColor(mLevel1Color);
       canvas.drawArc(arcBounds, endAngle, -sweepAngle * (1 + topIncrement), false, mPaint);
-      mPaint.setColor(mMiddleColor);
-      canvas.drawArc(arcBounds, endAngle, -sweepAngle * 7.0f / 8.0f, false, mPaint);
-      mPaint.setColor(mTopColor);
-      canvas.drawArc(arcBounds, endAngle, -sweepAngle * 5.0f / 8.0f * (1 + bottomIncrement), false, mPaint);
+      mPaint.setColor(mLevel2Color);
+      canvas.drawArc(arcBounds, endAngle, -sweepAngle * LEVEL2_SWEEP_ANGLE_OFFSET, false, mPaint);
+      mPaint.setColor(mLevel3Color);
+      canvas.drawArc(arcBounds, endAngle, -sweepAngle * LEVEL3_SWEEP_ANGLE_OFFSET * (1 + bottomIncrement), false, mPaint);
     } else {
       float renderPercentage = Math.abs(mStartTrim - mEndTrim) / MAX_PROGRESS_ARC;
-      float totalSweepAngle = MAX_PROGRESS_ARC * 360;
+      float totalSweepAngle = MAX_PROGRESS_ARC * DEGREE_360;
 
-      if (renderPercentage > 7.0f / 8.0f) {
-        mPaint.setColor(mBottomColor);
+      if (renderPercentage > LEVEL2_SWEEP_ANGLE_OFFSET) {
+        mPaint.setColor(mLevel1Color);
         canvas.drawArc(arcBounds, endAngle, -sweepAngle, false, mPaint);
 
-        mPaint.setColor(mMiddleColor);
-        canvas.drawArc(arcBounds, endAngle, totalSweepAngle * 7.0f / 8.0f, false, mPaint);
+        mPaint.setColor(mLevel2Color);
+        canvas.drawArc(arcBounds, endAngle, totalSweepAngle * LEVEL2_SWEEP_ANGLE_OFFSET, false, mPaint);
 
-        mPaint.setColor(mTopColor);
-        canvas.drawArc(arcBounds, endAngle, totalSweepAngle * 5.0f / 8.0f, false, mPaint);
-      }  else if (renderPercentage > 5.0f / 8.0f) {
-        mPaint.setColor(mMiddleColor);
+        mPaint.setColor(mLevel3Color);
+        canvas.drawArc(arcBounds, endAngle, totalSweepAngle * LEVEL3_SWEEP_ANGLE_OFFSET, false, mPaint);
+      }  else if (renderPercentage > LEVEL3_SWEEP_ANGLE_OFFSET) {
+        mPaint.setColor(mLevel2Color);
         canvas.drawArc(arcBounds, endAngle, -sweepAngle, false, mPaint);
 
-        mPaint.setColor(mTopColor);
-        canvas.drawArc(arcBounds, endAngle, totalSweepAngle * 5.0f / 8.0f, false, mPaint);
+        mPaint.setColor(mLevel3Color);
+        canvas.drawArc(arcBounds, endAngle, totalSweepAngle * LEVEL3_SWEEP_ANGLE_OFFSET, false, mPaint);
       } else {
-        mPaint.setColor(mTopColor);
+        mPaint.setColor(mLevel3Color);
         canvas.drawArc(arcBounds, endAngle, -sweepAngle, false, mPaint);
       }
     }
@@ -170,9 +172,8 @@ public class LevelLoadingRenderer extends LoadingRenderer{
       mIsRenderingFirstHalf = false;
     }
 
-    mRotation = originRotation + (0.25f * renderProgress);
-
     mGroupRotation = ((FULL_ROTATION / NUM_POINTS) * renderProgress) + (FULL_ROTATION * (mRotationCount / NUM_POINTS));
+    mRotation = originRotation + (ROTATION_FACTOR * renderProgress);
 
     invalidateSelf();
   }
@@ -195,9 +196,9 @@ public class LevelLoadingRenderer extends LoadingRenderer{
   }
 
   public void setColor(int color) {
-    mBottomColor = oneThirdAlphaColor(color);
-    mMiddleColor = twoThirdAlphaColor(color);
-    mTopColor = color;
+    mLevel1Color = oneThirdAlphaColor(color);
+    mLevel2Color = twoThirdAlphaColor(color);
+    mLevel3Color = color;
   }
 
   @Override

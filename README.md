@@ -24,7 +24,7 @@
  ImageView.setImageDrawable(new LoadingDrawable(new GearLoadingRenderer(Context)));
  ImageView.setImageDrawable(new LoadingDrawable(new WhorlLoadingRenderer(Context)));
  ImageView.setImageDrawable(new LoadingDrawable(new LevelLoadingRenderer(Context)));
- ImageView.setImageDrawable(new new LoadingDrawable(new MaterialLoadingRenderer(Context)));
+ ImageView.setImageDrawable(new LoadingDrawable(new MaterialLoadingRenderer(Context)));
   ```
 
  Used with View
@@ -32,7 +32,7 @@
  View.setBackground(new LoadingDrawable(new GearLoadingRenderer(Context)));
  View.setBackground(new LoadingDrawable(new WhorlLoadingRenderer(Context)));
  View.setBackground(new LoadingDrawable(new LevelLoadingRenderer(Context)));
- View.setBackground(new new LoadingDrawable(new MaterialLoadingRenderer(Context)));
+ View.setBackground(new LoadingDrawable(new MaterialLoadingRenderer(Context)));
   ```
 
 ## License

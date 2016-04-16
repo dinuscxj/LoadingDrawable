@@ -16,13 +16,15 @@ import android.view.animation.Interpolator;
 public class MaterialLoadingRenderer extends LoadingRenderer {
   private static final Interpolator MATERIAL_INTERPOLATOR = new FastOutSlowInInterpolator();
 
+  private static final float FULL_ROTATION = 1080.0f;
+  private static final float ROTATION_FACTOR = 0.25f;
+  private static final float MAX_PROGRESS_ARC = 0.8f;
   private static final float COLOR_START_DELAY_OFFSET = 0.8f;
   private static final float START_TRIM_DURATION_OFFSET = 0.5f;
   private static final float END_TRIM_START_DELAY_OFFSET = 0.5f;
 
-  private static final float NUM_POINTS = 5f;
-  private static final float FULL_ROTATION = 1080.0f;
-  private static final float MAX_PROGRESS_ARC = 0.8f;
+  private static final int DEGREE_360 = 360;
+  private static final int NUM_POINTS = 5;
 
   private static final int[] DEFAULT_COLORS = new int[] {
       Color.RED, Color.GREEN, Color.BLUE
@@ -49,19 +51,17 @@ public class MaterialLoadingRenderer extends LoadingRenderer {
     }
   };
 
-  private float mStrokeInset = 2.5f;
-
-  private float mEndTrim = 0.0f;
-  private float mRotation = 0.0f;
-  private float mStartTrim = 0.0f;
-
   private int[] mColors;
   private int mColorIndex;
   private int mCurrentColor;
 
+  private float mStrokeInset;
+
+  private float mEndTrim;
+  private float mRotation;
+  private float mStartTrim;
   private float mRotationCount;
   private float mGroupRotation;
-
   private float mOriginEndTrim;
   private float mOriginRotation;
   private float mOriginStartTrim;
@@ -95,13 +95,13 @@ public class MaterialLoadingRenderer extends LoadingRenderer {
     arcBounds.set(bounds);
     arcBounds.inset(mStrokeInset, mStrokeInset);
 
-    float startAngle = (mStartTrim + mRotation) * 360;
-    float endAngle = (mEndTrim + mRotation) * 360;
-    float sweepAngle = endAngle - startAngle;
-
-    if (sweepAngle == 0) {
-      return;
+    if (mStartTrim == mEndTrim) {
+      mStartTrim = mEndTrim + getMinProgressArc();
     }
+
+    float startAngle = (mStartTrim + mRotation) * DEGREE_360;
+    float endAngle = (mEndTrim + mRotation) * DEGREE_360;
+    float sweepAngle = endAngle - startAngle;
 
     canvas.drawArc(arcBounds, startAngle, sweepAngle, false, mPaint);
 
@@ -131,9 +131,8 @@ public class MaterialLoadingRenderer extends LoadingRenderer {
       mEndTrim = originEndTrim + ((MAX_PROGRESS_ARC - minProgressArc) * MATERIAL_INTERPOLATOR.getInterpolation(endTrimProgress));
     }
 
-    mRotation = originRotation + (0.25f * renderProgress);
-
     mGroupRotation = ((FULL_ROTATION / NUM_POINTS) * renderProgress) + (FULL_ROTATION * (mRotationCount / NUM_POINTS));
+    mRotation = originRotation + (ROTATION_FACTOR * renderProgress);
 
     invalidateSelf();
   }

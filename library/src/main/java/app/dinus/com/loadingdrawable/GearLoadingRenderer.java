@@ -17,18 +17,22 @@ import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
 public class GearLoadingRenderer extends LoadingRenderer {
+  private static final Interpolator LINEAR_INTERPOLATOR = new LinearInterpolator();
   private static final Interpolator ACCELERATE_INTERPOLATOR = new AccelerateInterpolator();
   private static final Interpolator DECELERATE_INTERPOLATOR = new DecelerateInterpolator();
 
-  private static final float START_SCALE_DURATION_OFFSET = 0.3f;
+  private static final float FULL_ROTATION = 1080.0f;
+  private static final float ROTATION_FACTOR = 0.25f;
+  private static final float MAX_PROGRESS_ARC = 0.17f;
   private static final float START_TRIM_DURATION_OFFSET = 0.5f;
+  private static final float START_SCALE_DURATION_OFFSET = 0.3f;
   private static final float END_TRIM_START_DELAY_OFFSET = 0.5f;
   private static final float END_SCALE_START_DELAY_OFFSET = 0.7f;
 
   private static final int GEAR_COUNT = 4;
-  private static final float NUM_POINTS = 3f;
-  private static final float FULL_ROTATION = 1080.0f;
-  private static final float MAX_PROGRESS_ARC = 0.15f;
+  private static final int NUM_POINTS = 3;
+  private static final int MAX_ALPHA = 255;
+  private static final int DEGREE_360 = 360;
 
   private static final int DEFAULT_COLOR = Color.WHITE;
 
@@ -44,7 +48,7 @@ public class GearLoadingRenderer extends LoadingRenderer {
       storeOriginals();
 
       mStartTrim = mEndTrim;;
-      mRotationCount = (mRotationCount + 1) % (NUM_POINTS);
+      mRotationCount = (mRotationCount + 1) % NUM_POINTS;
     }
 
     @Override
@@ -54,18 +58,16 @@ public class GearLoadingRenderer extends LoadingRenderer {
     }
   };
 
-  private float mStrokeInset = 2.5f;
-
-  private float mScale = 0.0f;
-  private float mEndTrim = 0.0f;
-  private float mRotation = 0.0f;
-  private float mStartTrim = 0.0f;
-
   private int mCurrentColor;
 
+  private float mStrokeInset;
+
+  private float mScale;
+  private float mEndTrim;
+  private float mRotation;
+  private float mStartTrim;
   private float mRotationCount;
   private float mGroupRotation;
-
   private float mOriginEndTrim;
   private float mOriginRotation;
   private float mOriginStartTrim;
@@ -98,26 +100,26 @@ public class GearLoadingRenderer extends LoadingRenderer {
     arcBounds.set(bounds);
     arcBounds.inset(mStrokeInset, mStrokeInset);
 
-    float startAngle = (mStartTrim + mRotation) * 360;
-    float endAngle = (mEndTrim + mRotation) * 360;
-    float sweepAngle = endAngle - startAngle;
-
-    if (sweepAngle == 0) {
-      return;
+    if (mStartTrim == mEndTrim) {
+      mStartTrim = mEndTrim + getMinProgressArc();
     }
 
+    float startAngle = (mStartTrim + mRotation) * DEGREE_360;
+    float endAngle = (mEndTrim + mRotation) * DEGREE_360;
+    float sweepAngle = endAngle - startAngle;
+
     if (mIsScaling) {
-      mPaint.setAlpha((int) (255 * mScale));
+      mPaint.setAlpha((int) (MAX_ALPHA * mScale));
       mPaint.setStrokeWidth(getStrokeWidth() * mScale);
       arcBounds.inset(arcBounds.width() * (1 - mScale) / 2, arcBounds.height() * (1 - mScale) / 2);
       for (int i = 0; i < GEAR_COUNT; i++) {
-        canvas.drawArc(arcBounds, startAngle + 360 / GEAR_COUNT * i, sweepAngle, false, mPaint);
+        canvas.drawArc(arcBounds, startAngle + DEGREE_360 / GEAR_COUNT * i, sweepAngle, false, mPaint);
       }
     } else {
-      mPaint.setAlpha(255);
+      mPaint.setAlpha(MAX_ALPHA);
 
       for (int i = 0; i < GEAR_COUNT; i++) {
-        canvas.drawArc(arcBounds, startAngle + 360 / GEAR_COUNT * i, sweepAngle, false, mPaint);
+        canvas.drawArc(arcBounds, startAngle + DEGREE_360 / GEAR_COUNT * i, sweepAngle, false, mPaint);
       }
     }
 
@@ -135,8 +137,7 @@ public class GearLoadingRenderer extends LoadingRenderer {
     // single ring animation
     if (renderProgress <= START_SCALE_DURATION_OFFSET) {
       float startScaleProgress = (renderProgress) / START_SCALE_DURATION_OFFSET;
-      mScale = ACCELERATE_INTERPOLATOR.getInterpolation(startScaleProgress);
-      mStartTrim = mEndTrim + minProgressArc;
+      mScale = DECELERATE_INTERPOLATOR.getInterpolation(startScaleProgress);
 
       mIsScaling = true;
       invalidateSelf();
@@ -147,7 +148,7 @@ public class GearLoadingRenderer extends LoadingRenderer {
     // single ring animation
     if (renderProgress <= START_TRIM_DURATION_OFFSET && renderProgress > START_SCALE_DURATION_OFFSET) {
       float startTrimProgress = (renderProgress - START_SCALE_DURATION_OFFSET) / (START_TRIM_DURATION_OFFSET - START_SCALE_DURATION_OFFSET);
-      mStartTrim = originStartTrim + ((MAX_PROGRESS_ARC - minProgressArc) * ACCELERATE_INTERPOLATOR.getInterpolation(startTrimProgress));
+      mStartTrim = originStartTrim + ((MAX_PROGRESS_ARC - minProgressArc) * LINEAR_INTERPOLATOR.getInterpolation(startTrimProgress));
 
       mIsScaling = false;
     }
@@ -156,7 +157,7 @@ public class GearLoadingRenderer extends LoadingRenderer {
     // animation completes
     if (renderProgress > END_TRIM_START_DELAY_OFFSET && renderProgress < END_SCALE_START_DELAY_OFFSET) {
       float endTrimProgress = (renderProgress - END_TRIM_START_DELAY_OFFSET) / (END_SCALE_START_DELAY_OFFSET - END_TRIM_START_DELAY_OFFSET);
-      mEndTrim = originEndTrim + ((MAX_PROGRESS_ARC - minProgressArc) * DECELERATE_INTERPOLATOR.getInterpolation(endTrimProgress));
+      mEndTrim = originEndTrim + ((MAX_PROGRESS_ARC - minProgressArc) * LINEAR_INTERPOLATOR.getInterpolation(endTrimProgress));
 
       mIsScaling = false;
     }
@@ -165,18 +166,16 @@ public class GearLoadingRenderer extends LoadingRenderer {
     // animation completes
     if (renderProgress > END_SCALE_START_DELAY_OFFSET) {
       float endScaleProgress = (renderProgress - END_SCALE_START_DELAY_OFFSET) / (1.0f - END_SCALE_START_DELAY_OFFSET);
-      mScale = 1.0f - DECELERATE_INTERPOLATOR.getInterpolation(endScaleProgress);
-      mStartTrim = mEndTrim + minProgressArc;
+      mScale = 1.0f - ACCELERATE_INTERPOLATOR.getInterpolation(endScaleProgress);
 
       mIsScaling = true;
       invalidateSelf();
       return ;
     }
 
-    mRotation = originRotation + (0.25f * renderProgress);
-
     float rotateProgress = (renderProgress - START_SCALE_DURATION_OFFSET) / (END_SCALE_START_DELAY_OFFSET - START_SCALE_DURATION_OFFSET);
     mGroupRotation = ((FULL_ROTATION / NUM_POINTS) * rotateProgress) + (FULL_ROTATION * (mRotationCount / NUM_POINTS));
+    mRotation = originRotation + (ROTATION_FACTOR * rotateProgress);
 
     invalidateSelf();
   }
@@ -245,7 +244,7 @@ public class GearLoadingRenderer extends LoadingRenderer {
     return mScale;
   }
 
-  public void setInsets(int width, int height) {
+  private void setInsets(int width, int height) {
     final float minEdge = (float) Math.min(width, height);
     float insets;
     if (getCenterRadius() <= 0 || minEdge < 0) {

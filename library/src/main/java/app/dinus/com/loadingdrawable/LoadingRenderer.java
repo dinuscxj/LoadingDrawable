@@ -41,7 +41,7 @@ public abstract class LoadingRenderer {
   public abstract void reset();
 
   public void start() {
-    mRenderAnimator.setDuration(ANIMATION_DURATION );
+    mRenderAnimator.setDuration(ANIMATION_DURATION * 10);
     mRenderAnimator.start();
   }
 
