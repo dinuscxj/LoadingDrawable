@@ -14,7 +14,7 @@
  When I feel less bugs enough, I will add a gradle dependency. So I hope you will make more Suggestions.
 
 ## Usage
- #### Gradle
+#### Gradle
  ```
  compile project(':library')
  ```
