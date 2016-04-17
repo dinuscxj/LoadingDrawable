@@ -3,7 +3,7 @@
  some android loading drawable, can be combined with any View as the loading View,
  and is especially suitable for the loading animation of the [RecyclerRefreshLayout](https://github.com/dinuscxj/RecyclerRefreshLayout).
 
-![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/CircleLoadingDrawable.gif?width=300)
+![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/CircleLoadingDrawable_Commit2.gif?width=300)
 ## Features
  * GearLoadingDrawable
  * WhorlLoadingDrawable
