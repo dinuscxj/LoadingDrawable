@@ -45,4 +45,28 @@
             android:background="#fff1c02e"
             android:layout_height="match_parent" />
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <ImageView
+            android:id="@+id/collision_view"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:background="#ffe9e4d1"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/rotate_view"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:textColor="#ffa10008"
+            android:textSize="20sp"
+            android:text="waiting ..."
+            android:layout_height="match_parent" />
+    </LinearLayout>
 </LinearLayout>

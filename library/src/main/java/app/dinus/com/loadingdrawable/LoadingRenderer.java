@@ -13,18 +13,18 @@ import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
 public abstract class LoadingRenderer {
+  private static final Interpolator LINEAR_INTERPOLATOR = new LinearInterpolator();
+
   private static final int ANIMATION_DURATION = 1333;
 
-  private static final int DEFAULT_CIRCLE_DIAMETER = 56;
+  private static final float DEFAULT_SIZE = 56.0f;
   private static final float DEFAULT_CENTER_RADIUS = 12.5f;
   private static final float DEFAULT_STROKE_WIDTH = 2.5f;
 
-  private static final Interpolator LINEAR_INTERPOLATOR = new LinearInterpolator();
-
-  private float mWidth;
-  private float mHeight;
-  private float mStrokeWidth;
-  private float mCenterRadius;
+  protected float mWidth;
+  protected float mHeight;
+  protected float mStrokeWidth;
+  protected float mCenterRadius;
 
   private Drawable.Callback mCallback;
   private ValueAnimator mRenderAnimator;
@@ -41,7 +41,7 @@ public abstract class LoadingRenderer {
   public abstract void reset();
 
   public void start() {
-    mRenderAnimator.setDuration(ANIMATION_DURATION * 10);
+    mRenderAnimator.setDuration(ANIMATION_DURATION);
     mRenderAnimator.start();
   }
 
@@ -66,8 +66,8 @@ public abstract class LoadingRenderer {
     final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
     final float screenDensity = metrics.density;
 
-    mWidth = DEFAULT_CIRCLE_DIAMETER * screenDensity;
-    mHeight = DEFAULT_CIRCLE_DIAMETER * screenDensity;
+    mWidth = DEFAULT_SIZE * screenDensity;
+    mHeight = DEFAULT_SIZE * screenDensity;
     mStrokeWidth = DEFAULT_STROKE_WIDTH * screenDensity;
     mCenterRadius = DEFAULT_CENTER_RADIUS * screenDensity;
   }
