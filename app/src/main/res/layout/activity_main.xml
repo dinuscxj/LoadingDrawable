@@ -59,14 +59,11 @@
             android:background="#ffe9e4d1"
             android:layout_height="match_parent" />
 
-        <TextView
-            android:id="@+id/rotate_view"
+        <ImageView
+            android:id="@+id/swap_view"
             android:layout_weight="1"
-            android:gravity="center"
+            android:layout_height="match_parent"
             android:layout_width="0dp"
-            android:textColor="#ffa10008"
-            android:textSize="20sp"
-            android:text="waiting ..."
-            android:layout_height="match_parent" />
+            android:background="#ff94d0c1"/>
     </LinearLayout>
 </LinearLayout>

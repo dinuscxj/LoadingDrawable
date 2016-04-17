@@ -9,16 +9,19 @@ import app.dinus.com.loadingdrawable.GearLoadingRenderer;
 import app.dinus.com.loadingdrawable.LevelLoadingRenderer;
 import app.dinus.com.loadingdrawable.LoadingDrawable;
 import app.dinus.com.loadingdrawable.MaterialLoadingRenderer;
+import app.dinus.com.loadingdrawable.SwapLoadingRenderer;
 import app.dinus.com.loadingdrawable.WhorlLoadingRenderer;
 
 
 public class MainActivity extends AppCompatActivity {
+    private LoadingDrawable mSwapDrawable;
     private LoadingDrawable mGearDrawable;
     private LoadingDrawable mWhorlDrawable;
     private LoadingDrawable mLevelDrawable;
     private LoadingDrawable mMaterialDrawable;
     private LoadingDrawable mCollisionDrawable;
 
+    private ImageView mIvSwap;
     private ImageView mIvGear;
     private ImageView mIvWhorl;
     private ImageView mIvLevel;
@@ -30,18 +33,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mIvSwap = (ImageView) findViewById(R.id.swap_view);
         mIvGear = (ImageView) findViewById(R.id.gear_view);
         mIvWhorl = (ImageView) findViewById(R.id.whorl_view);
         mIvLevel = (ImageView) findViewById(R.id.level_view);
         mIvMaterial = (ImageView) findViewById(R.id.material_view);
         mIvCollision = (ImageView) findViewById(R.id.collision_view);
 
+        mSwapDrawable = new LoadingDrawable(new SwapLoadingRenderer(this));
         mGearDrawable = new LoadingDrawable(new GearLoadingRenderer(this));
         mWhorlDrawable = new LoadingDrawable(new WhorlLoadingRenderer(this));
         mLevelDrawable = new LoadingDrawable(new LevelLoadingRenderer(this));
         mMaterialDrawable = new LoadingDrawable(new MaterialLoadingRenderer(this));
         mCollisionDrawable = new LoadingDrawable(new CollisionLoadingRenderer(this));
 
+        mIvSwap.setImageDrawable(mSwapDrawable);
         mIvGear.setImageDrawable(mGearDrawable);
         mIvWhorl.setImageDrawable(mWhorlDrawable);
         mIvLevel.setImageDrawable(mLevelDrawable);
@@ -52,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        mSwapDrawable.start();
         mGearDrawable.start();
         mWhorlDrawable.start();
         mLevelDrawable.start();
@@ -61,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
+        mSwapDrawable.stop();
         mGearDrawable.stop();
         mWhorlDrawable.stop();
         mLevelDrawable.stop();

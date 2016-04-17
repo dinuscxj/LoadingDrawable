@@ -20,15 +20,17 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
     private static final Interpolator ACCELERATE_INTERPOLATOR = new AccelerateInterpolator();
     private static final Interpolator DECELERATE_INTERPOLATOR = new DecelerateInterpolator();
 
-    private static final float DEFAULT_WIDTH = 15.0f * 11;
-    private static final float DEFAULT_HEIGHT = 15.0f * 5;
+    private static final int CIRCLE_COUNT = 7;
+
+    //the 2 * 2 is the left and right side offset
+    private static final float DEFAULT_WIDTH = 15.0f * (CIRCLE_COUNT + 2 * 2);
+    //the 2 * 2 is the top and bottom side offset
+    private static final float DEFAULT_HEIGHT = 15.0f * (1 + 2 * 2);
 
     private static final float DURATION_OFFSET = 0.25f;
     private static final float START_LEFT_DURATION_OFFSET = 0.25f;
     private static final float START_RIGHT_DURATION_OFFSET = 0.5f;
     private static final float END_RIGHT_DURATION_OFFSET = 0.75f;
-
-    private static final int CIRCLE_COUNT = 7;
 
     private static final int[] DEFAULT_COLORS = new int[] {
             Color.RED, Color.GREEN
@@ -72,15 +74,15 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
         RectF arcBounds = mTempBounds;
         arcBounds.set(bounds);
 
-        LinearGradient gradient = new LinearGradient(arcBounds.left, 0, arcBounds.right, 0,
-                mColors, mPositions, Shader.TileMode.CLAMP);
-        mPaint.setShader(gradient);
-
         float cy = mHeight / 2 ;
         float circleRadius = computeCircleRadius(arcBounds);
 
         float sideOffset = 2.0f * (2 * circleRadius);
         float maxMoveOffset = 1.5f * (2 * circleRadius);
+
+        LinearGradient gradient = new LinearGradient(arcBounds.left + sideOffset, 0, arcBounds.right - sideOffset, 0,
+                mColors, mPositions, Shader.TileMode.CLAMP);
+        mPaint.setShader(gradient);
 
         for (int i = 0; i < CIRCLE_COUNT; i++) {
             if (i == 0 && mStartXOffsetProgress != 0) {

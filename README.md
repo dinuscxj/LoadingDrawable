@@ -3,7 +3,7 @@
  some android loading drawable, can be combined with any View as the loading View,
  and is especially suitable for the loading animation of the [RecyclerRefreshLayout](https://github.com/dinuscxj/RecyclerRefreshLayout).
 
-![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/CircleLoadingDrawable_Commit2.gif?width=300)
+![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/CircleLoadingDrawable_Commit3.gif?width=300)
 ## Features
  * GearLoadingDrawable
  * WhorlLoadingDrawable
@@ -21,6 +21,7 @@
 
  Used with ImageView
  ```java
+ ImageView.setImageDrawable(new LoadingDrawable(new SwapLoadingRenderer(Context)));
  ImageView.setImageDrawable(new LoadingDrawable(new GearLoadingRenderer(Context)));
  ImageView.setImageDrawable(new LoadingDrawable(new WhorlLoadingRenderer(Context)));
  ImageView.setImageDrawable(new LoadingDrawable(new LevelLoadingRenderer(Context)));
@@ -30,6 +31,7 @@
 
  Used with View
  ```java
+ View.setBackground(new LoadingDrawable(new SwapLoadingRenderer(Context)));
  View.setBackground(new LoadingDrawable(new GearLoadingRenderer(Context)));
  View.setBackground(new LoadingDrawable(new WhorlLoadingRenderer(Context)));
  View.setBackground(new LoadingDrawable(new LevelLoadingRenderer(Context)));
