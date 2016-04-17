@@ -5,10 +5,12 @@
 
 ![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/CircleLoadingDrawable_Commit3.gif?width=300)
 ## Features
+ * SwapLoadingDrawable
  * GearLoadingDrawable
  * WhorlLoadingDrawable
  * LevelLoadingDrawable
  * MaterialLoadingDrawable
+ * CollisionLoadingDrawable
 
 ## TODO
  When I feel less bugs enough, I will add a gradle dependency. So I hope you will make more Suggestions.
