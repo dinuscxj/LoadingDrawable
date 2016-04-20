@@ -27,10 +27,12 @@ public class LevelLoadingRenderer extends LoadingRenderer{
   private static final float FULL_ROTATION = 1080.0f;
   private static final float ROTATION_FACTOR = 0.25f;
   private static final float MAX_PROGRESS_ARC = 0.8f;
+
   private static final float LEVEL2_SWEEP_ANGLE_OFFSET = 7.0f / 8.0f;
   private static final float LEVEL3_SWEEP_ANGLE_OFFSET = 5.0f / 8.0f;
+
   private static final float START_TRIM_DURATION_OFFSET = 0.5f;
-  private static final float END_TRIM_START_DELAY_OFFSET = 0.5f;
+  private static final float END_TRIM_DURATION_OFFSET = 1.0f;
 
   private static final int DEFAULT_COLOR = Color.WHITE;
 
@@ -165,8 +167,8 @@ public class LevelLoadingRenderer extends LoadingRenderer{
 
     // Moving the end trim starts after 50% of a single ring
     // animation completes
-    if (renderProgress > END_TRIM_START_DELAY_OFFSET) {
-      float endTrimProgress = (renderProgress - START_TRIM_DURATION_OFFSET) / (1.0f - START_TRIM_DURATION_OFFSET);
+    if (renderProgress > START_TRIM_DURATION_OFFSET) {
+      float endTrimProgress = (renderProgress - START_TRIM_DURATION_OFFSET) / (END_TRIM_DURATION_OFFSET - START_TRIM_DURATION_OFFSET);
       mEndTrim = originEndTrim + ((MAX_PROGRESS_ARC - minProgressArc) * MATERIAL_INTERPOLATOR.getInterpolation(endTrimProgress));
 
       mIsRenderingFirstHalf = false;

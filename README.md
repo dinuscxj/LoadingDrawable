@@ -1,6 +1,8 @@
 
 ## LoadingDrawable
- some android loading drawable, can be combined with any View as the loading View,
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-LoadingDrawable-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/3450)
+
+ some android loading drawable, can be combined with any View as the loading View and Progressbar,
  and is especially suitable for the loading animation of the [RecyclerRefreshLayout](https://github.com/dinuscxj/RecyclerRefreshLayout).
 
 ![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/CircleLoadingDrawable_Commit3.gif?width=300)

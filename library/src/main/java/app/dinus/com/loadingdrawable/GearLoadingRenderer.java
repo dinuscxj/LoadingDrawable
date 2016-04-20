@@ -9,8 +9,6 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.support.annotation.NonNull;
-import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
@@ -24,10 +22,11 @@ public class GearLoadingRenderer extends LoadingRenderer {
   private static final float FULL_ROTATION = 1080.0f;
   private static final float ROTATION_FACTOR = 0.25f;
   private static final float MAX_PROGRESS_ARC = 0.17f;
-  private static final float START_TRIM_DURATION_OFFSET = 0.5f;
+
   private static final float START_SCALE_DURATION_OFFSET = 0.3f;
-  private static final float END_TRIM_START_DELAY_OFFSET = 0.5f;
-  private static final float END_SCALE_START_DELAY_OFFSET = 0.7f;
+  private static final float START_TRIM_DURATION_OFFSET = 0.5f;
+  private static final float END_TRIM_DURATION_OFFSET = 0.7f;
+  private static final float END_SCALE_DURATION_OFFSET = 1.0f;
 
   private static final int GEAR_COUNT = 4;
   private static final int NUM_POINTS = 3;
@@ -155,8 +154,8 @@ public class GearLoadingRenderer extends LoadingRenderer {
 
     // Moving the end trim starts between 50% to 80% of a single ring
     // animation completes
-    if (renderProgress > END_TRIM_START_DELAY_OFFSET && renderProgress < END_SCALE_START_DELAY_OFFSET) {
-      float endTrimProgress = (renderProgress - END_TRIM_START_DELAY_OFFSET) / (END_SCALE_START_DELAY_OFFSET - END_TRIM_START_DELAY_OFFSET);
+    if (renderProgress <= END_TRIM_DURATION_OFFSET && renderProgress > START_TRIM_DURATION_OFFSET) {
+      float endTrimProgress = (renderProgress - START_TRIM_DURATION_OFFSET) / (END_TRIM_DURATION_OFFSET - START_TRIM_DURATION_OFFSET);
       mEndTrim = originEndTrim + ((MAX_PROGRESS_ARC - minProgressArc) * LINEAR_INTERPOLATOR.getInterpolation(endTrimProgress));
 
       mIsScaling = false;
@@ -164,8 +163,8 @@ public class GearLoadingRenderer extends LoadingRenderer {
 
     // Scaling down the end size starts after 80% of a single ring
     // animation completes
-    if (renderProgress > END_SCALE_START_DELAY_OFFSET) {
-      float endScaleProgress = (renderProgress - END_SCALE_START_DELAY_OFFSET) / (1.0f - END_SCALE_START_DELAY_OFFSET);
+    if (renderProgress > END_TRIM_DURATION_OFFSET) {
+      float endScaleProgress = (renderProgress - END_TRIM_DURATION_OFFSET) / (END_SCALE_DURATION_OFFSET - END_TRIM_DURATION_OFFSET);
       mScale = 1.0f - ACCELERATE_INTERPOLATOR.getInterpolation(endScaleProgress);
 
       mIsScaling = true;
@@ -173,7 +172,7 @@ public class GearLoadingRenderer extends LoadingRenderer {
       return ;
     }
 
-    float rotateProgress = (renderProgress - START_SCALE_DURATION_OFFSET) / (END_SCALE_START_DELAY_OFFSET - START_SCALE_DURATION_OFFSET);
+    float rotateProgress = (renderProgress - START_SCALE_DURATION_OFFSET) / (END_TRIM_DURATION_OFFSET - START_SCALE_DURATION_OFFSET);
     mGroupRotation = ((FULL_ROTATION / NUM_POINTS) * rotateProgress) + (FULL_ROTATION * (mRotationCount / NUM_POINTS));
     mRotation = originRotation + (ROTATION_FACTOR * rotateProgress);
 

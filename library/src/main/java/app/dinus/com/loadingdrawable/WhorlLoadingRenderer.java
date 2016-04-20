@@ -11,7 +11,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
-import android.util.Log;
 import android.view.animation.Interpolator;
 
 public class WhorlLoadingRenderer extends LoadingRenderer {
@@ -20,8 +19,9 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
   private static final float FULL_ROTATION = 1080.0f;
   private static final float ROTATION_FACTOR = 0.25f;
   private static final float MAX_PROGRESS_ARC = 0.6f;
+
   private static final float START_TRIM_DURATION_OFFSET = 0.5f;
-  private static final float END_TRIM_START_DELAY_OFFSET = 0.5f;
+  private static final float END_TRIM_DURATION_OFFSET = 1.0f;
 
   private static final int DEGREE_180 = 180;
   private static final int DEGREE_360 = 360;
@@ -140,8 +140,8 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
 
     // Moving the end trim starts after 50% of a single ring
     // animation completes
-    if (renderProgress > END_TRIM_START_DELAY_OFFSET) {
-      float endTrimProgress = (renderProgress - START_TRIM_DURATION_OFFSET) / (1.0f - START_TRIM_DURATION_OFFSET);
+    if (renderProgress > START_TRIM_DURATION_OFFSET) {
+      float endTrimProgress = (renderProgress - START_TRIM_DURATION_OFFSET) / (END_TRIM_DURATION_OFFSET - START_TRIM_DURATION_OFFSET);
       mEndTrim = originEndTrim + ((MAX_PROGRESS_ARC - minProgressArc) * MATERIAL_INTERPOLATOR.getInterpolation(endTrimProgress));
     }
 

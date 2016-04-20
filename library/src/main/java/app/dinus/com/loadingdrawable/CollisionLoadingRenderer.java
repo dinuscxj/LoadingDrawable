@@ -31,6 +31,7 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
     private static final float START_LEFT_DURATION_OFFSET = 0.25f;
     private static final float START_RIGHT_DURATION_OFFSET = 0.5f;
     private static final float END_RIGHT_DURATION_OFFSET = 0.75f;
+    private static final float END_LEFT_DURATION_OFFSET = 1.0f;
 
     private static final int[] DEFAULT_COLORS = new int[] {
             Color.RED, Color.GREEN
@@ -151,7 +152,7 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
 
         // Moving the end offset to left starts after 75% of a single ring
         // animation completes
-        if (renderProgress <= 1.0f) {
+        if (renderProgress <= END_LEFT_DURATION_OFFSET) {
             float endRightOffsetProgress = (renderProgress - END_RIGHT_DURATION_OFFSET) / DURATION_OFFSET;
             mEndXOffsetProgress = ACCELERATE_INTERPOLATOR.getInterpolation(1 - endRightOffsetProgress);
 
