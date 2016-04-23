@@ -5,13 +5,19 @@
  some android loading drawable, can be combined with any View as the loading View and Progressbar,
  and is especially suitable for the loading animation of the [RecyclerRefreshLayout](https://github.com/dinuscxj/RecyclerRefreshLayout).
 
-![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/CircleLoadingDrawable_Commit3.gif?width=300)
+![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/CircleJumpDrawable.gif?width=300)
+![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/CircleRotateDrawable.gif?width=300)
 ## Features
- * SwapLoadingDrawable
+#### Circle Rotate
  * GearLoadingDrawable
  * WhorlLoadingDrawable
  * LevelLoadingDrawable
  * MaterialLoadingDrawable
+
+#### Circle Jump
+ * SwapLoadingDrawable
+ * GuardLoadingRenderer
+ * DanceLoadingRenderer
  * CollisionLoadingDrawable
 
 ## TODO
@@ -25,22 +31,18 @@
 
  Used with ImageView
  ```java
- ImageView.setImageDrawable(new LoadingDrawable(new SwapLoadingRenderer(Context)));
  ImageView.setImageDrawable(new LoadingDrawable(new GearLoadingRenderer(Context)));
  ImageView.setImageDrawable(new LoadingDrawable(new WhorlLoadingRenderer(Context)));
  ImageView.setImageDrawable(new LoadingDrawable(new LevelLoadingRenderer(Context)));
  ImageView.setImageDrawable(new LoadingDrawable(new MaterialLoadingRenderer(Context)));
- ImageView.setImageDrawable(new LoadingDrawable(new CollisionLoadingRenderer(Context)));
   ```
 
  Used with View
  ```java
- View.setBackground(new LoadingDrawable(new SwapLoadingRenderer(Context)));
  View.setBackground(new LoadingDrawable(new GearLoadingRenderer(Context)));
  View.setBackground(new LoadingDrawable(new WhorlLoadingRenderer(Context)));
  View.setBackground(new LoadingDrawable(new LevelLoadingRenderer(Context)));
  View.setBackground(new LoadingDrawable(new MaterialLoadingRenderer(Context)));
- View.setBackground(new LoadingDrawable(new CollisionLoadingRenderer(Context)));
   ```
 
 ## License

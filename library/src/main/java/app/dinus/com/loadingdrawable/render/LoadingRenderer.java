@@ -1,4 +1,4 @@
-package app.dinus.com.loadingdrawable;
+package app.dinus.com.loadingdrawable.render;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
@@ -13,9 +13,7 @@ import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
 public abstract class LoadingRenderer {
-  private static final Interpolator LINEAR_INTERPOLATOR = new LinearInterpolator();
-
-  private static final int ANIMATION_DURATION = 1333;
+  private static final long ANIMATION_DURATION = 1333;
 
   private static final float DEFAULT_SIZE = 56.0f;
   private static final float DEFAULT_CENTER_RADIUS = 12.5f;
@@ -26,6 +24,7 @@ public abstract class LoadingRenderer {
   protected float mStrokeWidth;
   protected float mCenterRadius;
 
+  private long mDuration;
   private Drawable.Callback mCallback;
   private ValueAnimator mRenderAnimator;
 
@@ -41,13 +40,13 @@ public abstract class LoadingRenderer {
   public abstract void reset();
 
   public void start() {
-    mRenderAnimator.setDuration(ANIMATION_DURATION);
+    reset();
+    setDuration(mDuration);
     mRenderAnimator.start();
   }
 
   public void stop() {
     mRenderAnimator.cancel();
-    reset();
   }
 
   public boolean isRunning() {
@@ -70,13 +69,14 @@ public abstract class LoadingRenderer {
     mHeight = DEFAULT_SIZE * screenDensity;
     mStrokeWidth = DEFAULT_STROKE_WIDTH * screenDensity;
     mCenterRadius = DEFAULT_CENTER_RADIUS * screenDensity;
+
+    mDuration = ANIMATION_DURATION;
   }
 
   private void setupAnimators() {
     mRenderAnimator = ValueAnimator.ofFloat(0, 1);
     mRenderAnimator.setRepeatCount(Animation.INFINITE);
     mRenderAnimator.setRepeatMode(Animation.RESTART);
-    mRenderAnimator.setInterpolator(LINEAR_INTERPOLATOR);
     mRenderAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
       @Override
       public void onAnimationUpdate(ValueAnimator animation) {
@@ -120,5 +120,14 @@ public abstract class LoadingRenderer {
 
   public void setHeight(float height) {
     this.mHeight = height;
+  }
+
+  public long getDuration() {
+    return mDuration;
+  }
+
+  public void setDuration(long duration) {
+    this.mDuration = duration;
+    mRenderAnimator.setDuration(mDuration);
   }
 }

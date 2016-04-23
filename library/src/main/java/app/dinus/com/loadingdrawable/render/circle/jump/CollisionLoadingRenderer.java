@@ -1,4 +1,4 @@
-package app.dinus.com.loadingdrawable;
+package app.dinus.com.loadingdrawable.render.circle.jump;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -15,6 +15,8 @@ import android.util.TypedValue;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
+
+import app.dinus.com.loadingdrawable.render.LoadingRenderer;
 
 public class CollisionLoadingRenderer extends LoadingRenderer {
     private static final Interpolator ACCELERATE_INTERPOLATOR = new AccelerateInterpolator();

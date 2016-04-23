@@ -1,4 +1,4 @@
-package app.dinus.com.loadingdrawable;
+package app.dinus.com.loadingdrawable.render.circle.jump;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -9,14 +9,15 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
+
+import app.dinus.com.loadingdrawable.render.LoadingRenderer;
 
 public class SwapLoadingRenderer extends LoadingRenderer {
     private static final Interpolator MATERIAL_INTERPOLATOR = new FastOutSlowInInterpolator();
+
+    private static final long ANIMATION_DURATION = 2500;
 
     private static final int CIRCLE_COUNT = 5;
 
@@ -26,7 +27,7 @@ public class SwapLoadingRenderer extends LoadingRenderer {
     private static final float DEFAULT_HEIGHT = 15.0f * (1 + 2 * 2);
     private static final float DEFAULT_STROKE_WIDTH = 1.5f;
 
-    private static final int DEFAULT_COLOR = Color.RED;
+    private static final int DEFAULT_COLOR = Color.WHITE;
 
     private final Paint mPaint = new Paint();
     private final RectF mTempBounds = new RectF();
@@ -41,13 +42,18 @@ public class SwapLoadingRenderer extends LoadingRenderer {
     public SwapLoadingRenderer(Context context) {
         super(context);
 
+        setDuration(ANIMATION_DURATION);
+        init(context);
+        setupPaint();
+    }
+
+    private void init(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         mWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_WIDTH, displayMetrics);
         mHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_HEIGHT, displayMetrics);
         mStrokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_STROKE_WIDTH, displayMetrics);
 
         mSwapThreshold = 1.0f / CIRCLE_COUNT;
-        setupPaint();
     }
 
     private void setupPaint() {

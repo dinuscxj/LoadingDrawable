@@ -16,6 +16,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".CircleJumpActivity"
+            android:label="@string/label_circle_jump"/>
+
+        <activity android:name=".CircleRotateActivity"
+            android:label="@string/label_circle_rotate"/>
     </application>
 
 </manifest>

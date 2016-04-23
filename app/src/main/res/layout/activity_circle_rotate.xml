@@ -1,0 +1,48 @@
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <ImageView
+            android:id="@+id/whorl_view"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:background="#ffe6ebed"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/material_view"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:background="#ff2a8cc8"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <ImageView
+            android:id="@+id/gear_view"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:background="#fffa644e"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/level_view"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:background="#fff1c02e"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,4 +1,4 @@
-package app.dinus.com.loadingdrawable;
+package app.dinus.com.loadingdrawable.render.circle.rotate;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -9,30 +9,38 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.support.annotation.NonNull;
-import android.support.v4.view.animation.FastOutSlowInInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 
-public class WhorlLoadingRenderer extends LoadingRenderer {
-  private static final Interpolator MATERIAL_INTERPOLATOR = new FastOutSlowInInterpolator();
+import app.dinus.com.loadingdrawable.render.LoadingRenderer;
+
+public class GearLoadingRenderer extends LoadingRenderer {
+  private static final Interpolator LINEAR_INTERPOLATOR = new LinearInterpolator();
+  private static final Interpolator ACCELERATE_INTERPOLATOR = new AccelerateInterpolator();
+  private static final Interpolator DECELERATE_INTERPOLATOR = new DecelerateInterpolator();
 
   private static final float FULL_ROTATION = 1080.0f;
   private static final float ROTATION_FACTOR = 0.25f;
-  private static final float MAX_PROGRESS_ARC = 0.6f;
+  private static final float MAX_PROGRESS_ARC = 0.17f;
 
+  private static final float START_SCALE_DURATION_OFFSET = 0.3f;
   private static final float START_TRIM_DURATION_OFFSET = 0.5f;
-  private static final float END_TRIM_DURATION_OFFSET = 1.0f;
+  private static final float END_TRIM_DURATION_OFFSET = 0.7f;
+  private static final float END_SCALE_DURATION_OFFSET = 1.0f;
 
-  private static final int DEGREE_180 = 180;
+  private static final int GEAR_COUNT = 4;
+  private static final int NUM_POINTS = 3;
+  private static final int MAX_ALPHA = 255;
   private static final int DEGREE_360 = 360;
-  private static final int NUM_POINTS = 5;
 
-  private static final int[] DEFAULT_COLORS = new int[] {
-      Color.RED, Color.GREEN, Color.BLUE
-  };
+  private static final int DEFAULT_COLOR = Color.WHITE;
 
   private final Paint mPaint = new Paint();
   private final RectF mTempBounds = new RectF();
+
+  private boolean mIsScaling;
 
   private final Animator.AnimatorListener mAnimatorListener = new AnimatorListenerAdapter() {
     @Override
@@ -40,8 +48,8 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
       super.onAnimationRepeat(animator);
       storeOriginals();
 
-      mStartTrim = mEndTrim;
-      mRotationCount = (mRotationCount + 1) % (NUM_POINTS);
+      mStartTrim = mEndTrim;;
+      mRotationCount = (mRotationCount + 1) % NUM_POINTS;
     }
 
     @Override
@@ -51,10 +59,11 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
     }
   };
 
-  private int[] mColors;
+  private int mCurrentColor;
 
   private float mStrokeInset;
 
+  private float mScale;
   private float mEndTrim;
   private float mRotation;
   private float mStartTrim;
@@ -64,15 +73,15 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
   private float mOriginRotation;
   private float mOriginStartTrim;
 
-  public WhorlLoadingRenderer(Context context) {
+  public GearLoadingRenderer(Context context) {
     super(context);
+    mCurrentColor = DEFAULT_COLOR;
+
     setupPaint();
     addRenderListener(mAnimatorListener);
   }
 
   private void setupPaint() {
-    mColors = DEFAULT_COLORS;
-
     mPaint.setAntiAlias(true);
     mPaint.setStrokeWidth(getStrokeWidth());
     mPaint.setStyle(Paint.Style.STROKE);
@@ -83,6 +92,8 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
 
   @Override
   public void draw(Canvas canvas, Rect bounds) {
+    mPaint.setColor(mCurrentColor);
+
     int saveCount = canvas.save();
 
     canvas.rotate(mGroupRotation, bounds.exactCenterX(), bounds.exactCenterY());
@@ -98,30 +109,22 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
     float endAngle = (mEndTrim + mRotation) * DEGREE_360;
     float sweepAngle = endAngle - startAngle;
 
-    for (int i = 0; i < mColors.length; i++) {
-      mPaint.setStrokeWidth(getStrokeWidth() / (i + 1));
-      mPaint.setColor(mColors[i]);
-      canvas.drawArc(createArcBounds(arcBounds, i), startAngle + DEGREE_180 * (i % 2), sweepAngle, false, mPaint);
+    if (mIsScaling) {
+      mPaint.setAlpha((int) (MAX_ALPHA * mScale));
+      mPaint.setStrokeWidth(getStrokeWidth() * mScale);
+      arcBounds.inset(arcBounds.width() * (1 - mScale) / 2, arcBounds.height() * (1 - mScale) / 2);
+      for (int i = 0; i < GEAR_COUNT; i++) {
+        canvas.drawArc(arcBounds, startAngle + DEGREE_360 / GEAR_COUNT * i, sweepAngle, false, mPaint);
+      }
+    } else {
+      mPaint.setAlpha(MAX_ALPHA);
+
+      for (int i = 0; i < GEAR_COUNT; i++) {
+        canvas.drawArc(arcBounds, startAngle + DEGREE_360 / GEAR_COUNT * i, sweepAngle, false, mPaint);
+      }
     }
 
     canvas.restoreToCount(saveCount);
-  }
-
-  private RectF createArcBounds(RectF sourceArcBounds, int index) {
-    RectF arcBounds = new RectF();
-    int intervalWidth = 0;
-
-    for (int i = 0; i < index; i++) {
-      intervalWidth += getStrokeWidth() / (i + 1.0f) * 1.5f;
-    }
-
-    int arcBoundsLeft = (int) (sourceArcBounds.left + intervalWidth);
-    int arcBoundsTop = (int) (sourceArcBounds.top + intervalWidth);
-    int arcBoundsRight = (int) (sourceArcBounds.right - intervalWidth);
-    int arcBoundsBottom = (int) (sourceArcBounds.bottom - intervalWidth);
-    arcBounds.set(arcBoundsLeft, arcBoundsTop, arcBoundsRight, arcBoundsBottom);
-
-    return arcBounds;
   }
 
   @Override
@@ -131,22 +134,49 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
     final float originStartTrim = mOriginStartTrim;
     final float originRotation = mOriginRotation;
 
-    // Moving the start trim only occurs in the first 50% of a
+    // Scaling up the start size only occurs in the first 20% of a
     // single ring animation
-    if (renderProgress <= START_TRIM_DURATION_OFFSET) {
-      float startTrimProgress = (renderProgress) / (1.0f - START_TRIM_DURATION_OFFSET);
-      mStartTrim = originStartTrim + ((MAX_PROGRESS_ARC - minProgressArc) * MATERIAL_INTERPOLATOR.getInterpolation(startTrimProgress));
+    if (renderProgress <= START_SCALE_DURATION_OFFSET) {
+      float startScaleProgress = (renderProgress) / START_SCALE_DURATION_OFFSET;
+      mScale = DECELERATE_INTERPOLATOR.getInterpolation(startScaleProgress);
+
+      mIsScaling = true;
+      invalidateSelf();
+      return;
     }
 
-    // Moving the end trim starts after 50% of a single ring
+    // Moving the start trim only occurs between 20% to 50% of a
+    // single ring animation
+    if (renderProgress <= START_TRIM_DURATION_OFFSET && renderProgress > START_SCALE_DURATION_OFFSET) {
+      float startTrimProgress = (renderProgress - START_SCALE_DURATION_OFFSET) / (START_TRIM_DURATION_OFFSET - START_SCALE_DURATION_OFFSET);
+      mStartTrim = originStartTrim + ((MAX_PROGRESS_ARC - minProgressArc) * LINEAR_INTERPOLATOR.getInterpolation(startTrimProgress));
+
+      mIsScaling = false;
+    }
+
+    // Moving the end trim starts between 50% to 80% of a single ring
     // animation completes
-    if (renderProgress > START_TRIM_DURATION_OFFSET) {
+    if (renderProgress <= END_TRIM_DURATION_OFFSET && renderProgress > START_TRIM_DURATION_OFFSET) {
       float endTrimProgress = (renderProgress - START_TRIM_DURATION_OFFSET) / (END_TRIM_DURATION_OFFSET - START_TRIM_DURATION_OFFSET);
-      mEndTrim = originEndTrim + ((MAX_PROGRESS_ARC - minProgressArc) * MATERIAL_INTERPOLATOR.getInterpolation(endTrimProgress));
+      mEndTrim = originEndTrim + ((MAX_PROGRESS_ARC - minProgressArc) * LINEAR_INTERPOLATOR.getInterpolation(endTrimProgress));
+
+      mIsScaling = false;
     }
 
-    mGroupRotation = ((FULL_ROTATION / NUM_POINTS) * renderProgress) + (FULL_ROTATION * (mRotationCount / NUM_POINTS));
-    mRotation = originRotation + (ROTATION_FACTOR * renderProgress);
+    // Scaling down the end size starts after 80% of a single ring
+    // animation completes
+    if (renderProgress > END_TRIM_DURATION_OFFSET) {
+      float endScaleProgress = (renderProgress - END_TRIM_DURATION_OFFSET) / (END_SCALE_DURATION_OFFSET - END_TRIM_DURATION_OFFSET);
+      mScale = 1.0f - ACCELERATE_INTERPOLATOR.getInterpolation(endScaleProgress);
+
+      mIsScaling = true;
+      invalidateSelf();
+      return ;
+    }
+
+    float rotateProgress = (renderProgress - START_SCALE_DURATION_OFFSET) / (END_TRIM_DURATION_OFFSET - START_SCALE_DURATION_OFFSET);
+    mGroupRotation = ((FULL_ROTATION / NUM_POINTS) * rotateProgress) + (FULL_ROTATION * (mRotationCount / NUM_POINTS));
+    mRotation = originRotation + (ROTATION_FACTOR * rotateProgress);
 
     invalidateSelf();
   }
@@ -168,13 +198,14 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
     resetOriginals();
   }
 
-  public void setColors(@NonNull int[] colors) {
-    mColors = colors;
+  public void setColor(int color) {
+    mCurrentColor = color;
   }
 
   @Override
   public void setStrokeWidth(float strokeWidth) {
     super.setStrokeWidth(strokeWidth);
+    mPaint.setStrokeWidth(strokeWidth);
     invalidateSelf();
   }
 
@@ -205,7 +236,16 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
     return mRotation;
   }
 
-  public void setInsets(int width, int height) {
+  public void setScale(float scale) {
+    this.mScale = scale;
+    invalidateSelf();
+  }
+
+  public float getScale() {
+    return mScale;
+  }
+
+  private void setInsets(int width, int height) {
     final float minEdge = (float) Math.min(width, height);
     float insets;
     if (getCenterRadius() <= 0 || minEdge < 0) {
@@ -229,6 +269,7 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
     setStartTrim(0);
     setEndTrim(0);
     setRotation(0);
+    setScale(0);
   }
 
   private float getMinProgressArc() {

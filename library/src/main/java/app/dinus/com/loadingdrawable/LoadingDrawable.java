@@ -6,6 +6,8 @@ import android.graphics.PixelFormat;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 
+import app.dinus.com.loadingdrawable.render.LoadingRenderer;
+
 public class LoadingDrawable extends Drawable implements Animatable {
   private LoadingRenderer mLoadingRender;
 
