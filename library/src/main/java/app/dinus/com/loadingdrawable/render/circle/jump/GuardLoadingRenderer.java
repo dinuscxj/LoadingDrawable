@@ -174,7 +174,7 @@ public class GuardLoadingRenderer extends LoadingRenderer {
       return;
     }
 
-    if (renderProgress > BALL_SCALE_DURATION_OFFSET) {
+    if (renderProgress >= BALL_SCALE_DURATION_OFFSET) {
       final float endTrimProgress =
           (renderProgress - BALL_SKIP_DURATION_OFFSET)
               / (END_TRIM_DURATION_OFFSET - BALL_SKIP_DURATION_OFFSET);

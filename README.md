@@ -1,5 +1,6 @@
 
 ## LoadingDrawable
+[中文版文档](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/README-ZH.md)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-LoadingDrawable-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/3450)
 
  some android loading drawable, can be combined with any View as the loading View and Progressbar,
@@ -7,6 +8,7 @@
 
 ![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/CircleJumpDrawable.gif?width=300)
 ![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/CircleRotateDrawable.gif?width=300)
+
 ## Features
 #### Circle Rotate
  * GearLoadingDrawable
@@ -21,13 +23,14 @@
  * CollisionLoadingDrawable
 
 ## TODO
- When I feel less bugs enough, I will add a gradle dependency. So I hope you will make more Suggestions.
+ When I feel less bugs enough, I will add a gradle dependency. So I hope you will make more Suggestions or Issues.
 
 ## Usage
 #### Gradle
  ```
  compile project(':library')
  ```
+#### In java
 
  Used with ImageView
  ```java
@@ -44,6 +47,12 @@
  View.setBackground(new LoadingDrawable(new LevelLoadingRenderer(Context)));
  View.setBackground(new LoadingDrawable(new MaterialLoadingRenderer(Context)));
   ```
+
+## Misc
+ If you like LoadingDrawable or use it, could you please:
+
+ * star this repo
+ * send me some feedback. Thanks!
 
 ## License
     Copyright 2015-2019 dinus

@@ -74,7 +74,7 @@ public abstract class LoadingRenderer {
   }
 
   private void setupAnimators() {
-    mRenderAnimator = ValueAnimator.ofFloat(0, 1);
+    mRenderAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
     mRenderAnimator.setRepeatCount(Animation.INFINITE);
     mRenderAnimator.setRepeatMode(Animation.RESTART);
     mRenderAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
