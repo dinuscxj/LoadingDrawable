@@ -63,8 +63,8 @@ LoadingRenderer主要负责给LoadingDrawable绘制的。 核心方法 draw(Canv
 
 #### 圆形滚动系列
 圆形滚动系列（GearLoadingRenderer、WhorlLoadingRenderer、LevelLoadingRenderer、MaterialLoadingRenderer）代码
-相似度很高，无非都是不断改变绘制弧度的大小和绘制的位置。所以只详细讲解MaterialLoadingRenderer(下图的第二个动画)。
-![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/CircleRotateDrawable.gif?width=300)
+相似度很高，无非都是不断改变绘制弧度的大小和绘制的位置。所以只详细讲解MaterialLoadingRenderer(下图的第二个动画)。<br/>
+![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/CircleRotateDrawable.gif?width=300)<br/>
 首先draw方法进行详解， 详见下面代码注释：
 ```java
 public void draw(Canvas canvas, Rect bounds) {
@@ -125,8 +125,8 @@ public void computeRender(float renderProgress) {
 需要对圆、抛物线、直线的函数有一定的了解， 并且会计算交点。其中（CollisionLoadingRenderer，SwapLoadingRenderer）相对比较简单，
 （DanceLoadingRenderer, GuardLoadingRenderer）比较复杂，这两个相同点：都是圆与直线之间的动画处理，
 不同点：DanceLoadingRender设计的状态变换更多，而GuardLoadingRenderer设计的知识点难度更大。 所以这里对GuardLoadingRenderer（）（下图第三那个）
-进行详解。希望大家也可以尝试对代码进行分析，只有这样你才会进步的更快。 分析代码的能力对于程序员的成长非常大。废话不多说了，
-![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/CircleJumpDrawable.gif?width=300)
+进行详解。希望大家也可以尝试对代码进行分析，只有这样你才会进步的更快。 分析代码的能力对于程序员的成长非常大。废话不多说了.<br/>
+![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/CircleJumpDrawable.gif?width=300)<br/>
 首先还是对 draw方法进行解释：
 ``` java
 @Override

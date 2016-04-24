@@ -1,6 +1,6 @@
 
 ## LoadingDrawable
-[中文版文档](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/README-ZH.md)
+[中文版文档](https://github.com/dinuscxj/LoadingDrawable/blob/master/README-ZH.md) <br/>
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-LoadingDrawable-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/3450)
 
  some android loading drawable, can be combined with any View as the loading View and Progressbar,
