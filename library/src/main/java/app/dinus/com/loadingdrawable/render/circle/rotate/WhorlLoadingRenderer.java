@@ -40,9 +40,9 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
     @Override
     public void onAnimationRepeat(Animator animator) {
       super.onAnimationRepeat(animator);
+	  
+      mStartTrim = mEndTrim + getMinProgressArc();
       storeOriginals();
-
-      mStartTrim = mEndTrim;
       mRotationCount = (mRotationCount + 1) % (NUM_POINTS);
     }
 
@@ -91,10 +91,6 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
     RectF arcBounds = mTempBounds;
     arcBounds.set(bounds);
     arcBounds.inset(mStrokeInset, mStrokeInset);
-
-    if (mStartTrim == mEndTrim) {
-      mStartTrim = mEndTrim + getMinProgressArc();
-    }
 
     float startAngle = (mStartTrim + mRotation) * DEGREE_360;
     float endAngle = (mEndTrim + mRotation) * DEGREE_360;
