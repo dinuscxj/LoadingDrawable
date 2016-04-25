@@ -16,262 +16,230 @@ import android.view.animation.Interpolator;
 import app.dinus.com.loadingdrawable.render.LoadingRenderer;
 
 public class MaterialLoadingRenderer extends LoadingRenderer {
-  private static final Interpolator MATERIAL_INTERPOLATOR = new FastOutSlowInInterpolator();
+    private static final Interpolator MATERIAL_INTERPOLATOR = new FastOutSlowInInterpolator();
 
-  private static final float FULL_ROTATION = 1080.0f;
-  private static final float ROTATION_FACTOR = 0.25f;
-  private static final float MAX_PROGRESS_ARC = 0.8f;
+    private static final int DEGREE_360 = 360;
+    private static final int NUM_POINTS = 5;
 
-  private static final float COLOR_START_DELAY_OFFSET = 0.8f;
-  private static final float START_TRIM_DURATION_OFFSET = 0.5f;
-  private static final float END_TRIM_DURATION_OFFSET = 1.0f;
+    private static final float MIN_SWIPE_DEGREE = 0.1f;
+    private static final float MAX_SWIPE_DEGREES = 0.8f * DEGREE_360;
+    private static final float FULL_GROUP_ROTATION = 3.0f * DEGREE_360;
+    private static final float MAX_ROTATION_INCREMENT = 0.25f * DEGREE_360;
 
-  private static final int DEGREE_360 = 360;
-  private static final int NUM_POINTS = 5;
+    private static final float COLOR_START_DELAY_OFFSET = 0.8f;
+    private static final float END_TRIM_DURATION_OFFSET = 1.0f;
+    private static final float START_TRIM_DURATION_OFFSET = 0.5f;
 
-  private static final int[] DEFAULT_COLORS = new int[] {
-      Color.RED, Color.GREEN, Color.BLUE
-  };
+    private static final int[] DEFAULT_COLORS = new int[]{
+            Color.RED, Color.GREEN, Color.BLUE
+    };
 
-  private final Paint mPaint = new Paint();
-  private final RectF mTempBounds = new RectF();
+    private final Paint mPaint = new Paint();
+    private final RectF mTempBounds = new RectF();
 
-  private final Animator.AnimatorListener mAnimatorListener = new AnimatorListenerAdapter() {
-    @Override
-    public void onAnimationRepeat(Animator animator) {
-      super.onAnimationRepeat(animator);
-      storeOriginals();
-      goToNextColor();
+    private final Animator.AnimatorListener mAnimatorListener = new AnimatorListenerAdapter() {
+        @Override
+        public void onAnimationRepeat(Animator animator) {
+            super.onAnimationRepeat(animator);
+            storeOriginals();
+            goToNextColor();
 
-      mStartTrim = mEndTrim;
-      mRotationCount = (mRotationCount + 1) % (NUM_POINTS);
+            mStartDegrees = mEndDegrees;
+            mRotationCount = (mRotationCount + 1) % (NUM_POINTS);
+        }
+
+        @Override
+        public void onAnimationStart(Animator animation) {
+            super.onAnimationStart(animation);
+            mRotationCount = 0;
+        }
+    };
+
+    private int[] mColors;
+    private int mColorIndex;
+    private int mCurrentColor;
+
+    private float mStrokeInset;
+
+    private float mRotationCount;
+    private float mGroupRotation;
+
+    private float mEndDegrees;
+    private float mStartDegrees;
+    private float mSwipeDegrees;
+    private float mRotationIncrement;
+    private float mOriginEndDegrees;
+    private float mOriginStartDegrees;
+    private float mOriginRotationIncrement;
+
+
+    public MaterialLoadingRenderer(Context context) {
+        super(context);
+        init();
+        setupPaint();
+        addRenderListener(mAnimatorListener);
+    }
+
+    private void init() {
+        mColors = DEFAULT_COLORS;
+
+        setColorIndex(0);
+        setInsets((int) getWidth(), (int) getHeight());
+    }
+
+    private void setupPaint() {
+        mPaint.setAntiAlias(true);
+        mPaint.setStrokeWidth(getStrokeWidth());
+        mPaint.setStyle(Paint.Style.STROKE);
+        mPaint.setStrokeCap(Paint.Cap.ROUND);
     }
 
     @Override
-    public void onAnimationStart(Animator animation) {
-      super.onAnimationStart(animation);
-      mRotationCount = 0;
-    }
-  };
+    public void draw(Canvas canvas, Rect bounds) {
+        int saveCount = canvas.save();
 
-  private int[] mColors;
-  private int mColorIndex;
-  private int mCurrentColor;
+        canvas.rotate(mGroupRotation, bounds.exactCenterX(), bounds.exactCenterY());
 
-  private float mStrokeInset;
+        RectF arcBounds = mTempBounds;
+        arcBounds.set(bounds);
+        arcBounds.inset(mStrokeInset, mStrokeInset);
 
-  private float mEndTrim;
-  private float mRotation;
-  private float mStartTrim;
-  private float mRotationCount;
-  private float mGroupRotation;
-  private float mOriginEndTrim;
-  private float mOriginRotation;
-  private float mOriginStartTrim;
+        mPaint.setColor(mCurrentColor);
+        canvas.drawArc(arcBounds, mStartDegrees, mSwipeDegrees, false, mPaint);
 
-  public MaterialLoadingRenderer(Context context) {
-    super(context);
-    setupPaint();
-    addRenderListener(mAnimatorListener);
-  }
-
-  private void setupPaint() {
-    mColors = DEFAULT_COLORS;
-
-    mPaint.setAntiAlias(true);
-    mPaint.setStrokeWidth(getStrokeWidth());
-    mPaint.setStyle(Paint.Style.STROKE);
-    mPaint.setStrokeCap(Paint.Cap.ROUND);
-
-    setColorIndex(0);
-    setInsets((int) getWidth(), (int) getHeight());
-  }
-
-  @Override
-  public void draw(Canvas canvas, Rect bounds) {
-    mPaint.setColor(mCurrentColor);
-
-    int saveCount = canvas.save();
-
-    canvas.rotate(mGroupRotation, bounds.exactCenterX(), bounds.exactCenterY());
-    RectF arcBounds = mTempBounds;
-    arcBounds.set(bounds);
-    arcBounds.inset(mStrokeInset, mStrokeInset);
-
-    if (mStartTrim == mEndTrim) {
-      mStartTrim = mEndTrim + getMinProgressArc();
+        canvas.restoreToCount(saveCount);
     }
 
-    float startAngle = (mStartTrim + mRotation) * DEGREE_360;
-    float endAngle = (mEndTrim + mRotation) * DEGREE_360;
-    float sweepAngle = endAngle - startAngle;
+    @Override
+    public void computeRender(float renderProgress) {
+        updateRingColor(renderProgress);
 
-    canvas.drawArc(arcBounds, startAngle, sweepAngle, false, mPaint);
+        // Moving the start trim only occurs in the first 50% of a
+        // single ring animation
+        if (renderProgress <= START_TRIM_DURATION_OFFSET) {
+            float startTrimProgress = (renderProgress) / START_TRIM_DURATION_OFFSET;
+            mStartDegrees = mOriginStartDegrees + MAX_SWIPE_DEGREES * MATERIAL_INTERPOLATOR.getInterpolation(startTrimProgress);
+        }
 
-    canvas.restoreToCount(saveCount);
-  }
+        // Moving the end trim starts after 50% of a single ring
+        // animation completes
+        if (renderProgress > START_TRIM_DURATION_OFFSET) {
+            float endTrimProgress = (renderProgress - START_TRIM_DURATION_OFFSET) / (END_TRIM_DURATION_OFFSET - START_TRIM_DURATION_OFFSET);
+            mEndDegrees = mOriginEndDegrees + MAX_SWIPE_DEGREES * MATERIAL_INTERPOLATOR.getInterpolation(endTrimProgress);
+        }
 
-  @Override
-  public void computeRender(float renderProgress) {
-    final float minProgressArc = getMinProgressArc();
-    final float originEndTrim = mOriginEndTrim;
-    final float originStartTrim = mOriginStartTrim;
-    final float originRotation = mOriginRotation;
+        if (Math.abs(mEndDegrees - mStartDegrees) > MIN_SWIPE_DEGREE) {
+            mSwipeDegrees = mEndDegrees - mStartDegrees;
+        }
 
-    updateRingColor(renderProgress);
-
-    // Moving the start trim only occurs in the first 50% of a
-    // single ring animation
-    if (renderProgress <= START_TRIM_DURATION_OFFSET) {
-      float startTrimProgress = (renderProgress) / START_TRIM_DURATION_OFFSET;
-      mStartTrim = originStartTrim + ((MAX_PROGRESS_ARC - minProgressArc) * MATERIAL_INTERPOLATOR.getInterpolation(startTrimProgress));
+        mGroupRotation = ((FULL_GROUP_ROTATION / NUM_POINTS) * renderProgress) + (FULL_GROUP_ROTATION * (mRotationCount / NUM_POINTS));
+        mRotationIncrement = mOriginRotationIncrement + (MAX_ROTATION_INCREMENT * renderProgress);
     }
 
-    // Moving the end trim starts after 50% of a single ring
-    // animation completes
-    if (renderProgress > START_TRIM_DURATION_OFFSET) {
-      float endTrimProgress = (renderProgress - START_TRIM_DURATION_OFFSET) / (END_TRIM_DURATION_OFFSET - START_TRIM_DURATION_OFFSET);
-      mEndTrim = originEndTrim + ((MAX_PROGRESS_ARC - minProgressArc) * MATERIAL_INTERPOLATOR.getInterpolation(endTrimProgress));
+    @Override
+    public void setAlpha(int alpha) {
+        mPaint.setAlpha(alpha);
+        invalidateSelf();
     }
 
-    mGroupRotation = ((FULL_ROTATION / NUM_POINTS) * renderProgress) + (FULL_ROTATION * (mRotationCount / NUM_POINTS));
-    mRotation = originRotation + (ROTATION_FACTOR * renderProgress);
-
-    invalidateSelf();
-  }
-
-  @Override
-  public void setAlpha(int alpha) {
-    mPaint.setAlpha(alpha);
-    invalidateSelf();
-  }
-
-  @Override
-  public void setColorFilter(ColorFilter cf) {
-    mPaint.setColorFilter(cf);
-    invalidateSelf();
-  }
-
-  @Override
-  public void reset() {
-    resetOriginals();
-  }
-
-  public void setColors(@NonNull int[] colors) {
-    mColors = colors;
-    setColorIndex(0);
-  }
-
-  public void setColor(int color) {
-    mCurrentColor = color;
-  }
-
-  public void setColorIndex(int index) {
-    mColorIndex = index;
-    mCurrentColor = mColors[mColorIndex];
-  }
-
-  public int getNextColor() {
-    return mColors[getNextColorIndex()];
-  }
-
-  private int getNextColorIndex() {
-    return (mColorIndex + 1) % (mColors.length);
-  }
-
-  public void goToNextColor() {
-    setColorIndex(getNextColorIndex());
-  }
-
-  @Override
-  public void setStrokeWidth(float strokeWidth) {
-    super.setStrokeWidth(strokeWidth);
-    mPaint.setStrokeWidth(strokeWidth);
-    invalidateSelf();
-  }
-
-  public void setStartTrim(float startTrim) {
-    mStartTrim = startTrim;
-    invalidateSelf();
-  }
-
-  public float getStartTrim() {
-    return mStartTrim;
-  }
-
-  public void setEndTrim(float endTrim) {
-    mEndTrim = endTrim;
-    invalidateSelf();
-  }
-
-  public float getEndTrim() {
-    return mEndTrim;
-  }
-
-  public void setRotation(float rotation) {
-    mRotation = rotation;
-    invalidateSelf();
-  }
-
-  public float getRotation() {
-    return mRotation;
-  }
-
-  public void setInsets(int width, int height) {
-    final float minEdge = (float) Math.min(width, height);
-    float insets;
-    if (getCenterRadius() <= 0 || minEdge < 0) {
-      insets = (float) Math.ceil(getStrokeWidth() / 2.0f);
-    } else {
-      insets = minEdge / 2.0f - getCenterRadius();
+    @Override
+    public void setColorFilter(ColorFilter cf) {
+        mPaint.setColorFilter(cf);
+        invalidateSelf();
     }
-    mStrokeInset = insets;
-  }
 
-  private void storeOriginals() {
-    mOriginStartTrim = mStartTrim;
-    mOriginEndTrim = mEndTrim;
-    mOriginRotation = mRotation;
-  }
-
-  private void resetOriginals() {
-    mOriginStartTrim = 0;
-    mOriginEndTrim = 0;
-    mOriginRotation = 0;
-    setStartTrim(0);
-    setEndTrim(0);
-    setRotation(0);
-  }
-
-  private int getStartingColor() {
-    return mColors[mColorIndex];
-  }
-
-  private float getMinProgressArc() {
-    return (float) Math.toRadians(getStrokeWidth() / (2 * Math.PI * getCenterRadius()));
-  }
-
-  private void updateRingColor(float interpolatedTime) {
-    if (interpolatedTime > COLOR_START_DELAY_OFFSET) {
-      setColor(evaluateColorChange((interpolatedTime - COLOR_START_DELAY_OFFSET)
-          / (1.0f - COLOR_START_DELAY_OFFSET), getStartingColor(), getNextColor()));
+    @Override
+    public void reset() {
+        resetOriginals();
     }
-  }
 
-  private int evaluateColorChange(float fraction, int startValue, int endValue) {
-    int startA = (startValue >> 24) & 0xff;
-    int startR = (startValue >> 16) & 0xff;
-    int startG = (startValue >> 8) & 0xff;
-    int startB = startValue & 0xff;
+    public void setColors(@NonNull int[] colors) {
+        mColors = colors;
+        setColorIndex(0);
+    }
 
-    int endA = (endValue >> 24) & 0xff;
-    int endR = (endValue >> 16) & 0xff;
-    int endG = (endValue >> 8) & 0xff;
-    int endB = endValue & 0xff;
+    public void setColorIndex(int index) {
+        mColorIndex = index;
+        mCurrentColor = mColors[mColorIndex];
+    }
 
-    return ((startA + (int) (fraction * (endA - startA))) << 24)
-        | ((startR + (int) (fraction * (endR - startR))) << 16)
-        | ((startG + (int) (fraction * (endG - startG))) << 8)
-        | ((startB + (int) (fraction * (endB - startB))));
-  }
+    private int getNextColor() {
+        return mColors[getNextColorIndex()];
+    }
+
+    private int getNextColorIndex() {
+        return (mColorIndex + 1) % (mColors.length);
+    }
+
+    private void goToNextColor() {
+        setColorIndex(getNextColorIndex());
+    }
+
+    @Override
+    public void setStrokeWidth(float strokeWidth) {
+        super.setStrokeWidth(strokeWidth);
+        mPaint.setStrokeWidth(strokeWidth);
+        invalidateSelf();
+    }
+
+    private void setInsets(int width, int height) {
+        final float minEdge = (float) Math.min(width, height);
+        float insets;
+        if (getCenterRadius() <= 0 || minEdge < 0) {
+            insets = (float) Math.ceil(getStrokeWidth() / 2.0f);
+        } else {
+            insets = minEdge / 2.0f - getCenterRadius();
+        }
+        mStrokeInset = insets;
+    }
+
+    private void storeOriginals() {
+        mOriginStartDegrees = mStartDegrees;
+        mOriginEndDegrees = mEndDegrees;
+        mOriginRotationIncrement = mRotationIncrement;
+    }
+
+    private void resetOriginals() {
+        mOriginStartDegrees = 0;
+        mOriginEndDegrees = 0;
+        mOriginRotationIncrement = 0;
+
+        mEndDegrees = 0;
+        mStartDegrees = 0;
+        mRotationIncrement = 0;
+
+        mSwipeDegrees = MIN_SWIPE_DEGREE;
+    }
+
+    private int getStartingColor() {
+        return mColors[mColorIndex];
+    }
+
+    private float getMinDegrees() {
+        return (float) Math.toDegrees(getStrokeWidth() / (2 * Math.PI * getCenterRadius()));
+    }
+
+    private void updateRingColor(float interpolatedTime) {
+        if (interpolatedTime > COLOR_START_DELAY_OFFSET) {
+            mCurrentColor = evaluateColorChange((interpolatedTime - COLOR_START_DELAY_OFFSET)
+                    / (1.0f - COLOR_START_DELAY_OFFSET), getStartingColor(), getNextColor());
+        }
+    }
+
+    private int evaluateColorChange(float fraction, int startValue, int endValue) {
+        int startA = (startValue >> 24) & 0xff;
+        int startR = (startValue >> 16) & 0xff;
+        int startG = (startValue >> 8) & 0xff;
+        int startB = startValue & 0xff;
+
+        int endA = (endValue >> 24) & 0xff;
+        int endR = (endValue >> 16) & 0xff;
+        int endG = (endValue >> 8) & 0xff;
+        int endB = endValue & 0xff;
+
+        return ((startA + (int) (fraction * (endA - startA))) << 24)
+                | ((startR + (int) (fraction * (endR - startR))) << 16)
+                | ((startG + (int) (fraction * (endG - startG))) << 8)
+                | ((startB + (int) (fraction * (endB - startB))));
+    }
 }

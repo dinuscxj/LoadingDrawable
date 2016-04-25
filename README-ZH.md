@@ -68,9 +68,7 @@ LoadingRenderer主要负责给LoadingDrawable绘制的。 核心方法 draw(Canv
 首先draw方法进行详解， 详见下面代码注释：
 ```java
 public void draw(Canvas canvas, Rect bounds) {
-    //给画笔设置颜色
-    mPaint.setColor(mCurrentColor);
-    //保存画布
+    //保存画布状态
     int saveCount = canvas.save();
     //围绕bounds中心旋转画布mGroupRotation角度
     canvas.rotate(mGroupRotation, bounds.exactCenterX(), bounds.exactCenterY());
@@ -79,39 +77,33 @@ public void draw(Canvas canvas, Rect bounds) {
     //这个绘制圆环总要设置的，无论在View的onDraw 还是在Drawable 的draw方法里都是不能紧贴边界绘制圆环的
     //否则会发现所绘制圆环的边界有一半被裁剪掉
     arcBounds.inset(mStrokeInset, mStrokeInset);
-    //这句主要是为了防止canvas调用drawArc方法绘制sweepAngle为0时闪烁的问题
-    if (mStartTrim == mEndTrim) {
-      mStartTrim = mEndTrim + getMinProgressArc();
-    }
+    //给画笔设置颜色
+    mPaint.setColor(mCurrentColor);
     //下面代码是这个动画的核心代码， Material效果的动画无非就是通过不断改变绘制弧度的开始角度和绘制弧度的大小
-    float startAngle = (mStartTrim + mRotation) * DEGREE_360;
-    float endAngle = (mEndTrim + mRotation) * DEGREE_360;
-    float sweepAngle = endAngle - startAngle;
-    canvas.drawArc(arcBounds, startAngle, sweepAngle, false, mPaint);
+    canvas.drawArc(arcBounds, mStartDegrees, mSwipeDegrees, false, mPaint);
+    //恢复画布状态
     canvas.restoreToCount(saveCount);
   }
 ```
-对于mStartTrim和mEndTrim是如何计算的呢？
+对于mStartDegrees和mSwipeDegrees是如何计算的呢？
 
 ```java
 public void computeRender(float renderProgress) {
-    //绘制的最小弧度数
-    final float minProgressArc = getMinProgressArc();
-    //下面这三行主要是为了让此次动画起始点是上次动画的结束点，因为每次动画的结束点不是明确的
-    final float originEndTrim = mOriginEndTrim;
-    final float originStartTrim = mOriginStartTrim;
-    final float originRotation = mOriginRotation;
     //更新所绘制弧度的颜色，从本次动画的最后20%进行颜色渐变切换
     updateRingColor(renderProgress);
     //动画的前50% 不断增大开始角度的大小（不改变结束角度的大小）从而不断增大绘制弧度的大小
     if (renderProgress <= START_TRIM_DURATION_OFFSET) {
-      float startTrimProgress = (renderProgress) / START_TRIM_DURATION_OFFSET;
-      mStartTrim = originStartTrim + ((MAX_PROGRESS_ARC - minProgressArc) * MATERIAL_INTERPOLATOR.getInterpolation(startTrimProgress));
+        float startTrimProgress = (renderProgress) / START_TRIM_DURATION_OFFSET;
+        mStartDegrees = mOriginStartDegrees + MAX_SWIPE_DEGREES * MATERIAL_INTERPOLATOR.getInterpolation(startTrimProgress);
     }
     //动画的后50% 不断增大结束角度的大小（不改变开始角度的大小）从而不断减小绘制弧度的大小
     if (renderProgress > START_TRIM_DURATION_OFFSET) {
-      float endTrimProgress = (renderProgress - START_TRIM_DURATION_OFFSET) / (END_TRIM_DURATION_OFFSET - START_TRIM_DURATION_OFFSET);
-      mEndTrim = originEndTrim + ((MAX_PROGRESS_ARC - minProgressArc) * MATERIAL_INTERPOLATOR.getInterpolation(endTrimProgress));
+        float endTrimProgress = (renderProgress - START_TRIM_DURATION_OFFSET) / (END_TRIM_DURATION_OFFSET - START_TRIM_DURATION_OFFSET);
+        mEndDegrees = mOriginEndDegrees + MAX_SWIPE_DEGREES * MATERIAL_INTERPOLATOR.getInterpolation(endTrimProgress);
+    }
+    //这句主要是为了防止canvas调用drawArc方法绘制sweepAngle为0时闪烁的问题
+    if (Math.abs(mEndDegrees - mStartDegrees) > MIN_SWIPE_DEGREE) {
+        mSwipeDegrees = mEndDegrees - mStartDegrees;
     }
     //下面这两行用于旋转画布是绘制的弧度看起来是在不断转动
     mGroupRotation = ((FULL_ROTATION / NUM_POINTS) * renderProgress) + (FULL_ROTATION * (mRotationCount / NUM_POINTS));
