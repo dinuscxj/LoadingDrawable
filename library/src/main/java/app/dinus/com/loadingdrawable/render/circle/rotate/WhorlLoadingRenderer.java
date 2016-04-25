@@ -18,16 +18,17 @@ import app.dinus.com.loadingdrawable.render.LoadingRenderer;
 public class WhorlLoadingRenderer extends LoadingRenderer {
     private static final Interpolator MATERIAL_INTERPOLATOR = new FastOutSlowInInterpolator();
 
-    private static final float FULL_ROTATION = 1080.0f;
-    private static final float ROTATION_FACTOR = 0.25f;
-    private static final float MAX_PROGRESS_ARC = 0.6f;
-
-    private static final float START_TRIM_DURATION_OFFSET = 0.5f;
-    private static final float END_TRIM_DURATION_OFFSET = 1.0f;
-
     private static final int DEGREE_180 = 180;
     private static final int DEGREE_360 = 360;
     private static final int NUM_POINTS = 5;
+
+    private static final float MIN_SWIPE_DEGREE = 0.1f;
+    private static final float MAX_SWIPE_DEGREES = 0.6f * DEGREE_360;
+    private static final float FULL_GROUP_ROTATION = 3.0f * DEGREE_360;
+    private static final float MAX_ROTATION_INCREMENT = 0.25f * DEGREE_360;
+
+    private static final float START_TRIM_DURATION_OFFSET = 0.5f;
+    private static final float END_TRIM_DURATION_OFFSET = 1.0f;
 
     private static final int[] DEFAULT_COLORS = new int[]{
             Color.RED, Color.GREEN, Color.BLUE
@@ -42,7 +43,7 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
             super.onAnimationRepeat(animator);
             storeOriginals();
 
-            mStartTrim = mEndTrim;
+            mStartDegrees = mEndDegrees;
             mRotationCount = (mRotationCount + 1) % (NUM_POINTS);
         }
 
@@ -57,30 +58,34 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
 
     private float mStrokeInset;
 
-    private float mEndTrim;
-    private float mRotation;
-    private float mStartTrim;
     private float mRotationCount;
     private float mGroupRotation;
-    private float mOriginEndTrim;
-    private float mOriginRotation;
-    private float mOriginStartTrim;
+
+    private float mEndDegrees;
+    private float mStartDegrees;
+    private float mSwipeDegrees;
+    private float mRotationIncrement;
+    private float mOriginEndDegrees;
+    private float mOriginStartDegrees;
+    private float mOriginRotationIncrement;
 
     public WhorlLoadingRenderer(Context context) {
         super(context);
+        init();
         setupPaint();
         addRenderListener(mAnimatorListener);
     }
 
-    private void setupPaint() {
+    private void init() {
         mColors = DEFAULT_COLORS;
+        setInsets((int) getWidth(), (int) getHeight());
+    }
 
+    private void setupPaint() {
         mPaint.setAntiAlias(true);
         mPaint.setStrokeWidth(getStrokeWidth());
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
-
-        setInsets((int) getWidth(), (int) getHeight());
     }
 
     @Override
@@ -92,18 +97,11 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
         arcBounds.set(bounds);
         arcBounds.inset(mStrokeInset, mStrokeInset);
 
-        if (mStartTrim == mEndTrim) {
-            mStartTrim = mEndTrim + getMinProgressArc();
-        }
-
-        float startAngle = (mStartTrim + mRotation) * DEGREE_360;
-        float endAngle = (mEndTrim + mRotation) * DEGREE_360;
-        float sweepAngle = endAngle - startAngle;
-
         for (int i = 0; i < mColors.length; i++) {
             mPaint.setStrokeWidth(getStrokeWidth() / (i + 1));
             mPaint.setColor(mColors[i]);
-            canvas.drawArc(createArcBounds(arcBounds, i), startAngle + DEGREE_180 * (i % 2), sweepAngle, false, mPaint);
+            canvas.drawArc(createArcBounds(arcBounds, i), mStartDegrees + DEGREE_180 * (i % 2),
+                    mSwipeDegrees, false, mPaint);
         }
 
         canvas.restoreToCount(saveCount);
@@ -128,27 +126,26 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
 
     @Override
     public void computeRender(float renderProgress) {
-        final float minProgressArc = getMinProgressArc();
-        final float originEndTrim = mOriginEndTrim;
-        final float originStartTrim = mOriginStartTrim;
-        final float originRotation = mOriginRotation;
-
         // Moving the start trim only occurs in the first 50% of a
         // single ring animation
         if (renderProgress <= START_TRIM_DURATION_OFFSET) {
             float startTrimProgress = (renderProgress) / (1.0f - START_TRIM_DURATION_OFFSET);
-            mStartTrim = originStartTrim + ((MAX_PROGRESS_ARC - minProgressArc) * MATERIAL_INTERPOLATOR.getInterpolation(startTrimProgress));
+            mStartDegrees = mOriginStartDegrees + MAX_SWIPE_DEGREES * MATERIAL_INTERPOLATOR.getInterpolation(startTrimProgress);
         }
 
         // Moving the end trim starts after 50% of a single ring
         // animation completes
         if (renderProgress > START_TRIM_DURATION_OFFSET) {
             float endTrimProgress = (renderProgress - START_TRIM_DURATION_OFFSET) / (END_TRIM_DURATION_OFFSET - START_TRIM_DURATION_OFFSET);
-            mEndTrim = originEndTrim + ((MAX_PROGRESS_ARC - minProgressArc) * MATERIAL_INTERPOLATOR.getInterpolation(endTrimProgress));
+            mEndDegrees = mOriginEndDegrees + MAX_SWIPE_DEGREES * MATERIAL_INTERPOLATOR.getInterpolation(endTrimProgress);
         }
 
-        mGroupRotation = ((FULL_ROTATION / NUM_POINTS) * renderProgress) + (FULL_ROTATION * (mRotationCount / NUM_POINTS));
-        mRotation = originRotation + (ROTATION_FACTOR * renderProgress);
+        if (Math.abs(mEndDegrees - mStartDegrees) > MIN_SWIPE_DEGREE) {
+            mSwipeDegrees = mEndDegrees - mStartDegrees;
+        }
+
+        mGroupRotation = ((FULL_GROUP_ROTATION / NUM_POINTS) * renderProgress) + (FULL_GROUP_ROTATION * (mRotationCount / NUM_POINTS));
+        mRotationIncrement = mOriginRotationIncrement + (MAX_ROTATION_INCREMENT * renderProgress);
 
         invalidateSelf();
     }
@@ -180,33 +177,6 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
         invalidateSelf();
     }
 
-    public void setStartTrim(float startTrim) {
-        mStartTrim = startTrim;
-        invalidateSelf();
-    }
-
-    public float getStartTrim() {
-        return mStartTrim;
-    }
-
-    public void setEndTrim(float endTrim) {
-        mEndTrim = endTrim;
-        invalidateSelf();
-    }
-
-    public float getEndTrim() {
-        return mEndTrim;
-    }
-
-    public void setRotation(float rotation) {
-        mRotation = rotation;
-        invalidateSelf();
-    }
-
-    public float getRotation() {
-        return mRotation;
-    }
-
     public void setInsets(int width, int height) {
         final float minEdge = (float) Math.min(width, height);
         float insets;
@@ -219,21 +189,20 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
     }
 
     private void storeOriginals() {
-        mOriginStartTrim = mStartTrim;
-        mOriginEndTrim = mEndTrim;
-        mOriginRotation = mRotation;
+        mOriginEndDegrees = mEndDegrees;
+        mOriginStartDegrees = mStartDegrees;
+        mOriginRotationIncrement = mRotationIncrement;
     }
 
     private void resetOriginals() {
-        mOriginStartTrim = 0;
-        mOriginEndTrim = 0;
-        mOriginRotation = 0;
-        setStartTrim(0);
-        setEndTrim(0);
-        setRotation(0);
-    }
+        mOriginEndDegrees = 0;
+        mOriginStartDegrees = 0;
+        mOriginRotationIncrement = 0;
 
-    private float getMinProgressArc() {
-        return (float) Math.toRadians(getStrokeWidth() / (2 * Math.PI * getCenterRadius()));
+        mEndDegrees = 0;
+        mStartDegrees = 0;
+        mRotationIncrement = 0;
+
+        mSwipeDegrees = MIN_SWIPE_DEGREE;
     }
 }

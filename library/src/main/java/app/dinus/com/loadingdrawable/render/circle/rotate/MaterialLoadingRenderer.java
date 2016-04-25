@@ -72,7 +72,6 @@ public class MaterialLoadingRenderer extends LoadingRenderer {
     private float mOriginStartDegrees;
     private float mOriginRotationIncrement;
 
-
     public MaterialLoadingRenderer(Context context) {
         super(context);
         init();
@@ -194,14 +193,14 @@ public class MaterialLoadingRenderer extends LoadingRenderer {
     }
 
     private void storeOriginals() {
-        mOriginStartDegrees = mStartDegrees;
         mOriginEndDegrees = mEndDegrees;
+        mOriginStartDegrees = mStartDegrees;
         mOriginRotationIncrement = mRotationIncrement;
     }
 
     private void resetOriginals() {
-        mOriginStartDegrees = 0;
         mOriginEndDegrees = 0;
+        mOriginStartDegrees = 0;
         mOriginRotationIncrement = 0;
 
         mEndDegrees = 0;
@@ -213,10 +212,6 @@ public class MaterialLoadingRenderer extends LoadingRenderer {
 
     private int getStartingColor() {
         return mColors[mColorIndex];
-    }
-
-    private float getMinDegrees() {
-        return (float) Math.toDegrees(getStrokeWidth() / (2 * Math.PI * getCenterRadius()));
     }
 
     private void updateRingColor(float interpolatedTime) {
