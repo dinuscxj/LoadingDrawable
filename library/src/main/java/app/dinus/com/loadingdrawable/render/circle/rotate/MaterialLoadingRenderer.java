@@ -40,10 +40,10 @@ public class MaterialLoadingRenderer extends LoadingRenderer {
     @Override
     public void onAnimationRepeat(Animator animator) {
       super.onAnimationRepeat(animator);
-      storeOriginals();
       goToNextColor();
-
-      mStartTrim = mEndTrim;
+	  
+      mStartTrim = mEndTrim + getMinProgressArc();
+      storeOriginals();
       mRotationCount = (mRotationCount + 1) % (NUM_POINTS);
     }
 
@@ -97,10 +97,6 @@ public class MaterialLoadingRenderer extends LoadingRenderer {
     RectF arcBounds = mTempBounds;
     arcBounds.set(bounds);
     arcBounds.inset(mStrokeInset, mStrokeInset);
-
-    if (mStartTrim == mEndTrim) {
-      mStartTrim = mEndTrim + getMinProgressArc();
-    }
 
     float startAngle = (mStartTrim + mRotation) * DEGREE_360;
     float endAngle = (mEndTrim + mRotation) * DEGREE_360;
