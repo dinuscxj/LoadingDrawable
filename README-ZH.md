@@ -168,16 +168,12 @@ public void computeRender(float renderProgress) {
        mEndTrim = -MATERIAL_INTERPOLATOR.getInterpolation(startTrimProgress);
        mRotation = START_TRIM_INIT_ROTATION + START_TRIM_MAX_ROTATION
                * MATERIAL_INTERPOLATOR.getInterpolation(startTrimProgress);
-       invalidateSelf();
-       return ;
      }
      //动画在（START_TRIM_DURATION_OFFSET， WAVE_DURATION_OFFSET］之间不断扩大水波纹的半径
      if (renderProgress <= WAVE_DURATION_OFFSET && renderProgress > START_TRIM_DURATION_OFFSET) {
        final float waveProgress = (renderProgress - START_TRIM_DURATION_OFFSET)
                / (WAVE_DURATION_OFFSET - START_TRIM_DURATION_OFFSET);
        mWaveProgress = ACCELERATE_INTERPOLATOR.getInterpolation(waveProgress);
-       invalidateSelf();
-       return;
      }
      //动画在（WAVE_DURATION_OFFSET， BALL_SKIP_DURATION_OFFSET］之间通过PathMeasure获取当前跳动的小球
      //应该所在的坐标，不熟悉PathMeasure需要google和baidu一下了。做复杂动画必须了解的知识点
@@ -189,8 +185,6 @@ public void computeRender(float renderProgress) {
                / (BALL_SKIP_DURATION_OFFSET - WAVE_DURATION_OFFSET);
        mPathMeasure.getPosTan(ballSkipProgress * mPathMeasure.getLength(), mCurrentPosition, null);
        mWaveProgress = 1.0f;
-       invalidateSelf();
-       return;
      }
      //动画在（BALL_SKIP_DURATION_OFFSET， BALL_SCALE_DURATION_OFFSET］之间通过mScale缩放跳动小球的半径
      if (renderProgress <= BALL_SCALE_DURATION_OFFSET && renderProgress > BALL_SKIP_DURATION_OFFSET) {
@@ -202,8 +196,6 @@ public void computeRender(float renderProgress) {
        } else {
          mScale = 2.0f - ACCELERATE_INTERPOLATOR.getInterpolation((ballScaleProgress - 0.5f) * 2.0f) * 2.0f;
        }
-       invalidateSelf();
-       return;
      }
      //动画的在[BALL_SCALE_DURATION_OFFSET， 1.0f］不断增加结束角度的大小（不改变开始角度的大小）从而不断减小绘制弧度的大小
      //并不断加大mRotation（正向增大， END_TRIM_INIT_ROTATION、 END_TRIM_MAX_ROTATION 都是正数）从而正向旋转
@@ -217,8 +209,6 @@ public void computeRender(float renderProgress) {
        //重置参数，防止不必要的绘制
        mScale = 1.0f;
        mPathMeasure = null;
-       invalidateSelf();
-       return;
      }
    }
    //小球跳动路径的核心路径计算函数

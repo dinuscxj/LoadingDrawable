@@ -168,8 +168,6 @@ public class DanceLoadingRenderer extends LoadingRenderer {
     if (renderProgress <= RING_FORWARD_END_ROTATE_DURATION_OFFSET && renderProgress > RING_FORWARD_START_ROTATE_DURATION_OFFSET) {
       final float forwardRotateProgress = (renderProgress - RING_FORWARD_START_ROTATE_DURATION_OFFSET) / (RING_FORWARD_END_ROTATE_DURATION_OFFSET - RING_FORWARD_START_ROTATE_DURATION_OFFSET);
       mRotation = DEGREE_360 * MATERIAL_INTERPOLATOR.getInterpolation(forwardRotateProgress);
-    } else if (renderProgress > RING_FORWARD_END_ROTATE_DURATION_OFFSET) {
-      mRotation = 0.0f;
     }
 
     if (renderProgress <= CENTER_CIRCLE_FORWARD_END_SCALE_DURATION_OFFSET && renderProgress > CENTER_CIRCLE_FORWARD_START_SCALE_DURATION_OFFSET) {
@@ -201,6 +199,8 @@ public class DanceLoadingRenderer extends LoadingRenderer {
     if (renderProgress <= RING_REVERSAL_END_ROTATE_DURATION_OFFSET && renderProgress > RING_REVERSAL_START_ROTATE_DURATION_OFFSET) {
       float scaledTime = (renderProgress - RING_REVERSAL_START_ROTATE_DURATION_OFFSET) / (RING_REVERSAL_END_ROTATE_DURATION_OFFSET - RING_REVERSAL_START_ROTATE_DURATION_OFFSET);
       mRotation = DEGREE_360 * MATERIAL_INTERPOLATOR.getInterpolation(scaledTime) - 360;
+    } else if (renderProgress > RING_REVERSAL_END_ROTATE_DURATION_OFFSET) {
+      mRotation = 0.0f;
     }
 
     if (renderProgress <= BALL_REVERSAL_END_ENTER_DURATION_OFFSET && renderProgress > BALL_REVERSAL_START_ENTER_DURATION_OFFSET) {
@@ -245,8 +245,6 @@ public class DanceLoadingRenderer extends LoadingRenderer {
         POINT_Y[i] += originCoordinateY;
       }
     }
-
-    invalidateSelf();
   }
 
   @Override

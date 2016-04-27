@@ -146,8 +146,6 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
 
         mGroupRotation = ((FULL_GROUP_ROTATION / NUM_POINTS) * renderProgress) + (FULL_GROUP_ROTATION * (mRotationCount / NUM_POINTS));
         mRotationIncrement = mOriginRotationIncrement + (MAX_ROTATION_INCREMENT * renderProgress);
-
-        invalidateSelf();
     }
 
     @Override

@@ -132,18 +132,12 @@ public class GuardLoadingRenderer extends LoadingRenderer {
       mEndTrim = -MATERIAL_INTERPOLATOR.getInterpolation(startTrimProgress);
       mRotation = START_TRIM_INIT_ROTATION + START_TRIM_MAX_ROTATION
               * MATERIAL_INTERPOLATOR.getInterpolation(startTrimProgress);
-
-      invalidateSelf();
-      return ;
     }
 
     if (renderProgress <= WAVE_DURATION_OFFSET && renderProgress > START_TRIM_DURATION_OFFSET) {
       final float waveProgress = (renderProgress - START_TRIM_DURATION_OFFSET)
               / (WAVE_DURATION_OFFSET - START_TRIM_DURATION_OFFSET);
       mWaveProgress = ACCELERATE_INTERPOLATOR.getInterpolation(waveProgress);
-
-      invalidateSelf();
-      return;
     }
 
     if (renderProgress <= BALL_SKIP_DURATION_OFFSET && renderProgress > WAVE_DURATION_OFFSET) {
@@ -156,8 +150,6 @@ public class GuardLoadingRenderer extends LoadingRenderer {
       mPathMeasure.getPosTan(ballSkipProgress * mPathMeasure.getLength(), mCurrentPosition, null);
 
       mWaveProgress = 1.0f;
-      invalidateSelf();
-      return;
     }
 
     if (renderProgress <= BALL_SCALE_DURATION_OFFSET && renderProgress > BALL_SKIP_DURATION_OFFSET) {
@@ -169,9 +161,6 @@ public class GuardLoadingRenderer extends LoadingRenderer {
       } else {
         mScale = 2.0f - ACCELERATE_INTERPOLATOR.getInterpolation((ballScaleProgress - 0.5f) * 2.0f) * 2.0f;
       }
-
-      invalidateSelf();
-      return;
     }
 
     if (renderProgress >= BALL_SCALE_DURATION_OFFSET) {
@@ -184,8 +173,6 @@ public class GuardLoadingRenderer extends LoadingRenderer {
 
       mScale = 1.0f;
       mPathMeasure = null;
-      invalidateSelf();
-      return;
     }
   }
 
