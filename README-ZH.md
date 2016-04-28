@@ -21,7 +21,7 @@
  * DanceLoadingRenderer
  * CollisionLoadingDrawable
 
-## 代办事项
+## 待办事项
 当我感觉bug比较少的时候，我会添加一个gradle依赖。 所以在推上去之前希望大家多提提建议和bug.
 
 ## 用法
