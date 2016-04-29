@@ -8,8 +8,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAllCaps="false"
+        android:text="SceneryActivity"
+        android:id="@+id/scenery" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:layout_marginTop="50dp"
         android:text="CircleRotateActivity"
-        android:id="@+id/circle_rotate"  />
+        android:id="@+id/circle_rotate" />
 
     <Button
         android:layout_width="wrap_content"
@@ -17,6 +25,6 @@
         android:layout_marginTop="50dp"
         android:textAllCaps="false"
         android:text="CircleJumpActivity"
-        android:id="@+id/circle_jump"/>
+        android:id="@+id/circle_jump" />
 
 </LinearLayout>

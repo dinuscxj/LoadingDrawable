@@ -1,22 +1,13 @@
 package app.dinus.com.example;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-
-import app.dinus.com.loadingdrawable.render.circle.jump.CollisionLoadingRenderer;
-import app.dinus.com.loadingdrawable.render.circle.rotate.GearLoadingRenderer;
-import app.dinus.com.loadingdrawable.render.circle.rotate.LevelLoadingRenderer;
-import app.dinus.com.loadingdrawable.LoadingDrawable;
-import app.dinus.com.loadingdrawable.render.circle.rotate.MaterialLoadingRenderer;
-import app.dinus.com.loadingdrawable.render.circle.jump.SwapLoadingRenderer;
-import app.dinus.com.loadingdrawable.render.circle.rotate.WhorlLoadingRenderer;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+    private Button mBtnScenery;
     private Button mBtnCircleJump;
     private Button mBtnCircleRotate;
 
@@ -25,9 +16,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mBtnScenery = (Button) findViewById(R.id.scenery);
         mBtnCircleJump = (Button) findViewById(R.id.circle_jump);
         mBtnCircleRotate = (Button) findViewById(R.id.circle_rotate);
 
+        mBtnScenery.setOnClickListener(this);
         mBtnCircleJump.setOnClickListener(this);
         mBtnCircleRotate.setOnClickListener(this);
     }
@@ -35,13 +28,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            case R.id.scenery:
+                SceneryActivity.startActivity(this);
+                break;
             case R.id.circle_jump:
-                Intent footerIntent = new Intent(MainActivity.this, CircleJumpActivity.class);
-                startActivity(footerIntent);
+                CircleJumpActivity.startActivity(this);
                 break;
             case R.id.circle_rotate:
-                Intent headerIntent = new Intent(MainActivity.this, CircleRotateActivity.class);
-                startActivity(headerIntent);
+                CircleRotateActivity.startActivity(this);
                 break;
             default:
                 break;

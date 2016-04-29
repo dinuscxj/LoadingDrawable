@@ -21,6 +21,8 @@ public class DanceLoadingRenderer extends LoadingRenderer {
   private static final Interpolator ACCELERATE_INTERPOLATOR = new AccelerateInterpolator();
   private static final Interpolator DECELERATE_INTERPOLATOR = new DecelerateInterpolator();
 
+  private static final long ANIMATION_DURATION = 1888;
+
   private static final float DEFAULT_STROKE_WIDTH = 1.5f;
   private static final float DEFAULT_DANCE_BALL_RADIUS = 2.0f;
 
@@ -78,20 +80,25 @@ public class DanceLoadingRenderer extends LoadingRenderer {
 
   public DanceLoadingRenderer(Context context) {
     super(context);
+    init(context);
+    setupPaint();
+  }
+
+  private void init(Context context) {
     DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+
     mStrokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_STROKE_WIDTH, displayMetrics);
     mDanceBallRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_DANCE_BALL_RADIUS, displayMetrics);
 
-    setupPaint();
+    setColor(DEFAULT_COLOR);
+    setInsets((int) getWidth(), (int) getHeight());
+    setDuration(ANIMATION_DURATION);
   }
 
   private void setupPaint() {
     mPaint.setAntiAlias(true);
     mPaint.setStrokeWidth(getStrokeWidth());
     mPaint.setStyle(Paint.Style.STROKE);
-
-    setColor(DEFAULT_COLOR);
-    setInsets((int) getWidth(), (int) getHeight());
   }
 
   @Override

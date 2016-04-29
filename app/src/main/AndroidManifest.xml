@@ -22,6 +22,9 @@
 
         <activity android:name=".CircleRotateActivity"
             android:label="@string/label_circle_rotate"/>
+
+        <activity android:name=".SceneryActivity"
+            android:label="@string/label_scenery"/>
     </application>
 
 </manifest>

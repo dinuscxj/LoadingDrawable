@@ -70,7 +70,7 @@ public abstract class LoadingRenderer {
     mStrokeWidth = DEFAULT_STROKE_WIDTH * screenDensity;
     mCenterRadius = DEFAULT_CENTER_RADIUS * screenDensity;
 
-    mDuration = ANIMATION_DURATION * 10;
+    mDuration = ANIMATION_DURATION;
   }
 
   private void setupAnimators() {

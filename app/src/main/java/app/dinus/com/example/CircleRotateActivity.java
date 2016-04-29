@@ -1,5 +1,7 @@
 package app.dinus.com.example;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
@@ -20,6 +22,11 @@ public class CircleRotateActivity extends AppCompatActivity {
     private ImageView mIvWhorl;
     private ImageView mIvLevel;
     private ImageView mIvMaterial;
+
+    public static void startActivity(Context context) {
+        Intent intent = new Intent(context, CircleRotateActivity.class);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
