@@ -35,14 +35,13 @@ import app.dinus.com.loadingdrawable.render.LoadingRenderer;
 
 public class ElectricFanLoadingRenderer extends LoadingRenderer {
   private static final Interpolator LINEAR_INTERPOLATOR = new LinearInterpolator();
+  private static final Interpolator MATERIAL_INTERPOLATOR = new FastOutSlowInInterpolator();
   private static final Interpolator DECELERATE_INTERPOLATOR = new DecelerateInterpolator();
   private static final Interpolator ACCELERATE_INTERPOLATOR = new AccelerateInterpolator();
-  private static final Interpolator FASTOUTSLOWIN_INTERPOLATOR = new FastOutSlowInInterpolator();
   private static final Interpolator FASTOUTLINEARIN_INTERPOLATOR = new FastOutLinearInInterpolator();
 
   private static final Interpolator[] INTERPOLATORS = new Interpolator[]{LINEAR_INTERPOLATOR,
-      DECELERATE_INTERPOLATOR, ACCELERATE_INTERPOLATOR, FASTOUTLINEARIN_INTERPOLATOR, FASTOUTSLOWIN_INTERPOLATOR};
-
+      DECELERATE_INTERPOLATOR, ACCELERATE_INTERPOLATOR, FASTOUTLINEARIN_INTERPOLATOR, MATERIAL_INTERPOLATOR};
   private static final List<LeafHolder> mLeafHolders = new ArrayList<>();
   private static final Random mRandom = new Random();
   private final Animator.AnimatorListener mAnimatorListener = new AnimatorListenerAdapter() {
@@ -366,7 +365,7 @@ public class ElectricFanLoadingRenderer extends LoadingRenderer {
   }
 
   private ValueAnimator getBezierValueAnimator(LeafHolder target, RectF leafFlyRect, float progress) {
-    BezierEvaluator evaluator = new BezierEvaluator(getFirstPointF(leafFlyRect), getSecondPointF(leafFlyRect));
+    BezierEvaluator evaluator = new BezierEvaluator(getPoint1(leafFlyRect), getPoint2(leafFlyRect));
 
     int leafFlyStartY = (int) (mCurrentProgressBounds.bottom - mLeafDrawable.getIntrinsicHeight());
     int leafFlyRange = (int) (mCurrentProgressBounds.height() - mLeafDrawable.getIntrinsicHeight());
@@ -380,23 +379,22 @@ public class ElectricFanLoadingRenderer extends LoadingRenderer {
     animator.addUpdateListener(new BezierListener(target));
     animator.setTarget(target);
 
-    //TODO
     animator.setDuration((long) ((mRandom.nextInt(300) + getDuration() * DEFAULT_LEAF_FLY_DURATION_FACTOR) * (1.0f - progress)));
 
     return animator;
   }
 
-  private PointF getFirstPointF(RectF leafFlyRect) {
+  //get the pointF which belong to the right half side
+  private PointF getPoint1(RectF leafFlyRect) {
     PointF point = new PointF();
-    //the right half
     point.x = leafFlyRect.right - mRandom.nextInt((int) (leafFlyRect.width() / 2));
     point.y = (int) (leafFlyRect.bottom - mRandom.nextInt((int) leafFlyRect.height()));
     return point;
   }
 
-  private PointF getSecondPointF(RectF leafFlyRect) {
+  //get the pointF which belong to the left half side
+  private PointF getPoint2(RectF leafFlyRect) {
     PointF point = new PointF();
-    //the left half
     point.x = leafFlyRect.left + mRandom.nextInt((int) (leafFlyRect.width() / 2));
     point.y = (int) (leafFlyRect.bottom - mRandom.nextInt((int) leafFlyRect.height()));
     return point;
@@ -416,21 +414,17 @@ public class ElectricFanLoadingRenderer extends LoadingRenderer {
       this.point2 = point2;
     }
 
-    //Third-order Bezier curve formula: B(t) = P0 * (1-t)^3 + 3 * P1 * t * (1-t)^2 + 3 * P2 * t^2 * (1-t) + P3 * t^3
+    //Third-order Bezier curve formula: B(t) = point0 * (1-t)^3 + 3 * point1 * t * (1-t)^2 + 3 * point2 * t^2 * (1-t) + point3 * t^3
     @Override
-    public PointF evaluate(float fraction, PointF startValue, PointF endValue) {
+    public PointF evaluate(float fraction, PointF point0, PointF point3) {
 
-      float fractionLeft = 1.0f - fraction;
-      PointF point = new PointF();
+      float t = fraction;
+      float tLeft = 1.0f - t;
 
-      point.x = (int) (fractionLeft * fractionLeft * fractionLeft * (startValue.x) + 3
-          * fractionLeft * fractionLeft * fraction * (point1.x) + 3 * fractionLeft
-          * fraction * fraction * (point2.x) + fraction * fraction * fraction * (endValue.x));
+      float x = (float) (point0.x * Math.pow(tLeft, 3) + 3 * point1.x * t * Math.pow(tLeft, 2) + 3 * point2.x * Math.pow(t, 2) * tLeft + point3.x * Math.pow(t, 3));
+      float y = (float) (point0.y * Math.pow(tLeft, 3) + 3 * point1.y * t * Math.pow(tLeft, 2) + 3 * point2.y * Math.pow(t, 2) * tLeft + point3.y * Math.pow(t, 3));
 
-      point.y = (int) (fractionLeft * fractionLeft * fractionLeft * (startValue.y) + 3
-          * fractionLeft * fractionLeft * fraction * (point1.y) + 3 * fractionLeft
-          * fraction * fraction * (point2.y) + fraction * fraction * fraction * (endValue.y));
-      return point;
+      return new PointF(x, y);
     }
   }
 

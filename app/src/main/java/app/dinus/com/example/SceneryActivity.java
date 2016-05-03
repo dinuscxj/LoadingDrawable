@@ -11,11 +11,14 @@ import app.dinus.com.loadingdrawable.render.circle.rotate.GearLoadingRenderer;
 import app.dinus.com.loadingdrawable.render.circle.rotate.LevelLoadingRenderer;
 import app.dinus.com.loadingdrawable.render.circle.rotate.MaterialLoadingRenderer;
 import app.dinus.com.loadingdrawable.render.circle.rotate.WhorlLoadingRenderer;
+import app.dinus.com.loadingdrawable.render.scenery.DayNightRenderer;
 import app.dinus.com.loadingdrawable.render.scenery.ElectricFanLoadingRenderer;
 
 public class SceneryActivity extends AppCompatActivity {
+    private LoadingDrawable mDayNightDrawable;
     private LoadingDrawable mElectricFanDrawable;
 
+    private ImageView mIvDayNight;
     private ImageView mIvElectricFan;
 
     public static void startActivity(Context context) {
@@ -28,21 +31,26 @@ public class SceneryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scenery);
 
+        mIvDayNight = (ImageView) findViewById(R.id.day_night_view);
         mIvElectricFan = (ImageView) findViewById(R.id.electric_fan_view);
 
+        mDayNightDrawable = new LoadingDrawable(new DayNightRenderer(this));
         mElectricFanDrawable = new LoadingDrawable(new ElectricFanLoadingRenderer(this));
 
+        mIvDayNight.setImageDrawable(mDayNightDrawable);
         mIvElectricFan.setImageDrawable(mElectricFanDrawable);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        mDayNightDrawable.start();
         mElectricFanDrawable.start();
     }
 
     @Override
     protected void onStop() {
+        mDayNightDrawable.stop();
         mElectricFanDrawable.stop();
         super.onStop();
     }

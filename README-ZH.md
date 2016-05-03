@@ -5,21 +5,27 @@
  一些酷炫的加载动画， 可以与任何View配合使用，作为加载动画或者Progressbar, 此外很适合与[RecyclerRefreshLayout](https://github.com/dinuscxj/RecyclerRefreshLayout)
  配合使用作为刷新的loading 动画
 
+![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/SceneryDrawable.gif?width=300)
 ![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/CircleJumpDrawable.gif?width=300)
 ![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/CircleRotateDrawable.gif?width=300)
 
 ## 功能
 #### 圆形滚动系列
- * GearLoadingDrawable
- * WhorlLoadingDrawable
- * LevelLoadingDrawable
- * MaterialLoadingDrawable
+ * GearLoadingRenderer
+ * WhorlLoadingRenderer
+ * LevelLoadingRenderer
+ * MaterialLoadingRenderer
 
 #### 圆形跳动系列
- * SwapLoadingDrawable
+ * SwapLoadingRenderer
  * GuardLoadingRenderer
  * DanceLoadingRenderer
- * CollisionLoadingDrawable
+ * CollisionLoadingRenderer
+
+#### 风景系列
+ *DayNightRenderer
+ *ElectricFanLoadingRenderer
+
 
 ## 待办事项
 当我感觉bug比较少的时候，我会添加一个gradle依赖。 所以在推上去之前希望大家多提提建议和bug.

@@ -116,7 +116,7 @@ public class MaterialLoadingRenderer extends LoadingRenderer {
         // Moving the start trim only occurs in the first 50% of a
         // single ring animation
         if (renderProgress <= START_TRIM_DURATION_OFFSET) {
-            float startTrimProgress = (renderProgress) / START_TRIM_DURATION_OFFSET;
+            float startTrimProgress = renderProgress / START_TRIM_DURATION_OFFSET;
             mStartDegrees = mOriginStartDegrees + MAX_SWIPE_DEGREES * MATERIAL_INTERPOLATOR.getInterpolation(startTrimProgress);
         }
 
