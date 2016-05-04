@@ -82,7 +82,6 @@ public class DayNightRenderer extends LoadingRenderer {
 
     private int mCurrentColor;
 
-    private float mStrokeInsetX;
     private float mMaxStarOffsets;
 
     private float mStarRadius;
@@ -141,7 +140,6 @@ public class DayNightRenderer extends LoadingRenderer {
         mCurrentColor = DEFAULT_COLOR;
 
         setDuration(ANIMATION_DURATION);
-        setInsets((int) getWidth(), (int) getHeight());
     }
 
     private void setupPaint() {
@@ -330,10 +328,6 @@ public class DayNightRenderer extends LoadingRenderer {
         path.addArc(moonRectF, -90, 180);
         path.quadTo(moonCenterX + mSun$MoonRadius / 2.0f, moonCenterY, moonCenterX, moonCenterY - mSun$MoonRadius);
         return path;
-    }
-
-    private void setInsets(int width, int height) {
-        mStrokeInsetX = width / 8;
     }
 
     private class StarHolder {

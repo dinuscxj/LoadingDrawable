@@ -23,8 +23,8 @@
  * CollisionLoadingRenderer
 
 #### 风景系列
- *DayNightRenderer
- *ElectricFanLoadingRenderer
+ * DayNightRenderer
+ * ElectricFanLoadingRenderer
 
 
 ## 待办事项
