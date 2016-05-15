@@ -25,6 +25,10 @@
 
         <activity android:name=".SceneryActivity"
             android:label="@string/label_scenery"/>
+
+        <activity android:name=".AnimalActivity"
+            android:hardwareAccelerated="false"
+            android:label="@string/label_animal"/>
     </application>
 
 </manifest>

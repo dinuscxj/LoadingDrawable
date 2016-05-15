@@ -7,11 +7,20 @@
  some android loading drawable, can be combined with any View as the loading View and Progressbar,
  and is especially suitable for the loading animation of the [RecyclerRefreshLayout](https://github.com/dinuscxj/RecyclerRefreshLayout).
 
+![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/AnimalDrawable.gif?width=300)
 ![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/SceneryDrawable.gif?width=300)
 ![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/CircleJumpDrawable.gif?width=300)
 ![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/CircleRotateDrawable.gif?width=300)
 
 ## Features
+#### Animal
+ * FishLoadingRenderer
+ * GhostsLoadingEyeRenderer
+
+#### Scenery
+ * DayNightLoadingRenderer
+ * ElectricFanLoadingRenderer
+
 #### Circle Rotate
  * GearLoadingRenderer
  * WhorlLoadingRenderer
@@ -23,10 +32,6 @@
  * GuardLoadingRenderer
  * DanceLoadingRenderer
  * CollisionLoadingRenderer
-
-#### Scenery
- * DayNightRenderer
- * ElectricFanLoadingRenderer
 
 ## TODO
  When I feel less bugs enough, I will add a gradle dependency. So I hope you will make more Suggestions or Issues.

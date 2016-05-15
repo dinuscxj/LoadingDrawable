@@ -7,11 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import app.dinus.com.loadingdrawable.LoadingDrawable;
-import app.dinus.com.loadingdrawable.render.circle.rotate.GearLoadingRenderer;
-import app.dinus.com.loadingdrawable.render.circle.rotate.LevelLoadingRenderer;
-import app.dinus.com.loadingdrawable.render.circle.rotate.MaterialLoadingRenderer;
-import app.dinus.com.loadingdrawable.render.circle.rotate.WhorlLoadingRenderer;
-import app.dinus.com.loadingdrawable.render.scenery.DayNightRenderer;
+import app.dinus.com.loadingdrawable.render.scenery.DayNightLoadingRenderer;
 import app.dinus.com.loadingdrawable.render.scenery.ElectricFanLoadingRenderer;
 
 public class SceneryActivity extends AppCompatActivity {
@@ -34,7 +30,7 @@ public class SceneryActivity extends AppCompatActivity {
         mIvDayNight = (ImageView) findViewById(R.id.day_night_view);
         mIvElectricFan = (ImageView) findViewById(R.id.electric_fan_view);
 
-        mDayNightDrawable = new LoadingDrawable(new DayNightRenderer(this));
+        mDayNightDrawable = new LoadingDrawable(new DayNightLoadingRenderer(this));
         mElectricFanDrawable = new LoadingDrawable(new ElectricFanLoadingRenderer(this));
 
         mIvDayNight.setImageDrawable(mDayNightDrawable);

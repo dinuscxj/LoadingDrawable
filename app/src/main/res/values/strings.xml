@@ -3,6 +3,7 @@
     <string name="label_circle_rotate">CircleRotateActivity</string>
     <string name="label_circle_jump">CircleJumpActivity</string>
     <string name="label_scenery">SceneryActivity</string>
+    <string name="label_animal">AnimalActivity</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

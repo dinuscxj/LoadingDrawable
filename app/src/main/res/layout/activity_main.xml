@@ -2,27 +2,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layout_marginTop="50dp"
     android:gravity="center">
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAllCaps="false"
+        android:text="AnimalActivity"
+        android:id="@+id/animal" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
         android:text="SceneryActivity"
+        android:layout_marginTop="30dp"
         android:id="@+id/scenery" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAllCaps="false"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:text="CircleRotateActivity"
         android:id="@+id/circle_rotate" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:textAllCaps="false"
         android:text="CircleJumpActivity"
         android:id="@+id/circle_jump" />

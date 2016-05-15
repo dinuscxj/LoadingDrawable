@@ -77,6 +77,8 @@ public abstract class LoadingRenderer {
     mRenderAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
     mRenderAnimator.setRepeatCount(Animation.INFINITE);
     mRenderAnimator.setRepeatMode(Animation.RESTART);
+    //fuck you! the default interpolator is AccelerateDecelerateInterpolator
+    mRenderAnimator.setInterpolator(new LinearInterpolator());
     mRenderAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
       @Override
       public void onAnimationUpdate(ValueAnimator animation) {

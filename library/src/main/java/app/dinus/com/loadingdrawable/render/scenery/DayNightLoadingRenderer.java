@@ -25,7 +25,7 @@ import java.util.Random;
 
 import app.dinus.com.loadingdrawable.render.LoadingRenderer;
 
-public class DayNightRenderer extends LoadingRenderer {
+public class DayNightLoadingRenderer extends LoadingRenderer {
     private static final Interpolator MATERIAL_INTERPOLATOR = new FastOutSlowInInterpolator();
     private static final Interpolator LINEAR_INTERPOLATOR = new LinearInterpolator();
     private static final Interpolator DECELERATE_INTERPOLATOR = new DecelerateInterpolator();
@@ -34,9 +34,6 @@ public class DayNightRenderer extends LoadingRenderer {
 
     private static final Interpolator[] INTERPOLATORS = new Interpolator[]{LINEAR_INTERPOLATOR,
             DECELERATE_INTERPOLATOR, ACCELERATE_INTERPOLATOR, FASTOUTLINEARIN_INTERPOLATOR, MATERIAL_INTERPOLATOR};
-
-    private static final Random mRandom = new Random();
-    private static final List<StarHolder> mStarHolders = new ArrayList<>();
 
     private static final int MAX_ALPHA = 255;
     private static final int DEGREE_360 = 360;
@@ -69,6 +66,9 @@ public class DayNightRenderer extends LoadingRenderer {
     private static final int DEFAULT_COLOR = Color.parseColor("#ff21fd8e");
 
     private static final long ANIMATION_DURATION = 5111;
+
+    private final Random mRandom = new Random();
+    private final List<StarHolder> mStarHolders = new ArrayList<>();
 
     private final Paint mPaint = new Paint();
     private final RectF mTempBounds = new RectF();
@@ -106,7 +106,7 @@ public class DayNightRenderer extends LoadingRenderer {
 
     private int mSunRayCount;
 
-    public DayNightRenderer(Context context) {
+    public DayNightLoadingRenderer(Context context) {
         super(context);
         init(context);
         setupPaint();

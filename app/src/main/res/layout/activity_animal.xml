@@ -1,0 +1,22 @@
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <ImageView
+        android:id="@+id/fish_view"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:background="#ff071c28"
+        android:layout_height="0dp" />
+
+    <ImageView
+        android:id="@+id/ghosts_eye_view"
+        android:layout_weight="1"
+        android:layout_height="0dp"
+        android:background="#ffcdcdcd"
+        android:layout_width="match_parent" />
+
+</LinearLayout>
