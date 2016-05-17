@@ -4,8 +4,11 @@
 [源码解析](http://www.jianshu.com/p/1c3c6fc1b7ff)<br/>
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-LoadingDrawable-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/3450)
 
- some android loading drawable, can be combined with any View as the loading View and Progressbar,
- and is especially suitable for the loading animation of the [RecyclerRefreshLayout](https://github.com/dinuscxj/RecyclerRefreshLayout).
+ Some android loading drawable, can be combined with any View as the loading View and Progressbar,
+ and is especially suitable for the loading animation of the [RecyclerRefreshLayout](https://github.com/dinuscxj/RecyclerRefreshLayout).<br/>
+
+ This project idea is from the [link] (http://mp.weixin.qq.com/s?__biz=MjM5MDMxOTE5NA==&mid=402703079&idx=2&sn=2fcc6746a866dcc003c68ead9b68e595&scene=2&srcid=0302A7p723KK8E5gSzLKb2ZL&from=timeline&isappinstalled=0#wechat_redirect).<br/>
+ Perhaps you prefer to use gif way to achieve : [GifLoadingView] (https://github.com/Rogero0o/GifLoadingView). <br/>
 
 ![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/AnimalDrawable.gif?width=300)
 ![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/SceneryDrawable.gif?width=300)

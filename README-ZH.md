@@ -3,7 +3,10 @@
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-LoadingDrawable-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/3450)
 
  一些酷炫的加载动画， 可以与任何View配合使用，作为加载动画或者Progressbar, 此外很适合与[RecyclerRefreshLayout](https://github.com/dinuscxj/RecyclerRefreshLayout)
- 配合使用作为刷新的loading 动画
+ 配合使用作为刷新的loading 动画<br/>
+
+ 这个项目的思路源于这个动画链接 [link] (http://mp.weixin.qq.com/s?__biz=MjM5MDMxOTE5NA==&mid=402703079&idx=2&sn=2fcc6746a866dcc003c68ead9b68e595&scene=2&srcid=0302A7p723KK8E5gSzLKb2ZL&from=timeline&isappinstalled=0#wechat_redirect).<br/>
+ 或许你更喜欢使用Gif实现 : [GifLoadingView] (https://github.com/Rogero0o/GifLoadingView). <br/>
 
 ![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/AnimalDrawable.gif?width=300)
 ![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/SceneryDrawable.gif?width=300)
