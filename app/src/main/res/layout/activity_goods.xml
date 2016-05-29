@@ -1,0 +1,22 @@
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <ImageView
+        android:id="@+id/balloon_view"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:background="#ffd4d9da"
+        android:layout_height="0dp" />
+
+    <ImageView
+        android:id="@+id/water_bottle_view"
+        android:layout_weight="1"
+        android:layout_height="0dp"
+        android:background="#ff15181d"
+        android:layout_width="match_parent" />
+
+</LinearLayout>
