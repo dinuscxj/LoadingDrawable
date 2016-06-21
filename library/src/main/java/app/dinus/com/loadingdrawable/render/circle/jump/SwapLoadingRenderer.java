@@ -80,7 +80,7 @@ public class SwapLoadingRenderer extends LoadingRenderer {
         float intervalWidth = circleRadius;
 
         float circleDiameter = mSwapIndex == CIRCLE_COUNT - 1
-                ? circleRadius * 2 * (CIRCLE_COUNT + 1)
+                ? circleRadius * (CIRCLE_COUNT - 1) * 3
                 : circleRadius * 3;
 
         //x^2 + y^2 = (3 * circleRadius / 2) ^ 2
