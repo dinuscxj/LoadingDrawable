@@ -5,6 +5,7 @@
     <string name="label_scenery">SceneryActivity</string>
     <string name="label_animal">AnimalActivity</string>
     <string name="label_goods">GoodsActivity</string>
+    <string name="label_shape_change">ShapeChangeActivity</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

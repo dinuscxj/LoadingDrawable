@@ -33,6 +33,10 @@
         <activity android:name=".GoodsActivity"
             android:hardwareAccelerated="false"
             android:label="@string/label_goods"/>
+
+        <activity android:name=".ShapeChangeActivity"
+            android:hardwareAccelerated="false"
+            android:label="@string/label_shape_change"/>
     </application>
 
 </manifest>

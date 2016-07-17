@@ -1,47 +1,55 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:layout_marginTop="50dp"
-    android:gravity="center">
+    android:gravity="center"
+    android:orientation="vertical">
 
     <Button
+        android:id="@+id/shape_change"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAllCaps="false"
+        android:text="ShapeChangeActivity"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/goods"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         android:text="GoodsActivity"
-        android:id="@+id/goods" />
+        android:textAllCaps="false" />
 
     <Button
+        android:id="@+id/animal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAllCaps="false"
         android:layout_marginTop="30dp"
         android:text="AnimalActivity"
-        android:id="@+id/animal" />
+        android:textAllCaps="false" />
 
     <Button
+        android:id="@+id/scenery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAllCaps="false"
-        android:text="SceneryActivity"
         android:layout_marginTop="30dp"
-        android:id="@+id/scenery" />
+        android:text="SceneryActivity"
+        android:textAllCaps="false" />
 
     <Button
+        android:id="@+id/circle_rotate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAllCaps="false"
         android:layout_marginTop="30dp"
         android:text="CircleRotateActivity"
-        android:id="@+id/circle_rotate" />
+        android:textAllCaps="false" />
 
     <Button
+        android:id="@+id/circle_jump"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:textAllCaps="false"
         android:text="CircleJumpActivity"
-        android:id="@+id/circle_jump" />
+        android:textAllCaps="false" />
 
 </LinearLayout>

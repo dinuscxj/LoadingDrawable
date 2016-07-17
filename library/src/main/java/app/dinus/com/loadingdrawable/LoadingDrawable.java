@@ -70,11 +70,11 @@ public class LoadingDrawable extends Drawable implements Animatable {
 
   @Override
   public int getIntrinsicHeight() {
-    return (int) (mLoadingRender.getHeight() + 1);
+    return (int) mLoadingRender.getHeight();
   }
 
   @Override
   public int getIntrinsicWidth() {
-    return (int) (mLoadingRender.getWidth() + 1);
+    return (int) mLoadingRender.getWidth();
   }
 }

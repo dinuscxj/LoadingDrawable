@@ -7,7 +7,8 @@
 
  这个项目的思路源于这个动画链接 [link] (http://mp.weixin.qq.com/s?__biz=MjM5MDMxOTE5NA==&mid=402703079&idx=2&sn=2fcc6746a866dcc003c68ead9b68e595&scene=2&srcid=0302A7p723KK8E5gSzLKb2ZL&from=timeline&isappinstalled=0#wechat_redirect).<br/>
  或许你更喜欢使用Gif实现 : [GifLoadingView] (https://github.com/Rogero0o/GifLoadingView). <br/>
-
+ 
+![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/ShapeChangeDrawable.gif?width=300)
 ![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/GoodsDrawable.gif?width=300)
 ![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/AnimalDrawable.gif?width=300)
 ![](https://raw.githubusercontent.com/dinuscxj/LoadingDrawable/master/Preview/SceneryDrawable.gif?width=300)
@@ -16,6 +17,10 @@
 
 ## 功能
 
+#### 形变系列
+ * CircleBroodLoadingRenderer
+ * CoolWaitLoadingRenderer
+ 
 #### 物品系列
  * BalloonLoadingRenderer
  * WaterBottleLoadingRenderer
