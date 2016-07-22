@@ -108,6 +108,8 @@ public class BalloonLoadingRenderer extends LoadingRenderer {
         mCannulaColor = DEFAULT_CANNULA_COLOR;
         mPipeBodyColor = DEFAULT_PIPE_BODY_COLOR;
 
+        mProgressText = 10 + PERCENT_SIGN;
+
         setDuration(ANIMATION_DURATION);
     }
 
