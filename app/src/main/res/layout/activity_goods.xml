@@ -1,22 +1,24 @@
-<LinearLayout
-    android:orientation="vertical"
-    android:layout_height="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
 
-    <ImageView
+    <app.dinus.com.loadingdrawable.LoadingView
         android:id="@+id/balloon_view"
-        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:background="#ffd4d9da"
-        android:layout_height="0dp" />
-
-    <ImageView
-        android:id="@+id/water_bottle_view"
-        android:layout_weight="1"
         android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#ffd4d9da"
+        app:loading_renderer="BalloonLoadingRenderer"/>
+
+    <app.dinus.com.loadingdrawable.LoadingView
+        android:id="@+id/water_bottle_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:background="#ff15181d"
-        android:layout_width="match_parent" />
+        app:loading_renderer="WaterBottleLoadingRenderer"/>
 
 </LinearLayout>

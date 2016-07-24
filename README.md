@@ -1,6 +1,7 @@
 
 ## LoadingDrawable
 [中文版文档](https://github.com/dinuscxj/LoadingDrawable/blob/master/README-ZH.md)&nbsp;&nbsp;&nbsp;
+[前言](http://www.jianshu.com/p/6e0ac5af4e8b)&nbsp;&nbsp;&nbsp;
 [Circle系列源码解析](http://www.jianshu.com/p/1c3c6fc1b7ff)&nbsp;&nbsp;&nbsp;
 [Fish源码解析](http://blog.csdn.net/XSF50717/article/details/51494266)<br/>
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-LoadingDrawable-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/3450)
@@ -58,21 +59,23 @@
  ```
 #### In java
 
- Used with ImageView
  ```java
- ImageView.setImageDrawable(new LoadingDrawable(new GearLoadingRenderer(Context)));
- ImageView.setImageDrawable(new LoadingDrawable(new WhorlLoadingRenderer(Context)));
- ImageView.setImageDrawable(new LoadingDrawable(new LevelLoadingRenderer(Context)));
- ImageView.setImageDrawable(new LoadingDrawable(new MaterialLoadingRenderer(Context)));
-  ```
+ LoadingView.setLoadingRenderer(LoadingRenderer);
+ ```
 
- Used with View
- ```java
- View.setBackground(new LoadingDrawable(new GearLoadingRenderer(Context)));
- View.setBackground(new LoadingDrawable(new WhorlLoadingRenderer(Context)));
- View.setBackground(new LoadingDrawable(new LevelLoadingRenderer(Context)));
- View.setBackground(new LoadingDrawable(new MaterialLoadingRenderer(Context)));
+#### In xml
+
+ ```xml
+ <app.dinus.com.loadingdrawable.LoadingView
+    android:id="@+id/level_view"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:background="#fff1c02e"
+    app:loading_renderer="LevelLoadingRenderer"/>
   ```
+  
+If the LoadingView can't meet your requirements, you might need to refer to the LoadingView customize the View you need
 
 ## Misc
  If you like LoadingDrawable or use it, could you please:

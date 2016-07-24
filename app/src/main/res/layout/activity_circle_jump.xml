@@ -1,49 +1,53 @@
-<LinearLayout
-    android:orientation="vertical"
-    android:layout_height="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:layout_weight="1"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="0dp">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
 
-        <ImageView
+        <app.dinus.com.loadingdrawable.LoadingView
             android:id="@+id/collision_view"
-            android:layout_weight="1"
             android:layout_width="0dp"
-            android:background="#ffe9e4d1"
-            android:layout_height="match_parent" />
-
-        <ImageView
-            android:id="@+id/swap_view"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#ffe9e4d1"
+            app:loading_renderer="CollisionLoadingRenderer" />
+
+        <app.dinus.com.loadingdrawable.LoadingView
+            android:id="@+id/swap_view"
             android:layout_width="0dp"
-            android:background="#ff9c0000"/>
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#ff9c0000"
+            app:loading_renderer="SwapLoadingRenderer" />
     </LinearLayout>
 
     <LinearLayout
-        android:layout_weight="1"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="0dp">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
 
-        <ImageView
+        <app.dinus.com.loadingdrawable.LoadingView
             android:id="@+id/guard_view"
-            android:layout_weight="1"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:background="#ff000000"
-            android:layout_height="match_parent" />
+            app:loading_renderer="GuardLoadingRenderer" />
 
-        <ImageView
+        <app.dinus.com.loadingdrawable.LoadingView
             android:id="@+id/dance_view"
-            android:layout_weight="1"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:background="#ff94d0c1"
-            android:layout_height="match_parent" />
+            app:loading_renderer="DanceLoadingRenderer" />
     </LinearLayout>
 
 </LinearLayout>

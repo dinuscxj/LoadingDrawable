@@ -1,22 +1,23 @@
-<LinearLayout
-    android:orientation="vertical"
+<LinearLayout android:orientation="vertical"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
-    <ImageView
+    <app.dinus.com.loadingdrawable.LoadingView
         android:id="@+id/circle_brood_view"
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:background="#ffd4d9da"
-        android:layout_height="0dp" />
+        android:layout_height="0dp"
+        app:loading_renderer="CircleBroodLoadingRenderer"/>
 
-    <ImageView
+    <app.dinus.com.loadingdrawable.LoadingView
         android:id="@+id/cool_wait_view"
         android:layout_weight="1"
         android:layout_height="0dp"
         android:background="#ff1B78DD"
-        android:layout_width="match_parent" />
+        android:layout_width="match_parent"
+        app:loading_renderer="CoolWaitLoadingRenderer"/>
 
 </LinearLayout>
