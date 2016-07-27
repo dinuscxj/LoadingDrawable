@@ -15,6 +15,7 @@ import android.graphics.Region;
 import android.util.DisplayMetrics;
 import android.view.animation.Interpolator;
 
+import app.dinus.com.loadingdrawable.DensityUtil;
 import app.dinus.com.loadingdrawable.render.LoadingRenderer;
 
 public class FishLoadingRenderer extends LoadingRenderer {
@@ -31,13 +32,13 @@ public class FishLoadingRenderer extends LoadingRenderer {
 
     private static final float DEFAULT_WIDTH = 200.0f;
     private static final float DEFAULT_HEIGHT = 150.0f;
-    private static final float DEFAULT_STROKE_WIDTH = DEFAULT_PATH_FULL_LINE_SIZE;
+    private static final float DEFAULT_RIVER_BANK_WIDTH = DEFAULT_PATH_FULL_LINE_SIZE;
 
     private static final long ANIMATION_DURATION = 800;
     private static final float DOTTED_LINE_WIDTH_COUNT = (8.5f + 5.5f - 2.0f) * 2.0f * 2.0f;
     private static final float DOTTED_LINE_WIDTH_RATE = 1.0f / DOTTED_LINE_WIDTH_COUNT;
 
-    private final float[] FISH_MOVE_POINTS = new float[] {
+    private final float[] FISH_MOVE_POINTS = new float[]{
             DOTTED_LINE_WIDTH_RATE * 3.0f, DOTTED_LINE_WIDTH_RATE * 6.0f,
             DOTTED_LINE_WIDTH_RATE * 15f, DOTTED_LINE_WIDTH_RATE * 18f,
             DOTTED_LINE_WIDTH_RATE * 27.0f, DOTTED_LINE_WIDTH_RATE * 30.0f,
@@ -58,6 +59,7 @@ public class FishLoadingRenderer extends LoadingRenderer {
 
     private float mFishRotateDegrees;
 
+    private float mRiverBankWidth;
     private float mRiverWidth;
     private float mRiverHeight;
     private float mFishWidth;
@@ -75,20 +77,17 @@ public class FishLoadingRenderer extends LoadingRenderer {
     }
 
     private void init(Context context) {
-        final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        final float screenDensity = metrics.density;
+        mWidth = DensityUtil.dip2px(context, DEFAULT_WIDTH);
+        mHeight = DensityUtil.dip2px(context, DEFAULT_HEIGHT);
+        mRiverBankWidth = DensityUtil.dip2px(context, DEFAULT_RIVER_BANK_WIDTH);
 
-        mWidth = DEFAULT_WIDTH * screenDensity;
-        mHeight = DEFAULT_HEIGHT * screenDensity;
-        mStrokeWidth = DEFAULT_STROKE_WIDTH * screenDensity;
-
-        mPathFullLineSize = DEFAULT_PATH_FULL_LINE_SIZE * screenDensity;
-        mPathDottedLineSize = DEFAULT_PATH_DOTTED_LINE_SIZE * screenDensity;
-        mFishWidth = DEFAULT_FISH_WIDTH * screenDensity;
-        mFishHeight = DEFAULT_FISH_HEIGHT * screenDensity;
-        mFishEyeSize = DEFAULT_FISH_EYE_SIZE * screenDensity;
-        mRiverWidth = DEFAULT_RIVER_WIDTH * screenDensity;
-        mRiverHeight = DEFAULT_RIVER_HEIGHT * screenDensity;
+        mPathFullLineSize = DensityUtil.dip2px(context, DEFAULT_PATH_FULL_LINE_SIZE);
+        mPathDottedLineSize = DensityUtil.dip2px(context, DEFAULT_PATH_DOTTED_LINE_SIZE);
+        mFishWidth = DensityUtil.dip2px(context, DEFAULT_FISH_WIDTH);
+        mFishHeight = DensityUtil.dip2px(context, DEFAULT_FISH_HEIGHT);
+        mFishEyeSize = DensityUtil.dip2px(context, DEFAULT_FISH_EYE_SIZE);
+        mRiverWidth = DensityUtil.dip2px(context, DEFAULT_RIVER_WIDTH);
+        mRiverHeight = DensityUtil.dip2px(context, DEFAULT_RIVER_HEIGHT);
 
         mColor = DEFAULT_COLOR;
 
@@ -97,7 +96,7 @@ public class FishLoadingRenderer extends LoadingRenderer {
 
     private void setupPaint() {
         mPaint.setAntiAlias(true);
-        mPaint.setStrokeWidth(getStrokeWidth());
+        mPaint.setStrokeWidth(mRiverBankWidth);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeJoin(Paint.Join.MITER);
         mPaint.setPathEffect(new DashPathEffect(new float[]{mPathFullLineSize, mPathDottedLineSize}, mPathDottedLineSize));
@@ -229,7 +228,7 @@ public class FishLoadingRenderer extends LoadingRenderer {
         RectF rectF = new RectF(arcBounds.centerX() - mRiverWidth / 2.0f, arcBounds.centerY() - mRiverHeight / 2.0f,
                 arcBounds.centerX() + mRiverWidth / 2.0f, arcBounds.centerY() + mRiverHeight / 2.0f);
 
-        rectF.inset(mStrokeWidth / 2.0f, mStrokeWidth / 2.0f);
+        rectF.inset(mRiverBankWidth / 2.0f, mRiverBankWidth / 2.0f);
 
         mRiverPath.addRect(rectF, Path.Direction.CW);
 

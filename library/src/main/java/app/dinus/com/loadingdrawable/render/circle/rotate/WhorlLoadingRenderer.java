@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.animation.Interpolator;
 
+import app.dinus.com.loadingdrawable.DensityUtil;
 import app.dinus.com.loadingdrawable.render.LoadingRenderer;
 
 public class WhorlLoadingRenderer extends LoadingRenderer {
@@ -29,6 +30,9 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
 
     private static final float START_TRIM_DURATION_OFFSET = 0.5f;
     private static final float END_TRIM_DURATION_OFFSET = 1.0f;
+
+    private static final float DEFAULT_CENTER_RADIUS = 12.5f;
+    private static final float DEFAULT_STROKE_WIDTH = 2.5f;
 
     private static final int[] DEFAULT_COLORS = new int[]{
             Color.RED, Color.GREEN, Color.BLUE
@@ -68,22 +72,27 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
     private float mOriginEndDegrees;
     private float mOriginStartDegrees;
     private float mOriginRotationIncrement;
+    
+    private float mStrokeWidth;
+    private float mCenterRadius;
 
     public WhorlLoadingRenderer(Context context) {
         super(context);
-        init();
+        init(context);
         setupPaint();
         addRenderListener(mAnimatorListener);
     }
 
-    private void init() {
+    private void init(Context context) {
         mColors = DEFAULT_COLORS;
+        mStrokeWidth = DensityUtil.dip2px(context, DEFAULT_STROKE_WIDTH);
+        mCenterRadius = DensityUtil.dip2px(context, DEFAULT_CENTER_RADIUS);
         setInsets((int) getWidth(), (int) getHeight());
     }
 
     private void setupPaint() {
         mPaint.setAntiAlias(true);
-        mPaint.setStrokeWidth(getStrokeWidth());
+        mPaint.setStrokeWidth(mStrokeWidth);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
     }
@@ -98,7 +107,7 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
         arcBounds.inset(mStrokeInset, mStrokeInset);
 
         for (int i = 0; i < mColors.length; i++) {
-            mPaint.setStrokeWidth(getStrokeWidth() / (i + 1));
+            mPaint.setStrokeWidth(mStrokeWidth / (i + 1));
             mPaint.setColor(mColors[i]);
             canvas.drawArc(createArcBounds(arcBounds, i), mStartDegrees + DEGREE_180 * (i % 2),
                     mSwipeDegrees, false, mPaint);
@@ -112,7 +121,7 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
         int intervalWidth = 0;
 
         for (int i = 0; i < index; i++) {
-            intervalWidth += getStrokeWidth() / (i + 1.0f) * 1.5f;
+            intervalWidth += mStrokeWidth / (i + 1.0f) * 1.5f;
         }
 
         int arcBoundsLeft = (int) (sourceArcBounds.left + intervalWidth);
@@ -169,19 +178,13 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
         mColors = colors;
     }
 
-    @Override
-    public void setStrokeWidth(float strokeWidth) {
-        super.setStrokeWidth(strokeWidth);
-        invalidateSelf();
-    }
-
     public void setInsets(int width, int height) {
         final float minEdge = (float) Math.min(width, height);
         float insets;
-        if (getCenterRadius() <= 0 || minEdge < 0) {
-            insets = (float) Math.ceil(getStrokeWidth() / 2.0f);
+        if (mCenterRadius <= 0 || minEdge < 0) {
+            insets = (float) Math.ceil(mStrokeWidth / 2.0f);
         } else {
-            insets = minEdge / 2.0f - getCenterRadius();
+            insets = minEdge / 2.0f - mCenterRadius;
         }
         mStrokeInset = insets;
     }

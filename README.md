@@ -1,5 +1,5 @@
 
-## LoadingDrawable
+## LoadingDrawable: Android cool animation collection
 [中文版文档](https://github.com/dinuscxj/LoadingDrawable/blob/master/README-ZH.md)&nbsp;&nbsp;&nbsp;
 [前言](http://www.jianshu.com/p/6e0ac5af4e8b)&nbsp;&nbsp;&nbsp;
 [Circle系列源码解析](http://www.jianshu.com/p/1c3c6fc1b7ff)&nbsp;&nbsp;&nbsp;
@@ -7,7 +7,6 @@
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-LoadingDrawable-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/3450)
 
  Some android loading drawable, can be combined with any View as the loading View and Progressbar,
- and is especially suitable for the loading animation of the [RecyclerRefreshLayout](https://github.com/dinuscxj/RecyclerRefreshLayout).<br/>
 
  This project idea is from the [link] (http://mp.weixin.qq.com/s?__biz=MjM5MDMxOTE5NA==&mid=402703079&idx=2&sn=2fcc6746a866dcc003c68ead9b68e595&scene=2&srcid=0302A7p723KK8E5gSzLKb2ZL&from=timeline&isappinstalled=0#wechat_redirect).<br/>
  Perhaps you prefer to use gif way to achieve : [GifLoadingView] (https://github.com/Rogero0o/GifLoadingView). <br/>
@@ -31,7 +30,7 @@
 
 #### Animal
  * FishLoadingRenderer
- * GhostsLoadingEyeRenderer
+ * GhostsEyeLoadingEyeRenderer
 
 #### Scenery
  * DayNightLoadingRenderer

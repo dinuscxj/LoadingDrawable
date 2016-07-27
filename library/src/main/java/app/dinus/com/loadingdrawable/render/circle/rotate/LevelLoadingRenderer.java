@@ -10,11 +10,13 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
+import android.util.DisplayMetrics;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
+import app.dinus.com.loadingdrawable.DensityUtil;
 import app.dinus.com.loadingdrawable.render.LoadingRenderer;
 
 public class LevelLoadingRenderer extends LoadingRenderer {
@@ -36,6 +38,9 @@ public class LevelLoadingRenderer extends LoadingRenderer {
 
     private static final float START_TRIM_DURATION_OFFSET = 0.5f;
     private static final float END_TRIM_DURATION_OFFSET = 1.0f;
+
+    private static final float DEFAULT_CENTER_RADIUS = 12.5f;
+    private static final float DEFAULT_STROKE_WIDTH = 2.5f;
 
     private static final int DEFAULT_COLOR = Color.WHITE;
 
@@ -78,19 +83,28 @@ public class LevelLoadingRenderer extends LoadingRenderer {
     private float mOriginStartDegrees;
     private float mOriginRotationIncrement;
 
+    private float mStrokeWidth;
+    private float mCenterRadius;
+
     public LevelLoadingRenderer(Context context) {
         super(context);
+        init(context);
         setupPaint();
         addRenderListener(mAnimatorListener);
     }
-
+    
+    private void init(Context context) {
+        mStrokeWidth = DensityUtil.dip2px(context, DEFAULT_STROKE_WIDTH);
+        mCenterRadius = DensityUtil.dip2px(context, DEFAULT_CENTER_RADIUS);
+    }
+    
     private void setupPaint() {
         mLevel1Color = oneThirdAlphaColor(DEFAULT_COLOR);
         mLevel2Color = twoThirdAlphaColor(DEFAULT_COLOR);
         mLevel3Color = DEFAULT_COLOR;
 
         mPaint.setAntiAlias(true);
-        mPaint.setStrokeWidth(getStrokeWidth());
+        mPaint.setStrokeWidth(mStrokeWidth);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
 
@@ -192,20 +206,13 @@ public class LevelLoadingRenderer extends LoadingRenderer {
         mLevel3Color = color;
     }
 
-    @Override
-    public void setStrokeWidth(float strokeWidth) {
-        super.setStrokeWidth(strokeWidth);
-        mPaint.setStrokeWidth(strokeWidth);
-        invalidateSelf();
-    }
-
     public void setInsets(int width, int height) {
         final float minEdge = (float) Math.min(width, height);
         float insets;
-        if (getCenterRadius() <= 0 || minEdge < 0) {
-            insets = (float) Math.ceil(getStrokeWidth() / 2.0f);
+        if (mCenterRadius <= 0 || minEdge < 0) {
+            insets = (float) Math.ceil(mStrokeWidth / 2.0f);
         } else {
-            insets = minEdge / 2.0f - getCenterRadius();
+            insets = minEdge / 2.0f - mCenterRadius;
         }
         mStrokeInset = insets;
     }

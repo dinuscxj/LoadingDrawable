@@ -15,6 +15,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
+import app.dinus.com.loadingdrawable.DensityUtil;
 import app.dinus.com.loadingdrawable.render.LoadingRenderer;
 
 public class CoolWaitLoadingRenderer extends LoadingRenderer {
@@ -49,6 +50,7 @@ public class CoolWaitLoadingRenderer extends LoadingRenderer {
 
     private final RectF mCurrentBounds = new RectF();
 
+    private float mStrokeWidth;
     private float mWaitCircleRadius;
     private float mOriginEndDistance;
     private float mOriginStartDistance;
@@ -65,13 +67,10 @@ public class CoolWaitLoadingRenderer extends LoadingRenderer {
     }
 
     private void init(Context context) {
-        final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        final float screenDensity = metrics.density;
-
-        mWidth = DEFAULT_WIDTH * screenDensity;
-        mHeight = DEFAULT_HEIGHT * screenDensity;
-        mStrokeWidth = DEFAULT_STROKE_WIDTH * screenDensity;
-        mWaitCircleRadius = WAIT_CIRCLE_RADIUS * screenDensity;
+        mWidth = DensityUtil.dip2px(context, DEFAULT_WIDTH);
+        mHeight = DensityUtil.dip2px(context, DEFAULT_HEIGHT);
+        mStrokeWidth = DensityUtil.dip2px(context, DEFAULT_STROKE_WIDTH);
+        mWaitCircleRadius = DensityUtil.dip2px(context, WAIT_CIRCLE_RADIUS);
 
         mTopColor = Color.WHITE;
         mMiddleColor = Color.parseColor("#FFF3C742");
@@ -82,7 +81,7 @@ public class CoolWaitLoadingRenderer extends LoadingRenderer {
 
     private void setupPaint() {
         mPaint.setAntiAlias(true);
-        mPaint.setStrokeWidth(getStrokeWidth());
+        mPaint.setStrokeWidth(mStrokeWidth);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import app.dinus.com.loadingdrawable.DensityUtil;
 import app.dinus.com.loadingdrawable.render.LoadingRenderer;
 
 public class DayNightLoadingRenderer extends LoadingRenderer {
@@ -41,6 +42,7 @@ public class DayNightLoadingRenderer extends LoadingRenderer {
 
     private static final float DEFAULT_WIDTH = 200.0f;
     private static final float DEFAULT_HEIGHT = 150.0f;
+    private static final float DEFAULT_STROKE_WIDTH = 2.5f;
     private static final float DEFAULT_SUN$MOON_RADIUS = 12.0f;
     private static final float DEFAULT_STAR_RADIUS = 2.5f;
     private static final float DEFAULT_SUN_RAY_LENGTH = 10.0f;
@@ -84,6 +86,7 @@ public class DayNightLoadingRenderer extends LoadingRenderer {
 
     private float mMaxStarOffsets;
 
+    private float mStrokeWidth;
     private float mStarRadius;
     private float mSun$MoonRadius;
     private float mSunCoordinateY;
@@ -114,24 +117,22 @@ public class DayNightLoadingRenderer extends LoadingRenderer {
     }
 
     private void init(Context context) {
-        final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        final float screenDensity = metrics.density;
+        mWidth = DensityUtil.dip2px(context, DEFAULT_WIDTH);
+        mHeight = DensityUtil.dip2px(context, DEFAULT_HEIGHT);
+        mStrokeWidth = DensityUtil.dip2px(context, DEFAULT_STROKE_WIDTH);
 
-        mWidth = DEFAULT_WIDTH * screenDensity;
-        mHeight = DEFAULT_HEIGHT * screenDensity;
-
-        mStarRadius = DEFAULT_STAR_RADIUS * screenDensity;
-        mSun$MoonRadius = DEFAULT_SUN$MOON_RADIUS * screenDensity;
+        mStarRadius = DensityUtil.dip2px(context, DEFAULT_STAR_RADIUS);
+        mSun$MoonRadius = DensityUtil.dip2px(context, DEFAULT_SUN$MOON_RADIUS);
         mInitSun$MoonCoordinateY = mHeight + mSun$MoonRadius + mStrokeWidth * 2.0f;
         mMaxSun$MoonRiseDistance = mHeight / 2.0f + mSun$MoonRadius;
 
         mSunRayStartCoordinateY = mInitSun$MoonCoordinateY - mMaxSun$MoonRiseDistance //the center
                 - mSun$MoonRadius //sub the radius
                 - mStrokeWidth // sub the with the sun circle
-                - DEFAULT_SUN_RAY_OFFSET * screenDensity; //sub the interval between the sun and the sun ray
+                - DensityUtil.dip2px(context, DEFAULT_SUN_RAY_OFFSET); //sub the interval between the sun and the sun ray
 
         //add strokeWidth * 2.0f because the stroke cap is Paint.Cap.ROUND
-        mSunRayEndCoordinateY = mSunRayStartCoordinateY - DEFAULT_SUN_RAY_LENGTH * screenDensity
+        mSunRayEndCoordinateY = mSunRayStartCoordinateY - DensityUtil.dip2px(context, DEFAULT_SUN_RAY_LENGTH)
                 + mStrokeWidth;
 
         mSunCoordinateY = mInitSun$MoonCoordinateY;
@@ -144,7 +145,7 @@ public class DayNightLoadingRenderer extends LoadingRenderer {
 
     private void setupPaint() {
         mPaint.setAntiAlias(true);
-        mPaint.setStrokeWidth(getStrokeWidth());
+        mPaint.setStrokeWidth(mStrokeWidth);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
@@ -184,7 +185,7 @@ public class DayNightLoadingRenderer extends LoadingRenderer {
             canvas.restoreToCount(sunRaySaveCount);
         }
 
-        if(mShowStar) {
+        if (mShowStar) {
             if (mStarHolders.isEmpty()) {
                 initStarHolders(arcBounds);
             }
@@ -212,12 +213,12 @@ public class DayNightLoadingRenderer extends LoadingRenderer {
             float sunRotateProgress = (renderProgress - SUN_RISE_DURATION_OFFSET) / (SUN_ROTATE_DURATION_OFFSET - SUN_RISE_DURATION_OFFSET);
             mSunRayRotation = sunRotateProgress * MAX_SUN_ROTATE_DEGREE;
 
-            if ((int)(mSunRayRotation / SUN_RAY_INTERVAL_DEGREE) <= MAX_SUN_RAY_COUNT) {
+            if ((int) (mSunRayRotation / SUN_RAY_INTERVAL_DEGREE) <= MAX_SUN_RAY_COUNT) {
                 mIsExpandSunRay = true;
                 mSunRayCount = (int) (mSunRayRotation / SUN_RAY_INTERVAL_DEGREE);
             }
 
-            if ((int)((MAX_SUN_ROTATE_DEGREE - mSunRayRotation) / SUN_RAY_INTERVAL_DEGREE) <= MAX_SUN_RAY_COUNT) {
+            if ((int) ((MAX_SUN_ROTATE_DEGREE - mSunRayRotation) / SUN_RAY_INTERVAL_DEGREE) <= MAX_SUN_RAY_COUNT) {
                 mIsExpandSunRay = false;
                 mSunRayCount = (int) ((MAX_SUN_ROTATE_DEGREE - mSunRayRotation) / SUN_RAY_INTERVAL_DEGREE);
             }
@@ -258,7 +259,7 @@ public class DayNightLoadingRenderer extends LoadingRenderer {
             if (starProgress >= STAR_DECREASE_PROGRESS_OFFSET) {
                 for (int i = 0; i < mStarHolders.size(); i++) {
                     StarHolder starHolder = mStarHolders.get(i);
-                    starHolder.mCurrentPoint.y = starHolder.mPoint.y + starHolder.mInterpolator.getInterpolation((starProgress -STAR_DECREASE_PROGRESS_OFFSET) * 5.0f) * mMaxStarOffsets;
+                    starHolder.mCurrentPoint.y = starHolder.mPoint.y + starHolder.mInterpolator.getInterpolation((starProgress - STAR_DECREASE_PROGRESS_OFFSET) * 5.0f) * mMaxStarOffsets;
                     starHolder.mCurrentPoint.x = starHolder.mPoint.x;
                 }
             }
@@ -285,13 +286,6 @@ public class DayNightLoadingRenderer extends LoadingRenderer {
 
     @Override
     public void reset() {
-    }
-
-    @Override
-    public void setStrokeWidth(float strokeWidth) {
-        super.setStrokeWidth(strokeWidth);
-        mPaint.setStrokeWidth(strokeWidth);
-        invalidateSelf();
     }
 
     private void initStarHolders(RectF currentBounds) {

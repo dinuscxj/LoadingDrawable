@@ -12,6 +12,7 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.animation.Interpolator;
 
+import app.dinus.com.loadingdrawable.DensityUtil;
 import app.dinus.com.loadingdrawable.render.LoadingRenderer;
 
 public class SwapLoadingRenderer extends LoadingRenderer {
@@ -39,6 +40,8 @@ public class SwapLoadingRenderer extends LoadingRenderer {
     private float mSwapThreshold;
     private float mSwapXOffsetProgress;
 
+    private float mStrokeWidth;
+
     public SwapLoadingRenderer(Context context) {
         super(context);
 
@@ -48,10 +51,9 @@ public class SwapLoadingRenderer extends LoadingRenderer {
     }
 
     private void init(Context context) {
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        mWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_WIDTH, displayMetrics);
-        mHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_HEIGHT, displayMetrics);
-        mStrokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_STROKE_WIDTH, displayMetrics);
+        mWidth = DensityUtil.dip2px(context, DEFAULT_WIDTH);
+        mHeight = DensityUtil.dip2px(context, DEFAULT_HEIGHT);
+        mStrokeWidth = DensityUtil.dip2px(context, DEFAULT_STROKE_WIDTH);
 
         mSwapThreshold = 1.0f / CIRCLE_COUNT;
     }
@@ -60,7 +62,7 @@ public class SwapLoadingRenderer extends LoadingRenderer {
         mColor = DEFAULT_COLOR;
 
         mPaint.setAntiAlias(true);
-        mPaint.setStrokeWidth(getStrokeWidth());
+        mPaint.setStrokeWidth(mStrokeWidth);
         mPaint.setStyle(Paint.Style.FILL);
     }
 
@@ -73,7 +75,7 @@ public class SwapLoadingRenderer extends LoadingRenderer {
         RectF arcBounds = mTempBounds;
         arcBounds.set(bounds);
 
-        float cy = mHeight / 2 ;
+        float cy = mHeight / 2;
         float circleRadius = computeCircleRadius(arcBounds);
 
         float sideOffset = 2.0f * (2 * circleRadius);
@@ -91,7 +93,7 @@ public class SwapLoadingRenderer extends LoadingRenderer {
         float xCoordinate = mSwapIndex == CIRCLE_COUNT - 1
                 ? xMoveOffset + circleDiameter / 2
                 : xMoveOffset - circleDiameter / 2;
-        float yMoveOffset = (float) (mSwapIndex % 2 == 0 && mSwapIndex != CIRCLE_COUNT -1
+        float yMoveOffset = (float) (mSwapIndex % 2 == 0 && mSwapIndex != CIRCLE_COUNT - 1
                 ? Math.sqrt(Math.pow(circleDiameter / 2, 2.0f) - Math.pow(xCoordinate, 2.0f))
                 : -Math.sqrt(Math.pow(circleDiameter / 2, 2.0f) - Math.pow(xCoordinate, 2.0f)));
 
@@ -99,17 +101,17 @@ public class SwapLoadingRenderer extends LoadingRenderer {
             if (i == mSwapIndex) {
                 mPaint.setStyle(Paint.Style.FILL);
                 canvas.drawCircle(circleRadius * (i * 2 + 1) + sideOffset + i * intervalWidth + xMoveOffset
-                        , cy - yMoveOffset, circleRadius - getStrokeWidth() / 2, mPaint);
+                        , cy - yMoveOffset, circleRadius - mStrokeWidth / 2, mPaint);
             } else if (i == (mSwapIndex + 1) % CIRCLE_COUNT) {
                 mPaint.setStyle(Paint.Style.STROKE);
 
                 canvas.drawCircle(circleRadius * (i * 2 + 1) + sideOffset + i * intervalWidth - xMoveOffset
-                        , cy + yMoveOffset, circleRadius - getStrokeWidth() / 2, mPaint);
+                        , cy + yMoveOffset, circleRadius - mStrokeWidth / 2, mPaint);
             } else {
                 mPaint.setStyle(Paint.Style.STROKE);
 
                 canvas.drawCircle(circleRadius * (i * 2 + 1) + sideOffset + i * intervalWidth, cy,
-                        circleRadius - getStrokeWidth() / 2, mPaint);
+                        circleRadius - mStrokeWidth / 2, mPaint);
             }
 
         }
@@ -153,12 +155,5 @@ public class SwapLoadingRenderer extends LoadingRenderer {
 
     public void setColor(int color) {
         mColor = color;
-    }
-
-    @Override
-    public void setStrokeWidth(float strokeWidth) {
-        super.setStrokeWidth(strokeWidth);
-        mPaint.setStrokeWidth(strokeWidth);
-        invalidateSelf();
     }
 }

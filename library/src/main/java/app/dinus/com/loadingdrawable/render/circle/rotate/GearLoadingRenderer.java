@@ -9,11 +9,13 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.util.DisplayMetrics;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
+import app.dinus.com.loadingdrawable.DensityUtil;
 import app.dinus.com.loadingdrawable.render.LoadingRenderer;
 
 public class GearLoadingRenderer extends LoadingRenderer {
@@ -36,12 +38,13 @@ public class GearLoadingRenderer extends LoadingRenderer {
     private static final float END_TRIM_DURATION_OFFSET = 0.7f;
     private static final float END_SCALE_DURATION_OFFSET = 1.0f;
 
+    private static final float DEFAULT_CENTER_RADIUS = 12.5f;
+    private static final float DEFAULT_STROKE_WIDTH = 2.5f;
+
     private static final int DEFAULT_COLOR = Color.WHITE;
 
     private final Paint mPaint = new Paint();
     private final RectF mTempBounds = new RectF();
-
-    private boolean mIsScaling;
 
     private final Animator.AnimatorListener mAnimatorListener = new AnimatorListenerAdapter() {
         @Override
@@ -76,17 +79,27 @@ public class GearLoadingRenderer extends LoadingRenderer {
     private float mOriginStartDegrees;
     private float mOriginRotationIncrement;
 
+    private float mStrokeWidth;
+    private float mCenterRadius;
+
     public GearLoadingRenderer(Context context) {
         super(context);
-        mCurrentColor = DEFAULT_COLOR;
 
+        init(context);
         setupPaint();
         addRenderListener(mAnimatorListener);
     }
 
+    private void init(Context context) {
+        mStrokeWidth = DensityUtil.dip2px(context, DEFAULT_STROKE_WIDTH);
+        mCenterRadius = DensityUtil.dip2px(context, DEFAULT_CENTER_RADIUS);
+
+        mCurrentColor = DEFAULT_COLOR;
+    }
+
     private void setupPaint() {
         mPaint.setAntiAlias(true);
-        mPaint.setStrokeWidth(getStrokeWidth());
+        mPaint.setStrokeWidth(mStrokeWidth);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
 
@@ -106,7 +119,7 @@ public class GearLoadingRenderer extends LoadingRenderer {
 
         mPaint.setColor(mCurrentColor);
         mPaint.setAlpha((int) (MAX_ALPHA * mScale));
-        mPaint.setStrokeWidth(getStrokeWidth() * mScale);
+        mPaint.setStrokeWidth(mStrokeWidth * mScale);
         for (int i = 0; i < GEAR_COUNT; i++) {
             canvas.drawArc(arcBounds, mStartDegrees + DEGREE_360 / GEAR_COUNT * i, mSwipeDegrees, false, mPaint);
         }
@@ -176,20 +189,13 @@ public class GearLoadingRenderer extends LoadingRenderer {
         mCurrentColor = color;
     }
 
-    @Override
-    public void setStrokeWidth(float strokeWidth) {
-        super.setStrokeWidth(strokeWidth);
-        mPaint.setStrokeWidth(strokeWidth);
-        invalidateSelf();
-    }
-
     private void setInsets(int width, int height) {
         final float minEdge = (float) Math.min(width, height);
         float insets;
-        if (getCenterRadius() <= 0 || minEdge < 0) {
-            insets = (float) Math.ceil(getStrokeWidth() / 2.0f);
+        if (mCenterRadius <= 0 || minEdge < 0) {
+            insets = (float) Math.ceil(mStrokeWidth / 2.0f);
         } else {
-            insets = minEdge / 2.0f - getCenterRadius();
+            insets = minEdge / 2.0f - mCenterRadius;
         }
         mStrokeInset = insets;
     }

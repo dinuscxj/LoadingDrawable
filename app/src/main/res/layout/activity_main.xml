@@ -53,8 +53,4 @@
         android:text="CircleJumpActivity"
         android:textAllCaps="false" />
 
-    <app.dinus.com.loadingdrawable.LoadingView
-        app:loading_renderer="MaterialLoadingRenderer"
-        android:layout_width="50dp"
-        android:layout_height="50dp" />
 </LinearLayout>

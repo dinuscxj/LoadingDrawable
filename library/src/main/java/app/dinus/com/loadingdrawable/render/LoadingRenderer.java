@@ -12,17 +12,14 @@ import android.view.animation.Animation;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
+import app.dinus.com.loadingdrawable.DensityUtil;
+
 public abstract class LoadingRenderer {
     private static final long ANIMATION_DURATION = 1333;
-
     private static final float DEFAULT_SIZE = 56.0f;
-    private static final float DEFAULT_CENTER_RADIUS = 12.5f;
-    private static final float DEFAULT_STROKE_WIDTH = 2.5f;
 
     protected float mWidth;
     protected float mHeight;
-    protected float mStrokeWidth;
-    protected float mCenterRadius;
 
     private long mDuration;
     private Drawable.Callback mCallback;
@@ -66,13 +63,8 @@ public abstract class LoadingRenderer {
     }
 
     private void setupDefaultParams(Context context) {
-        final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        final float screenDensity = metrics.density;
-
-        mWidth = DEFAULT_SIZE * screenDensity;
-        mHeight = DEFAULT_SIZE * screenDensity;
-        mStrokeWidth = DEFAULT_STROKE_WIDTH * screenDensity;
-        mCenterRadius = DEFAULT_CENTER_RADIUS * screenDensity;
+        mWidth = DensityUtil.dip2px(context, DEFAULT_SIZE);
+        mHeight = DensityUtil.dip2px(context, DEFAULT_SIZE);
 
         mDuration = ANIMATION_DURATION;
     }
@@ -95,22 +87,6 @@ public abstract class LoadingRenderer {
 
     protected void addRenderListener(Animator.AnimatorListener animatorListener) {
         mRenderAnimator.addListener(animatorListener);
-    }
-
-    public void setCenterRadius(float centerRadius) {
-        mCenterRadius = centerRadius;
-    }
-
-    public float getCenterRadius() {
-        return mCenterRadius;
-    }
-
-    public void setStrokeWidth(float strokeWidth) {
-        mStrokeWidth = strokeWidth;
-    }
-
-    public float getStrokeWidth() {
-        return mStrokeWidth;
     }
 
     public float getWidth() {

@@ -16,6 +16,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
+import app.dinus.com.loadingdrawable.DensityUtil;
 import app.dinus.com.loadingdrawable.render.LoadingRenderer;
 
 public class CollisionLoadingRenderer extends LoadingRenderer {
@@ -35,11 +36,13 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
     private static final float END_RIGHT_DURATION_OFFSET = 0.75f;
     private static final float END_LEFT_DURATION_OFFSET = 1.0f;
 
-    private static final int[] DEFAULT_COLORS = new int[] {
+    private static final float DEFAULT_STROKE_WIDTH = 2.5f;
+
+    private static final int[] DEFAULT_COLORS = new int[]{
             Color.RED, Color.GREEN
     };
 
-    private static final float[] DEFAULT_POSITIONS = new float[] {
+    private static final float[] DEFAULT_POSITIONS = new float[]{
             0.0f, 1.0f
     };
 
@@ -52,21 +55,26 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
     private float mEndXOffsetProgress;
     private float mStartXOffsetProgress;
 
+    private float mStrokeWidth;
+
     public CollisionLoadingRenderer(Context context) {
         super(context);
+        init(context);
         setupPaint();
+    }
 
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        mWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_WIDTH, displayMetrics);
-        mHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_HEIGHT, displayMetrics);
+    private void init(Context context) {
+        mWidth = DensityUtil.dip2px(context, DEFAULT_WIDTH);
+        mHeight = DensityUtil.dip2px(context, DEFAULT_HEIGHT);
+        mStrokeWidth = DensityUtil.dip2px(context, DEFAULT_STROKE_WIDTH);
     }
 
     private void setupPaint() {
         mColors = DEFAULT_COLORS;
         mPositions = DEFAULT_POSITIONS;
 
+        mPaint.setStrokeWidth(mStrokeWidth);
         mPaint.setAntiAlias(true);
-        mPaint.setStrokeWidth(getStrokeWidth());
         mPaint.setStyle(Paint.Style.FILL);
     }
 
@@ -77,7 +85,7 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
         RectF arcBounds = mTempBounds;
         arcBounds.set(bounds);
 
-        float cy = mHeight / 2 ;
+        float cy = mHeight / 2;
         float circleRadius = computeCircleRadius(arcBounds);
 
         float sideOffset = 2.0f * (2 * circleRadius);
@@ -92,7 +100,7 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
                 float xMoveOffset = maxMoveOffset * mStartXOffsetProgress;
                 // y = ax^2 -->  if x = sideOffset, y = sideOffset ==> a = 1 / sideOffset
                 float yMoveOffset = (float) (Math.pow(xMoveOffset, 2) / maxMoveOffset);
-                canvas.drawCircle(circleRadius + sideOffset - xMoveOffset , cy - yMoveOffset, circleRadius, mPaint);
+                canvas.drawCircle(circleRadius + sideOffset - xMoveOffset, cy - yMoveOffset, circleRadius, mPaint);
                 continue;
             }
 
@@ -100,11 +108,11 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
                 float xMoveOffset = maxMoveOffset * mEndXOffsetProgress;
                 // y = ax^2 -->  if x = sideOffset, y = sideOffset / 2 ==> a = 1 / sideOffset
                 float yMoveOffset = (float) (Math.pow(xMoveOffset, 2) / maxMoveOffset);
-                canvas.drawCircle(circleRadius * (CIRCLE_COUNT * 2 - 1) + sideOffset + xMoveOffset , cy - yMoveOffset, circleRadius, mPaint);
+                canvas.drawCircle(circleRadius * (CIRCLE_COUNT * 2 - 1) + sideOffset + xMoveOffset, cy - yMoveOffset, circleRadius, mPaint);
                 continue;
             }
 
-            canvas.drawCircle(circleRadius * (i * 2 + 1) + sideOffset , cy, circleRadius, mPaint);
+            canvas.drawCircle(circleRadius * (i * 2 + 1) + sideOffset, cy, circleRadius, mPaint);
         }
 
         canvas.restoreToCount(saveCount);
@@ -129,7 +137,7 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
             mStartXOffsetProgress = DECELERATE_INTERPOLATOR.getInterpolation(startLeftOffsetProgress);
 
             invalidateSelf();
-            return ;
+            return;
         }
 
         // Moving the start offset to left only occurs between 25% and 50% of a
@@ -139,7 +147,7 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
             mStartXOffsetProgress = ACCELERATE_INTERPOLATOR.getInterpolation(1.0f - startRightOffsetProgress);
 
             invalidateSelf();
-            return ;
+            return;
         }
 
         // Moving the end offset to right starts between 50% and 75% a single ring
@@ -149,7 +157,7 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
             mEndXOffsetProgress = DECELERATE_INTERPOLATOR.getInterpolation(endRightOffsetProgress);
 
             invalidateSelf();
-            return ;
+            return;
         }
 
         // Moving the end offset to left starts after 75% of a single ring
@@ -159,7 +167,7 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
             mEndXOffsetProgress = ACCELERATE_INTERPOLATOR.getInterpolation(1 - endRightOffsetProgress);
 
             invalidateSelf();
-            return ;
+            return;
         }
     }
 
@@ -185,12 +193,5 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
 
     public void setPositions(@NonNull float[] positions) {
         mPositions = positions;
-    }
-
-    @Override
-    public void setStrokeWidth(float strokeWidth) {
-        super.setStrokeWidth(strokeWidth);
-        mPaint.setStrokeWidth(strokeWidth);
-        invalidateSelf();
     }
 }
