@@ -68,7 +68,7 @@ public class GuardLoadingRenderer extends LoadingRenderer {
     public GuardLoadingRenderer(Context context) {
         super(context);
 
-        setDuration(ANIMATION_DURATION);
+        mDuration = ANIMATION_DURATION;
         init(context);
         setupPaint();
     }
@@ -88,7 +88,7 @@ public class GuardLoadingRenderer extends LoadingRenderer {
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
 
-        setInsets((int) getWidth(), (int) getHeight());
+        setInsets((int) mWidth, (int) mHeight);
     }
 
     @Override
@@ -182,13 +182,13 @@ public class GuardLoadingRenderer extends LoadingRenderer {
     @Override
     public void setAlpha(int alpha) {
         mPaint.setAlpha(alpha);
-        invalidateSelf();
+
     }
 
     @Override
     public void setColorFilter(ColorFilter cf) {
         mPaint.setColorFilter(cf);
-        invalidateSelf();
+
     }
 
     @Override
@@ -239,7 +239,7 @@ public class GuardLoadingRenderer extends LoadingRenderer {
 
     public void setStartTrim(float startTrim) {
         mStartTrim = startTrim;
-        invalidateSelf();
+
     }
 
     public float getStartTrim() {
@@ -248,7 +248,7 @@ public class GuardLoadingRenderer extends LoadingRenderer {
 
     public void setEndTrim(float endTrim) {
         mEndTrim = endTrim;
-        invalidateSelf();
+
     }
 
     public float getEndTrim() {
@@ -257,7 +257,7 @@ public class GuardLoadingRenderer extends LoadingRenderer {
 
     public void setRotation(float rotation) {
         mRotation = rotation;
-        invalidateSelf();
+
     }
 
     public void setScale(float scale) {

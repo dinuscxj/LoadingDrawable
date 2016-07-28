@@ -7,9 +7,10 @@ import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.util.DisplayMetrics;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.animation.Animation;
-import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
 import app.dinus.com.loadingdrawable.DensityUtil;
@@ -18,51 +19,71 @@ public abstract class LoadingRenderer {
     private static final long ANIMATION_DURATION = 1333;
     private static final float DEFAULT_SIZE = 56.0f;
 
-    protected float mWidth;
-    protected float mHeight;
+    private final ValueAnimator.AnimatorUpdateListener mAnimatorUpdateListener
+            = new ValueAnimator.AnimatorUpdateListener() {
+        @Override
+        public void onAnimationUpdate(ValueAnimator animation) {
+            computeRender((float) animation.getAnimatedValue());
+            invalidateSelf();
+        }
+    };
 
-    private long mDuration;
     private Drawable.Callback mCallback;
     private ValueAnimator mRenderAnimator;
 
+    protected long mDuration;
+
+    protected float mWidth;
+    protected float mHeight;
+
     public LoadingRenderer(Context context) {
-        setupDefaultParams(context);
+        initParams(context);
         setupAnimators();
     }
 
-    public abstract void draw(Canvas canvas, Rect bounds);
+    protected abstract void draw(Canvas canvas, Rect bounds);
 
-    public abstract void computeRender(float renderProgress);
+    protected abstract void computeRender(float renderProgress);
 
-    public abstract void setAlpha(int alpha);
+    protected abstract void setAlpha(int alpha);
 
-    public abstract void setColorFilter(ColorFilter cf);
+    protected abstract void setColorFilter(ColorFilter cf);
 
-    public abstract void reset();
+    protected abstract void reset();
 
-    public void start() {
+    protected void addRenderListener(Animator.AnimatorListener animatorListener) {
+        mRenderAnimator.addListener(animatorListener);
+    }
+
+    void start() {
         reset();
-        setDuration(mDuration);
+        mRenderAnimator.addUpdateListener(mAnimatorUpdateListener);
+
+        mRenderAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        mRenderAnimator.setDuration(mDuration);
         mRenderAnimator.start();
     }
 
-    public void stop() {
-        mRenderAnimator.cancel();
+    void stop() {
+        // if I just call mRenderAnimator.end(),
+        // it will always call the method onAnimationUpdate(ValueAnimator animation)
+        // why ? if you know why please send email to me (dinus_developer@163.com)
+        mRenderAnimator.removeUpdateListener(mAnimatorUpdateListener);
+
+        mRenderAnimator.setRepeatCount(0);
+        mRenderAnimator.setDuration(0);
+        mRenderAnimator.end();
     }
 
-    public boolean isRunning() {
+    boolean isRunning() {
         return mRenderAnimator.isRunning();
     }
 
-    public void setCallback(Drawable.Callback callback) {
+    void setCallback(Drawable.Callback callback) {
         this.mCallback = callback;
     }
 
-    protected void invalidateSelf() {
-        mCallback.invalidateDrawable(null);
-    }
-
-    private void setupDefaultParams(Context context) {
+    private void initParams(Context context) {
         mWidth = DensityUtil.dip2px(context, DEFAULT_SIZE);
         mHeight = DensityUtil.dip2px(context, DEFAULT_SIZE);
 
@@ -73,44 +94,14 @@ public abstract class LoadingRenderer {
         mRenderAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
         mRenderAnimator.setRepeatCount(Animation.INFINITE);
         mRenderAnimator.setRepeatMode(Animation.RESTART);
+        mRenderAnimator.setDuration(mDuration);
         //fuck you! the default interpolator is AccelerateDecelerateInterpolator
         mRenderAnimator.setInterpolator(new LinearInterpolator());
-        mRenderAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                computeRender((float) animation.getAnimatedValue());
-                invalidateSelf();
-            }
-        });
-
+        mRenderAnimator.addUpdateListener(mAnimatorUpdateListener);
     }
 
-    protected void addRenderListener(Animator.AnimatorListener animatorListener) {
-        mRenderAnimator.addListener(animatorListener);
+    private void invalidateSelf() {
+        mCallback.invalidateDrawable(null);
     }
 
-    public float getWidth() {
-        return mWidth;
-    }
-
-    public void setWidth(float width) {
-        this.mWidth = width;
-    }
-
-    public float getHeight() {
-        return mHeight;
-    }
-
-    public void setHeight(float height) {
-        this.mHeight = height;
-    }
-
-    public long getDuration() {
-        return mDuration;
-    }
-
-    public void setDuration(long duration) {
-        this.mDuration = duration;
-        mRenderAnimator.setDuration(mDuration);
-    }
 }

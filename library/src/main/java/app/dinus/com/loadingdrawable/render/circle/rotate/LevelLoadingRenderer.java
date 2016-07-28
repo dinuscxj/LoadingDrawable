@@ -108,7 +108,7 @@ public class LevelLoadingRenderer extends LoadingRenderer {
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
 
-        setInsets((int) getWidth(), (int) getHeight());
+        setInsets((int) mWidth, (int) mHeight);
     }
 
     @Override
@@ -186,13 +186,13 @@ public class LevelLoadingRenderer extends LoadingRenderer {
     @Override
     public void setAlpha(int alpha) {
         mPaint.setAlpha(alpha);
-        invalidateSelf();
+
     }
 
     @Override
     public void setColorFilter(ColorFilter cf) {
         mPaint.setColorFilter(cf);
-        invalidateSelf();
+
     }
 
     @Override

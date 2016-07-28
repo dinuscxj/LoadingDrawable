@@ -94,7 +94,7 @@ public class MaterialLoadingRenderer extends LoadingRenderer {
         mColors = DEFAULT_COLORS;
 
         setColorIndex(0);
-        setInsets((int) getWidth(), (int) getHeight());
+        setInsets((int) mWidth, (int) mHeight);
     }
 
     private void setupPaint() {
@@ -149,13 +149,13 @@ public class MaterialLoadingRenderer extends LoadingRenderer {
     @Override
     public void setAlpha(int alpha) {
         mPaint.setAlpha(alpha);
-        invalidateSelf();
+
     }
 
     @Override
     public void setColorFilter(ColorFilter cf) {
         mPaint.setColorFilter(cf);
-        invalidateSelf();
+
     }
 
     @Override
@@ -240,10 +240,5 @@ public class MaterialLoadingRenderer extends LoadingRenderer {
                 | ((startR + (int) (fraction * (endR - startR))) << 16)
                 | ((startG + (int) (fraction * (endG - startG))) << 8)
                 | ((startB + (int) (fraction * (endB - startB))));
-    }
-
-    public static class Builder {
-
-
     }
 }

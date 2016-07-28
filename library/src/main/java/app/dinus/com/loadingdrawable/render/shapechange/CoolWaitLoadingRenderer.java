@@ -76,7 +76,7 @@ public class CoolWaitLoadingRenderer extends LoadingRenderer {
         mMiddleColor = Color.parseColor("#FFF3C742");
         mBottomColor = Color.parseColor("#FF89CC59");
 
-        setDuration(ANIMATION_DURATION);
+        mDuration = ANIMATION_DURATION;
     }
 
     private void setupPaint() {
@@ -242,13 +242,13 @@ public class CoolWaitLoadingRenderer extends LoadingRenderer {
     @Override
     public void setAlpha(int alpha) {
         mPaint.setAlpha(alpha);
-        invalidateSelf();
+
     }
 
     @Override
     public void setColorFilter(ColorFilter cf) {
         mPaint.setColorFilter(cf);
-        invalidateSelf();
+
     }
 
     @Override

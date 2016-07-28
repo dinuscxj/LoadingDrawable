@@ -87,7 +87,7 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
         mColors = DEFAULT_COLORS;
         mStrokeWidth = DensityUtil.dip2px(context, DEFAULT_STROKE_WIDTH);
         mCenterRadius = DensityUtil.dip2px(context, DEFAULT_CENTER_RADIUS);
-        setInsets((int) getWidth(), (int) getHeight());
+        setInsets((int) mWidth, (int) mHeight);
     }
 
     private void setupPaint() {
@@ -160,13 +160,13 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
     @Override
     public void setAlpha(int alpha) {
         mPaint.setAlpha(alpha);
-        invalidateSelf();
+
     }
 
     @Override
     public void setColorFilter(ColorFilter cf) {
         mPaint.setColorFilter(cf);
-        invalidateSelf();
+
     }
 
     @Override

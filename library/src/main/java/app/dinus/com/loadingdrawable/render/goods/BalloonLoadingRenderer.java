@@ -110,7 +110,7 @@ public class BalloonLoadingRenderer extends LoadingRenderer {
 
         mProgressText = 10 + PERCENT_SIGN;
 
-        setDuration(ANIMATION_DURATION);
+        mDuration = ANIMATION_DURATION;
     }
 
     private void setupPaint() {
@@ -284,13 +284,13 @@ public class BalloonLoadingRenderer extends LoadingRenderer {
     @Override
     public void setAlpha(int alpha) {
         mPaint.setAlpha(alpha);
-        invalidateSelf();
+
     }
 
     @Override
     public void setColorFilter(ColorFilter cf) {
         mPaint.setColorFilter(cf);
-        invalidateSelf();
+
     }
 
     @Override

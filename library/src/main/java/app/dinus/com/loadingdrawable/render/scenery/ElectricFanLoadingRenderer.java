@@ -146,8 +146,8 @@ public class ElectricFanLoadingRenderer extends LoadingRenderer {
         mLoadingDrawable = context.getResources().getDrawable(R.drawable.ic_loading);
         mElectricFanDrawable = context.getResources().getDrawable(R.drawable.ic_eletric_fan);
 
-        setDuration(ANIMATION_DURATION);
-        setInsets((int) getWidth(), (int) getHeight());
+        mDuration = ANIMATION_DURATION;
+        setInsets((int) mWidth, (int) mHeight);
     }
 
     private void setupPaint() {
@@ -307,13 +307,13 @@ public class ElectricFanLoadingRenderer extends LoadingRenderer {
     @Override
     public void setAlpha(int alpha) {
         mPaint.setAlpha(alpha);
-        invalidateSelf();
+
     }
 
     @Override
     public void setColorFilter(ColorFilter cf) {
         mPaint.setColorFilter(cf);
-        invalidateSelf();
+
     }
 
     @Override
@@ -374,7 +374,7 @@ public class ElectricFanLoadingRenderer extends LoadingRenderer {
         animator.addUpdateListener(new BezierListener(target));
         animator.setTarget(target);
 
-        animator.setDuration((long) ((mRandom.nextInt(300) + getDuration() * DEFAULT_LEAF_FLY_DURATION_FACTOR) * (1.0f - progress)));
+        animator.setDuration((long) ((mRandom.nextInt(300) + mDuration * DEFAULT_LEAF_FLY_DURATION_FACTOR) * (1.0f - progress)));
 
         return animator;
     }

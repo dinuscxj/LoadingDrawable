@@ -95,8 +95,8 @@ public class DanceLoadingRenderer extends LoadingRenderer {
         mDanceBallRadius = DensityUtil.dip2px(context, DEFAULT_DANCE_BALL_RADIUS);
 
         setColor(DEFAULT_COLOR);
-        setInsets((int) getWidth(), (int) getHeight());
-        setDuration(ANIMATION_DURATION);
+        setInsets((int) mWidth, (int) mHeight);
+        mDuration = ANIMATION_DURATION;
     }
 
     private void setupPaint() {
@@ -261,13 +261,13 @@ public class DanceLoadingRenderer extends LoadingRenderer {
     @Override
     public void setAlpha(int alpha) {
         mPaint.setAlpha(alpha);
-        invalidateSelf();
+
     }
 
     @Override
     public void setColorFilter(ColorFilter cf) {
         mPaint.setColorFilter(cf);
-        invalidateSelf();
+
     }
 
     @Override
@@ -283,12 +283,12 @@ public class DanceLoadingRenderer extends LoadingRenderer {
 
     public void setRotation(float rotation) {
         mRotation = rotation;
-        invalidateSelf();
+
     }
 
     public void setDanceBallRadius(float danceBallRadius) {
         this.mDanceBallRadius = danceBallRadius;
-        invalidateSelf();
+
     }
 
     public float getDanceBallRadius() {

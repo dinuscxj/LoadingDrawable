@@ -140,7 +140,7 @@ public class DayNightLoadingRenderer extends LoadingRenderer {
 
         mCurrentColor = DEFAULT_COLOR;
 
-        setDuration(ANIMATION_DURATION);
+        mDuration = ANIMATION_DURATION;
     }
 
     private void setupPaint() {
@@ -275,13 +275,13 @@ public class DayNightLoadingRenderer extends LoadingRenderer {
     @Override
     public void setAlpha(int alpha) {
         mPaint.setAlpha(alpha);
-        invalidateSelf();
+
     }
 
     @Override
     public void setColorFilter(ColorFilter cf) {
         mPaint.setColorFilter(cf);
-        invalidateSelf();
+
     }
 
     @Override

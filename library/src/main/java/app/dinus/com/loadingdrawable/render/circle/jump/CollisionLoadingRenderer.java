@@ -136,7 +136,7 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
             float startLeftOffsetProgress = renderProgress / DURATION_OFFSET;
             mStartXOffsetProgress = DECELERATE_INTERPOLATOR.getInterpolation(startLeftOffsetProgress);
 
-            invalidateSelf();
+
             return;
         }
 
@@ -146,7 +146,7 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
             float startRightOffsetProgress = (renderProgress - START_LEFT_DURATION_OFFSET) / DURATION_OFFSET;
             mStartXOffsetProgress = ACCELERATE_INTERPOLATOR.getInterpolation(1.0f - startRightOffsetProgress);
 
-            invalidateSelf();
+
             return;
         }
 
@@ -156,7 +156,7 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
             float endRightOffsetProgress = (renderProgress - START_RIGHT_DURATION_OFFSET) / DURATION_OFFSET;
             mEndXOffsetProgress = DECELERATE_INTERPOLATOR.getInterpolation(endRightOffsetProgress);
 
-            invalidateSelf();
+
             return;
         }
 
@@ -166,7 +166,7 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
             float endRightOffsetProgress = (renderProgress - END_RIGHT_DURATION_OFFSET) / DURATION_OFFSET;
             mEndXOffsetProgress = ACCELERATE_INTERPOLATOR.getInterpolation(1 - endRightOffsetProgress);
 
-            invalidateSelf();
+
             return;
         }
     }
@@ -174,13 +174,13 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
     @Override
     public void setAlpha(int alpha) {
         mPaint.setAlpha(alpha);
-        invalidateSelf();
+
     }
 
     @Override
     public void setColorFilter(ColorFilter cf) {
         mPaint.setColorFilter(cf);
-        invalidateSelf();
+
     }
 
     @Override

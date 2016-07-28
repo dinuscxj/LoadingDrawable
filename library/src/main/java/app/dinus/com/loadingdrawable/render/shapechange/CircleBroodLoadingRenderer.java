@@ -131,7 +131,7 @@ public class CircleBroodLoadingRenderer extends LoadingRenderer {
 
         mMaxRevealCircleRadius = (int) (Math.sqrt(mWidth * mWidth + mHeight * mHeight) / 2 + 1);
 
-        setDuration(ANIMATION_DURATION);
+        mDuration = ANIMATION_DURATION;
     }
 
     private void setupPaint() {
@@ -600,13 +600,13 @@ public class CircleBroodLoadingRenderer extends LoadingRenderer {
     @Override
     public void setAlpha(int alpha) {
         mPaint.setAlpha(alpha);
-        invalidateSelf();
+
     }
 
     @Override
     public void setColorFilter(ColorFilter cf) {
         mPaint.setColorFilter(cf);
-        invalidateSelf();
+
     }
 
     @Override

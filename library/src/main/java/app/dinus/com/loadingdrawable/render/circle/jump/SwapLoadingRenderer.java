@@ -45,7 +45,7 @@ public class SwapLoadingRenderer extends LoadingRenderer {
     public SwapLoadingRenderer(Context context) {
         super(context);
 
-        setDuration(ANIMATION_DURATION);
+        mDuration = ANIMATION_DURATION;
         init(context);
         setupPaint();
     }
@@ -134,19 +134,19 @@ public class SwapLoadingRenderer extends LoadingRenderer {
         mSwapXOffsetProgress = MATERIAL_INTERPOLATOR.getInterpolation(
                 (renderProgress - mSwapIndex * mSwapThreshold) / mSwapThreshold);
 
-        invalidateSelf();
+
     }
 
     @Override
     public void setAlpha(int alpha) {
         mPaint.setAlpha(alpha);
-        invalidateSelf();
+
     }
 
     @Override
     public void setColorFilter(ColorFilter cf) {
         mPaint.setColorFilter(cf);
-        invalidateSelf();
+
     }
 
     @Override

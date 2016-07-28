@@ -91,7 +91,7 @@ public class FishLoadingRenderer extends LoadingRenderer {
 
         mColor = DEFAULT_COLOR;
 
-        setDuration(ANIMATION_DURATION);
+        mDuration = ANIMATION_DURATION;
     }
 
     private void setupPaint() {

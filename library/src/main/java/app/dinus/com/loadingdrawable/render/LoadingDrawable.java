@@ -1,4 +1,4 @@
-package app.dinus.com.loadingdrawable;
+package app.dinus.com.loadingdrawable.render;
 
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
@@ -70,11 +70,11 @@ public class LoadingDrawable extends Drawable implements Animatable {
 
     @Override
     public int getIntrinsicHeight() {
-        return (int) mLoadingRender.getHeight();
+        return (int) mLoadingRender.mHeight;
     }
 
     @Override
     public int getIntrinsicWidth() {
-        return (int) mLoadingRender.getWidth();
+        return (int) mLoadingRender.mWidth;
     }
 }
