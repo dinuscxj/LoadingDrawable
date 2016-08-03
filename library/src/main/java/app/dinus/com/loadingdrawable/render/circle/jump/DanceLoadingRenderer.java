@@ -83,7 +83,7 @@ public class DanceLoadingRenderer extends LoadingRenderer {
     private int mColor;
     private int mArcColor;
 
-    public DanceLoadingRenderer(Context context) {
+    private DanceLoadingRenderer(Context context) {
         super(context);
         init(context);
         setupPaint();
@@ -106,7 +106,7 @@ public class DanceLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void draw(Canvas canvas, Rect bounds) {
+    protected void draw(Canvas canvas, Rect bounds) {
         int saveCount = canvas.save();
 
         mTempBounds.set(bounds);
@@ -149,7 +149,7 @@ public class DanceLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void computeRender(float renderProgress) {
+    protected void computeRender(float renderProgress) {
         float radius = Math.min(mCurrentBounds.height(), mCurrentBounds.width()) / 2.0f;
         //the origin coordinate is the centerLeft of the field mCurrentBounds
         float originCoordinateX = mCurrentBounds.left;
@@ -259,47 +259,47 @@ public class DanceLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void setAlpha(int alpha) {
+    protected void setAlpha(int alpha) {
         mPaint.setAlpha(alpha);
 
     }
 
     @Override
-    public void setColorFilter(ColorFilter cf) {
+    protected void setColorFilter(ColorFilter cf) {
         mPaint.setColorFilter(cf);
 
     }
 
     @Override
-    public void reset() {
+    protected void reset() {
         mScale = 1.0f;
         mRotation = 0;
     }
 
-    public void setColor(int color) {
+    private void setColor(int color) {
         mColor = color;
         mArcColor = halfAlphaColor(mColor);
     }
 
-    public void setRotation(float rotation) {
+    private void setRotation(float rotation) {
         mRotation = rotation;
 
     }
 
-    public void setDanceBallRadius(float danceBallRadius) {
+    private void setDanceBallRadius(float danceBallRadius) {
         this.mDanceBallRadius = danceBallRadius;
 
     }
 
-    public float getDanceBallRadius() {
+    private float getDanceBallRadius() {
         return mDanceBallRadius;
     }
 
-    public float getRotation() {
+    private float getRotation() {
         return mRotation;
     }
 
-    public void setInsets(int width, int height) {
+    private void setInsets(int width, int height) {
         final float minEdge = (float) Math.min(width, height);
         float insets;
         if (mCenterRadius <= 0 || minEdge < 0) {
@@ -320,5 +320,18 @@ public class DanceLoadingRenderer extends LoadingRenderer {
                 | (startR << 16)
                 | (startG << 8)
                 | startB;
+    }
+
+    public static class Builder {
+        private Context mContext;
+
+        public Builder(Context mContext) {
+            this.mContext = mContext;
+        }
+
+        public DanceLoadingRenderer build() {
+            DanceLoadingRenderer loadingRenderer = new DanceLoadingRenderer(mContext);
+            return loadingRenderer;
+        }
     }
 }

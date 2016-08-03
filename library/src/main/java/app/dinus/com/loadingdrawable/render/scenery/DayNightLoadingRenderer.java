@@ -109,7 +109,7 @@ public class DayNightLoadingRenderer extends LoadingRenderer {
 
     private int mSunRayCount;
 
-    public DayNightLoadingRenderer(Context context) {
+    private DayNightLoadingRenderer(Context context) {
         super(context);
         init(context);
         setupPaint();
@@ -152,7 +152,7 @@ public class DayNightLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void draw(Canvas canvas, Rect bounds) {
+    protected void draw(Canvas canvas, Rect bounds) {
         int saveCount = canvas.save();
 
         RectF arcBounds = mTempBounds;
@@ -201,7 +201,7 @@ public class DayNightLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void computeRender(float renderProgress) {
+    protected void computeRender(float renderProgress) {
         if (renderProgress <= SUN_RISE_DURATION_OFFSET) {
             float sunRiseProgress = renderProgress / SUN_RISE_DURATION_OFFSET;
             mSunCoordinateY = mInitSun$MoonCoordinateY - mMaxSun$MoonRiseDistance * MATERIAL_INTERPOLATOR.getInterpolation(sunRiseProgress);
@@ -273,19 +273,19 @@ public class DayNightLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void setAlpha(int alpha) {
+    protected void setAlpha(int alpha) {
         mPaint.setAlpha(alpha);
 
     }
 
     @Override
-    public void setColorFilter(ColorFilter cf) {
+    protected void setColorFilter(ColorFilter cf) {
         mPaint.setColorFilter(cf);
 
     }
 
     @Override
-    public void reset() {
+    protected void reset() {
     }
 
     private void initStarHolders(RectF currentBounds) {
@@ -342,6 +342,19 @@ public class DayNightLoadingRenderer extends LoadingRenderer {
             this.mPoint = mPoint;
             this.mFlashOffset = flashOffset;
             this.mInterpolator = INTERPOLATORS[mRandom.nextInt(INTERPOLATORS.length)];
+        }
+    }
+
+    public static class Builder {
+        private Context mContext;
+
+        public Builder(Context mContext) {
+            this.mContext = mContext;
+        }
+
+        public DayNightLoadingRenderer build() {
+            DayNightLoadingRenderer loadingRenderer = new DayNightLoadingRenderer(mContext);
+            return loadingRenderer;
         }
     }
 }

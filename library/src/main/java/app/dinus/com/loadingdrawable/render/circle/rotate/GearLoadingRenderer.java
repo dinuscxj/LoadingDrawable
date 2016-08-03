@@ -82,7 +82,7 @@ public class GearLoadingRenderer extends LoadingRenderer {
     private float mStrokeWidth;
     private float mCenterRadius;
 
-    public GearLoadingRenderer(Context context) {
+    private GearLoadingRenderer(Context context) {
         super(context);
 
         init(context);
@@ -107,7 +107,7 @@ public class GearLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void draw(Canvas canvas, Rect bounds) {
+    protected void draw(Canvas canvas, Rect bounds) {
         int saveCount = canvas.save();
 
         canvas.rotate(mGroupRotation, bounds.exactCenterX(), bounds.exactCenterY());
@@ -128,7 +128,7 @@ public class GearLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void computeRender(float renderProgress) {
+    protected void computeRender(float renderProgress) {
         // Scaling up the start size only occurs in the first 20% of a
         // single ring animation
         if (renderProgress <= START_SCALE_DURATION_OFFSET) {
@@ -169,24 +169,18 @@ public class GearLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void setAlpha(int alpha) {
+    protected void setAlpha(int alpha) {
         mPaint.setAlpha(alpha);
-
     }
 
     @Override
-    public void setColorFilter(ColorFilter cf) {
+    protected void setColorFilter(ColorFilter cf) {
         mPaint.setColorFilter(cf);
-
     }
 
     @Override
-    public void reset() {
+    protected void reset() {
         resetOriginals();
-    }
-
-    public void setColor(int color) {
-        mCurrentColor = color;
     }
 
     private void setInsets(int width, int height) {
@@ -216,5 +210,18 @@ public class GearLoadingRenderer extends LoadingRenderer {
         mRotationIncrement = 0;
 
         mSwipeDegrees = MIN_SWIPE_DEGREE;
+    }
+
+    public static class Builder {
+        private Context mContext;
+
+        public Builder(Context mContext) {
+            this.mContext = mContext;
+        }
+
+        public GearLoadingRenderer build() {
+            GearLoadingRenderer loadingRenderer = new GearLoadingRenderer(mContext);
+            return loadingRenderer;
+        }
     }
 }

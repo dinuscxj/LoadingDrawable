@@ -76,7 +76,7 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
     private float mStrokeWidth;
     private float mCenterRadius;
 
-    public WhorlLoadingRenderer(Context context) {
+    private WhorlLoadingRenderer(Context context) {
         super(context);
         init(context);
         setupPaint();
@@ -98,7 +98,7 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void draw(Canvas canvas, Rect bounds) {
+    protected void draw(Canvas canvas, Rect bounds) {
         int saveCount = canvas.save();
 
         canvas.rotate(mGroupRotation, bounds.exactCenterX(), bounds.exactCenterY());
@@ -134,7 +134,7 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void computeRender(float renderProgress) {
+    protected void computeRender(float renderProgress) {
         // Moving the start trim only occurs in the first 50% of a
         // single ring animation
         if (renderProgress <= START_TRIM_DURATION_OFFSET) {
@@ -158,27 +158,23 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void setAlpha(int alpha) {
+    protected void setAlpha(int alpha) {
         mPaint.setAlpha(alpha);
 
     }
 
     @Override
-    public void setColorFilter(ColorFilter cf) {
+    protected void setColorFilter(ColorFilter cf) {
         mPaint.setColorFilter(cf);
 
     }
 
     @Override
-    public void reset() {
+    protected void reset() {
         resetOriginals();
     }
 
-    public void setColors(@NonNull int[] colors) {
-        mColors = colors;
-    }
-
-    public void setInsets(int width, int height) {
+    private void setInsets(int width, int height) {
         final float minEdge = (float) Math.min(width, height);
         float insets;
         if (mCenterRadius <= 0 || minEdge < 0) {
@@ -205,5 +201,18 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
         mRotationIncrement = 0;
 
         mSwipeDegrees = MIN_SWIPE_DEGREE;
+    }
+
+    public static class Builder {
+        private Context mContext;
+
+        public Builder(Context mContext) {
+            this.mContext = mContext;
+        }
+
+        public WhorlLoadingRenderer build() {
+            WhorlLoadingRenderer loadingRenderer = new WhorlLoadingRenderer(mContext);
+            return loadingRenderer;
+        }
     }
 }

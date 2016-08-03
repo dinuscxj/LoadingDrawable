@@ -61,6 +61,7 @@ public final class LoadingRendererFactory {
             if (parameterTypes != null
                     && parameterTypes.length == 1
                     && parameterTypes[0].equals(Context.class)) {
+                constructor.setAccessible(true);
                 return (LoadingRenderer) constructor.newInstance(context);
             }
         }

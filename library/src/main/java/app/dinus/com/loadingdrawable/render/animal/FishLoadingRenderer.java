@@ -70,7 +70,7 @@ public class FishLoadingRenderer extends LoadingRenderer {
 
     private int mColor;
 
-    public FishLoadingRenderer(Context context) {
+    private FishLoadingRenderer(Context context) {
         super(context);
         init(context);
         setupPaint();
@@ -103,7 +103,7 @@ public class FishLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void draw(Canvas canvas, Rect bounds) {
+    protected void draw(Canvas canvas, Rect bounds) {
         int saveCount = canvas.save();
         RectF arcBounds = mTempBounds;
         arcBounds.set(bounds);
@@ -153,7 +153,7 @@ public class FishLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void computeRender(float renderProgress) {
+    protected void computeRender(float renderProgress) {
         if (mRiverPath == null) {
             return;
         }
@@ -169,17 +169,17 @@ public class FishLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void setAlpha(int alpha) {
+    protected void setAlpha(int alpha) {
 
     }
 
     @Override
-    public void setColorFilter(ColorFilter cf) {
+    protected void setColorFilter(ColorFilter cf) {
 
     }
 
     @Override
-    public void reset() {
+    protected void reset() {
     }
 
     private Path createFishEyePath(float fishEyeCenterX, float fishEyeCenterY) {
@@ -244,6 +244,19 @@ public class FishLoadingRenderer extends LoadingRenderer {
             }
 
             return FISH_MOVE_POINTS[index];
+        }
+    }
+
+    public static class Builder {
+        private Context mContext;
+
+        public Builder(Context mContext) {
+            this.mContext = mContext;
+        }
+
+        public FishLoadingRenderer build() {
+            FishLoadingRenderer loadingRenderer = new FishLoadingRenderer(mContext);
+            return loadingRenderer;
         }
     }
 }

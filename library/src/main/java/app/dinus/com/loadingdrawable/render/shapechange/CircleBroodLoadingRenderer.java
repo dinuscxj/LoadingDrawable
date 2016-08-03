@@ -108,7 +108,7 @@ public class CircleBroodLoadingRenderer extends LoadingRenderer {
     private float mStageChildForwardBottomLeftLength;
     private float mStageChildBackwardBottomLeftLength;
 
-    public CircleBroodLoadingRenderer(Context context) {
+    private CircleBroodLoadingRenderer(Context context) {
         super(context);
         init(context);
         setupPaint();
@@ -141,7 +141,7 @@ public class CircleBroodLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void draw(Canvas canvas, Rect bounds) {
+    protected void draw(Canvas canvas, Rect bounds) {
         int saveCount = canvas.save();
 
         RectF arcBounds = mCurrentBounds;
@@ -258,7 +258,7 @@ public class CircleBroodLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void computeRender(float renderProgress) {
+    protected void computeRender(float renderProgress) {
         if (mCurrentBounds.isEmpty()) {
             return;
         }
@@ -598,19 +598,19 @@ public class CircleBroodLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void setAlpha(int alpha) {
+    protected void setAlpha(int alpha) {
         mPaint.setAlpha(alpha);
 
     }
 
     @Override
-    public void setColorFilter(ColorFilter cf) {
+    protected void setColorFilter(ColorFilter cf) {
         mPaint.setColorFilter(cf);
 
     }
 
     @Override
-    public void reset() {
+    protected void reset() {
     }
 
     private class MotherMoveInterpolator implements Interpolator {
@@ -659,6 +659,19 @@ public class CircleBroodLoadingRenderer extends LoadingRenderer {
             }
 
             return result;
+        }
+    }
+
+    public static class Builder {
+        private Context mContext;
+
+        public Builder(Context mContext) {
+            this.mContext = mContext;
+        }
+
+        public CircleBroodLoadingRenderer build() {
+            CircleBroodLoadingRenderer loadingRenderer = new CircleBroodLoadingRenderer(mContext);
+            return loadingRenderer;
         }
     }
 }

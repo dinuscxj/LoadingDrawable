@@ -65,7 +65,7 @@ public class GhostsEyeLoadingRenderer extends LoadingRenderer {
 
     private int mColor;
 
-    public GhostsEyeLoadingRenderer(Context context) {
+    private GhostsEyeLoadingRenderer(Context context) {
         super(context);
         init(context);
         setupPaint();
@@ -99,7 +99,7 @@ public class GhostsEyeLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void draw(Canvas canvas, Rect bounds) {
+    protected void draw(Canvas canvas, Rect bounds) {
         int saveCount = canvas.save();
         RectF arcBounds = mTempBounds;
         arcBounds.set(bounds);
@@ -120,7 +120,7 @@ public class GhostsEyeLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void computeRender(float renderProgress) {
+    protected void computeRender(float renderProgress) {
         if (renderProgress <= LEFT_EYE_BALL_END_JUMP_OFFSET && renderProgress >= LEFT_EYE_CIRCLE$BALL_START_JUMP_UP_OFFSET) {
             float eyeCircle$BallJumpUpProgress = (renderProgress - LEFT_EYE_CIRCLE$BALL_START_JUMP_UP_OFFSET) / (LEFT_EYE_BALL_END_JUMP_OFFSET - LEFT_EYE_CIRCLE$BALL_START_JUMP_UP_OFFSET);
             mLeftEyeBallOffsetY = -mMaxEyeJumptDistance * EYE_BALL_INTERPOLATOR.getInterpolation(eyeCircle$BallJumpUpProgress);
@@ -143,17 +143,17 @@ public class GhostsEyeLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void setAlpha(int alpha) {
+    protected void setAlpha(int alpha) {
 
     }
 
     @Override
-    public void setColorFilter(ColorFilter cf) {
+    protected void setColorFilter(ColorFilter cf) {
 
     }
 
     @Override
-    public void reset() {
+    protected void reset() {
         mLeftEyeBallOffsetY = 0.0f;
         mRightEyeBallOffsetY = 0.0f;
         mLeftEyeCircleOffsetY = 0.0f;
@@ -243,6 +243,19 @@ public class GhostsEyeLoadingRenderer extends LoadingRenderer {
             } else {
                 return 1.0f - (input - 0.333333f) * 1.5f;
             }
+        }
+    }
+
+    public static class Builder {
+        private Context mContext;
+
+        public Builder(Context mContext) {
+            this.mContext = mContext;
+        }
+
+        public GhostsEyeLoadingRenderer build() {
+            GhostsEyeLoadingRenderer loadingRenderer = new GhostsEyeLoadingRenderer(mContext);
+            return loadingRenderer;
         }
     }
 }

@@ -3,13 +3,14 @@ package app.dinus.com.loadingdrawable.render;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 
 import app.dinus.com.loadingdrawable.render.LoadingRenderer;
 
 public class LoadingDrawable extends Drawable implements Animatable {
-    private LoadingRenderer mLoadingRender;
+    private final LoadingRenderer mLoadingRender;
 
     private final Callback mCallback = new Callback() {
         @Override
@@ -34,18 +35,26 @@ public class LoadingDrawable extends Drawable implements Animatable {
     }
 
     @Override
+    protected void onBoundsChange(Rect bounds) {
+        super.onBoundsChange(bounds);
+        this.mLoadingRender.setBounds(bounds);
+    }
+
+    @Override
     public void draw(Canvas canvas) {
-        mLoadingRender.draw(canvas, getBounds());
+        if (!getBounds().isEmpty()) {
+            this.mLoadingRender.draw(canvas);
+        }
     }
 
     @Override
     public void setAlpha(int alpha) {
-        mLoadingRender.setAlpha(alpha);
+        this.mLoadingRender.setAlpha(alpha);
     }
 
     @Override
     public void setColorFilter(ColorFilter cf) {
-        mLoadingRender.setColorFilter(cf);
+        this.mLoadingRender.setColorFilter(cf);
     }
 
     @Override
@@ -55,26 +64,26 @@ public class LoadingDrawable extends Drawable implements Animatable {
 
     @Override
     public void start() {
-        mLoadingRender.start();
+        this.mLoadingRender.start();
     }
 
     @Override
     public void stop() {
-        mLoadingRender.stop();
+        this.mLoadingRender.stop();
     }
 
     @Override
     public boolean isRunning() {
-        return mLoadingRender.isRunning();
+        return this.mLoadingRender.isRunning();
     }
 
     @Override
     public int getIntrinsicHeight() {
-        return (int) mLoadingRender.mHeight;
+        return (int) this.mLoadingRender.mHeight;
     }
 
     @Override
     public int getIntrinsicWidth() {
-        return (int) mLoadingRender.mWidth;
+        return (int) this.mLoadingRender.mWidth;
     }
 }

@@ -66,7 +66,7 @@ public class WaterBottleLoadingRenderer extends LoadingRenderer {
 
     private int mWaveCount;
 
-    public WaterBottleLoadingRenderer(Context context) {
+    private WaterBottleLoadingRenderer(Context context) {
         super(context);
         init(context);
         setupPaint();
@@ -98,7 +98,7 @@ public class WaterBottleLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void draw(Canvas canvas, Rect bounds) {
+    protected void draw(Canvas canvas, Rect bounds) {
         int saveCount = canvas.save();
 
         RectF arcBounds = mCurrentBounds;
@@ -130,7 +130,7 @@ public class WaterBottleLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void computeRender(float renderProgress) {
+    protected void computeRender(float renderProgress) {
         if (mCurrentBounds.width() <= 0) {
             return;
         }
@@ -278,19 +278,19 @@ public class WaterBottleLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void setAlpha(int alpha) {
+    protected void setAlpha(int alpha) {
         mPaint.setAlpha(alpha);
 
     }
 
     @Override
-    public void setColorFilter(ColorFilter cf) {
+    protected void setColorFilter(ColorFilter cf) {
         mPaint.setColorFilter(cf);
 
     }
 
     @Override
-    public void reset() {
+    protected void reset() {
     }
 
     private class WaterDropHolder {
@@ -305,5 +305,18 @@ public class WaterBottleLoadingRenderer extends LoadingRenderer {
         public float mDuration;
 
         public boolean mNeedDraw;
+    }
+
+    public static class Builder {
+        private Context mContext;
+
+        public Builder(Context mContext) {
+            this.mContext = mContext;
+        }
+
+        public WaterBottleLoadingRenderer build() {
+            WaterBottleLoadingRenderer loadingRenderer = new WaterBottleLoadingRenderer(mContext);
+            return loadingRenderer;
+        }
     }
 }

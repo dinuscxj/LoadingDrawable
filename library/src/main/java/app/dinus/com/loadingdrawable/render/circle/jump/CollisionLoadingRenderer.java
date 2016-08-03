@@ -57,7 +57,7 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
 
     private float mStrokeWidth;
 
-    public CollisionLoadingRenderer(Context context) {
+    private CollisionLoadingRenderer(Context context) {
         super(context);
         init(context);
         setupPaint();
@@ -79,7 +79,7 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void draw(Canvas canvas, Rect bounds) {
+    protected void draw(Canvas canvas, Rect bounds) {
         int saveCount = canvas.save();
 
         RectF arcBounds = mTempBounds;
@@ -128,7 +128,7 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void computeRender(float renderProgress) {
+    protected void computeRender(float renderProgress) {
 
         // Moving the start offset to left only occurs in the first 25% of a
         // single ring animation
@@ -172,26 +172,31 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void setAlpha(int alpha) {
+    protected void setAlpha(int alpha) {
         mPaint.setAlpha(alpha);
 
     }
 
     @Override
-    public void setColorFilter(ColorFilter cf) {
+    protected void setColorFilter(ColorFilter cf) {
         mPaint.setColorFilter(cf);
 
     }
 
     @Override
-    public void reset() {
+    protected void reset() {
     }
 
-    public void setColors(@NonNull int[] colors) {
-        mColors = colors;
-    }
+    public static class Builder {
+        private Context mContext;
 
-    public void setPositions(@NonNull float[] positions) {
-        mPositions = positions;
+        public Builder(Context mContext) {
+            this.mContext = mContext;
+        }
+
+        public CollisionLoadingRenderer build() {
+            CollisionLoadingRenderer loadingRenderer = new CollisionLoadingRenderer(mContext);
+            return loadingRenderer;
+        }
     }
 }

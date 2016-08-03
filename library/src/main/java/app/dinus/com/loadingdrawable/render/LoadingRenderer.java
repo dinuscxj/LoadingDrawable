@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
@@ -28,6 +29,12 @@ public abstract class LoadingRenderer {
         }
     };
 
+    /**
+     * Whenever {@link LoadingDrawable} boundary changes mBounds will be updated.
+     * More details you can see {@link LoadingDrawable#onBoundsChange(Rect)}
+     */
+    protected final Rect mBounds = new Rect();
+
     private Drawable.Callback mCallback;
     private ValueAnimator mRenderAnimator;
 
@@ -41,7 +48,13 @@ public abstract class LoadingRenderer {
         setupAnimators();
     }
 
-    protected abstract void draw(Canvas canvas, Rect bounds);
+    @Deprecated
+    protected void draw(Canvas canvas, Rect bounds) {
+    }
+
+    protected void draw(Canvas canvas) {
+        draw(canvas, mBounds);
+    }
 
     protected abstract void computeRender(float renderProgress);
 
@@ -81,6 +94,10 @@ public abstract class LoadingRenderer {
 
     void setCallback(Drawable.Callback callback) {
         this.mCallback = callback;
+    }
+
+    void setBounds(Rect bounds) {
+        mBounds.set(bounds);
     }
 
     private void initParams(Context context) {

@@ -2,8 +2,15 @@ package app.dinus.com.example;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
+import app.dinus.com.loadingdrawable.DensityUtil;
+import app.dinus.com.loadingdrawable.LoadingView;
+import app.dinus.com.loadingdrawable.render.LoadingRenderer;
+import app.dinus.com.loadingdrawable.render.circle.rotate.LevelLoadingRenderer;
+import app.dinus.com.loadingdrawable.render.circle.rotate.MaterialLoadingRenderer;
 
 public class CircleRotateActivity extends AppCompatActivity {
     public static void startActivity(Context context) {

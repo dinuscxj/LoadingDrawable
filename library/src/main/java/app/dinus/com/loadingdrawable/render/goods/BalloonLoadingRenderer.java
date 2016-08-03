@@ -78,7 +78,7 @@ public class BalloonLoadingRenderer extends LoadingRenderer {
     private int mCannulaColor;
     private int mPipeBodyColor;
 
-    public BalloonLoadingRenderer(Context context) {
+    private BalloonLoadingRenderer(Context context) {
         super(context);
         init(context);
         setupPaint();
@@ -119,7 +119,7 @@ public class BalloonLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void draw(Canvas canvas, Rect bounds) {
+    protected void draw(Canvas canvas, Rect bounds) {
         int saveCount = canvas.save();
 
         RectF arcBounds = mCurrentBounds;
@@ -160,7 +160,7 @@ public class BalloonLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void computeRender(float renderProgress) {
+    protected void computeRender(float renderProgress) {
         RectF arcBounds = mCurrentBounds;
         //compute gas tube bounds
         mGasTubeBounds.set(arcBounds.centerX() - mGasTubeWidth / 2.0f, arcBounds.centerY(),
@@ -282,18 +282,30 @@ public class BalloonLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void setAlpha(int alpha) {
+    protected void setAlpha(int alpha) {
         mPaint.setAlpha(alpha);
 
     }
 
     @Override
-    public void setColorFilter(ColorFilter cf) {
+    protected void setColorFilter(ColorFilter cf) {
         mPaint.setColorFilter(cf);
-
     }
 
     @Override
-    public void reset() {
+    protected void reset() {
+    }
+
+    public static class Builder {
+        private Context mContext;
+
+        public Builder(Context mContext) {
+            this.mContext = mContext;
+        }
+
+        public BalloonLoadingRenderer build() {
+            BalloonLoadingRenderer loadingRenderer = new BalloonLoadingRenderer(mContext);
+            return loadingRenderer;
+        }
     }
 }

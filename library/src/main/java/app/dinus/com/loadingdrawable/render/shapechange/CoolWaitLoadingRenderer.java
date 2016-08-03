@@ -60,7 +60,7 @@ public class CoolWaitLoadingRenderer extends LoadingRenderer {
     private int mMiddleColor;
     private int mBottomColor;
 
-    public CoolWaitLoadingRenderer(Context context) {
+    private CoolWaitLoadingRenderer(Context context) {
         super(context);
         init(context);
         setupPaint();
@@ -88,7 +88,7 @@ public class CoolWaitLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void draw(Canvas canvas, Rect bounds) {
+    protected void draw(Canvas canvas, Rect bounds) {
         int saveCount = canvas.save();
         RectF arcBounds = mCurrentBounds;
         arcBounds.set(bounds);
@@ -145,7 +145,7 @@ public class CoolWaitLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void computeRender(float renderProgress) {
+    protected void computeRender(float renderProgress) {
         if (mCurrentBounds.isEmpty()) {
             return;
         }
@@ -240,20 +240,31 @@ public class CoolWaitLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void setAlpha(int alpha) {
+    protected void setAlpha(int alpha) {
         mPaint.setAlpha(alpha);
 
     }
 
     @Override
-    public void setColorFilter(ColorFilter cf) {
+    protected void setColorFilter(ColorFilter cf) {
         mPaint.setColorFilter(cf);
 
     }
 
     @Override
-    public void reset() {
+    protected void reset() {
     }
 
+    public static class Builder {
+        private Context mContext;
 
+        public Builder(Context mContext) {
+            this.mContext = mContext;
+        }
+
+        public CoolWaitLoadingRenderer build() {
+            CoolWaitLoadingRenderer loadingRenderer = new CoolWaitLoadingRenderer(mContext);
+            return loadingRenderer;
+        }
+    }
 }

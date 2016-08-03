@@ -65,7 +65,7 @@ public class GuardLoadingRenderer extends LoadingRenderer {
 
     private PathMeasure mPathMeasure;
 
-    public GuardLoadingRenderer(Context context) {
+    private GuardLoadingRenderer(Context context) {
         super(context);
 
         mDuration = ANIMATION_DURATION;
@@ -92,7 +92,7 @@ public class GuardLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void draw(Canvas canvas, Rect bounds) {
+    protected void draw(Canvas canvas, Rect bounds) {
         RectF arcBounds = mTempBounds;
         arcBounds.set(bounds);
         arcBounds.inset(mStrokeInset, mStrokeInset);
@@ -129,7 +129,7 @@ public class GuardLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void computeRender(float renderProgress) {
+    protected void computeRender(float renderProgress) {
         if (renderProgress <= START_TRIM_DURATION_OFFSET) {
             final float startTrimProgress = (renderProgress) / START_TRIM_DURATION_OFFSET;
             mEndTrim = -MATERIAL_INTERPOLATOR.getInterpolation(startTrimProgress);
@@ -180,28 +180,24 @@ public class GuardLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void setAlpha(int alpha) {
+    protected void setAlpha(int alpha) {
         mPaint.setAlpha(alpha);
 
     }
 
     @Override
-    public void setColorFilter(ColorFilter cf) {
+    protected void setColorFilter(ColorFilter cf) {
         mPaint.setColorFilter(cf);
 
     }
 
     @Override
-    public void reset() {
+    protected void reset() {
         mScale = 1.0f;
         mEndTrim = 0.0f;
         mRotation = 0.0f;
         mStartTrim = 0.0f;
         mWaveProgress = 1.0f;
-    }
-
-    public void setColor(int color) {
-        mColor = color;
     }
 
     private Path createSkipBallPath() {
@@ -237,46 +233,7 @@ public class GuardLoadingRenderer extends LoadingRenderer {
         return path;
     }
 
-    public void setStartTrim(float startTrim) {
-        mStartTrim = startTrim;
-
-    }
-
-    public float getStartTrim() {
-        return mStartTrim;
-    }
-
-    public void setEndTrim(float endTrim) {
-        mEndTrim = endTrim;
-
-    }
-
-    public float getEndTrim() {
-        return mEndTrim;
-    }
-
-    public void setRotation(float rotation) {
-        mRotation = rotation;
-
-    }
-
-    public void setScale(float scale) {
-        this.mScale = scale;
-    }
-
-    public float getScale() {
-        return mScale;
-    }
-
-    public void setSkipBallSize(float skipBallSize) {
-        this.mSkipBallSize = skipBallSize;
-    }
-
-    public float getSkipBallSize() {
-        return mSkipBallSize;
-    }
-
-    public void setInsets(int width, int height) {
+    private void setInsets(int width, int height) {
         final float minEdge = (float) Math.min(width, height);
         float insets;
         if (mCenterRadius <= 0 || minEdge < 0) {
@@ -285,5 +242,18 @@ public class GuardLoadingRenderer extends LoadingRenderer {
             insets = minEdge / 2.0f - mCenterRadius;
         }
         mStrokeInset = insets;
+    }
+
+    public static class Builder {
+        private Context mContext;
+
+        public Builder(Context mContext) {
+            this.mContext = mContext;
+        }
+
+        public GuardLoadingRenderer build() {
+            GuardLoadingRenderer loadingRenderer = new GuardLoadingRenderer(mContext);
+            return loadingRenderer;
+        }
     }
 }

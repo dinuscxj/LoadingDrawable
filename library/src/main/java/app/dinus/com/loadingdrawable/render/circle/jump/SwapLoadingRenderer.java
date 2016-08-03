@@ -42,7 +42,7 @@ public class SwapLoadingRenderer extends LoadingRenderer {
 
     private float mStrokeWidth;
 
-    public SwapLoadingRenderer(Context context) {
+    private SwapLoadingRenderer(Context context) {
         super(context);
 
         mDuration = ANIMATION_DURATION;
@@ -67,7 +67,7 @@ public class SwapLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void draw(Canvas canvas, Rect bounds) {
+    protected void draw(Canvas canvas, Rect bounds) {
         mPaint.setColor(mColor);
 
         int saveCount = canvas.save();
@@ -129,7 +129,7 @@ public class SwapLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void computeRender(float renderProgress) {
+    protected void computeRender(float renderProgress) {
         mSwapIndex = (int) (renderProgress / mSwapThreshold);
         mSwapXOffsetProgress = MATERIAL_INTERPOLATOR.getInterpolation(
                 (renderProgress - mSwapIndex * mSwapThreshold) / mSwapThreshold);
@@ -138,22 +138,31 @@ public class SwapLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void setAlpha(int alpha) {
+    protected void setAlpha(int alpha) {
         mPaint.setAlpha(alpha);
 
     }
 
     @Override
-    public void setColorFilter(ColorFilter cf) {
+    protected void setColorFilter(ColorFilter cf) {
         mPaint.setColorFilter(cf);
 
     }
 
     @Override
-    public void reset() {
+    protected void reset() {
     }
 
-    public void setColor(int color) {
-        mColor = color;
+    public static class Builder {
+        private Context mContext;
+
+        public Builder(Context mContext) {
+            this.mContext = mContext;
+        }
+
+        public SwapLoadingRenderer build() {
+            SwapLoadingRenderer loadingRenderer = new SwapLoadingRenderer(mContext);
+            return loadingRenderer;
+        }
     }
 }

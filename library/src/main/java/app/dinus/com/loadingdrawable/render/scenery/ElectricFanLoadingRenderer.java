@@ -120,7 +120,7 @@ public class ElectricFanLoadingRenderer extends LoadingRenderer {
     private Drawable mLoadingDrawable;
     private Drawable mElectricFanDrawable;
 
-    public ElectricFanLoadingRenderer(Context context) {
+    private ElectricFanLoadingRenderer(Context context) {
         super(context);
         init(context);
         setupPaint();
@@ -158,7 +158,7 @@ public class ElectricFanLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void draw(Canvas canvas, Rect bounds) {
+    protected void draw(Canvas canvas, Rect bounds) {
         int saveCount = canvas.save();
 
         RectF arcBounds = mTempBounds;
@@ -296,7 +296,7 @@ public class ElectricFanLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void computeRender(float renderProgress) {
+    protected void computeRender(float renderProgress) {
         if (renderProgress < DECELERATE_DURATION_PERCENTAGE) {
             mProgress = DECELERATE_INTERPOLATOR.getInterpolation(renderProgress / DECELERATE_DURATION_PERCENTAGE) * DECELERATE_DURATION_PERCENTAGE;
         } else {
@@ -305,26 +305,26 @@ public class ElectricFanLoadingRenderer extends LoadingRenderer {
     }
 
     @Override
-    public void setAlpha(int alpha) {
+    protected void setAlpha(int alpha) {
         mPaint.setAlpha(alpha);
 
     }
 
     @Override
-    public void setColorFilter(ColorFilter cf) {
+    protected void setColorFilter(ColorFilter cf) {
         mPaint.setColorFilter(cf);
 
     }
 
     @Override
-    public void reset() {
+    protected void reset() {
         mScale = 1.0f;
         mCurrentLeafCount = 0;
         mNextLeafCreateThreshold = 0.0f;
         mLeafHolders.clear();
     }
 
-    public void setInsets(int width, int height) {
+    protected void setInsets(int width, int height) {
         final float minEdge = (float) Math.min(width, height);
         float insetXs;
         if (mCenterRadius <= 0 || minEdge < 0) {
@@ -395,10 +395,6 @@ public class ElectricFanLoadingRenderer extends LoadingRenderer {
         return point;
     }
 
-    public void setMode(@MODE int mode) {
-        this.mMode = mode;
-    }
-
     private class BezierEvaluator implements TypeEvaluator<PointF> {
 
         private PointF point1;
@@ -460,5 +456,18 @@ public class ElectricFanLoadingRenderer extends LoadingRenderer {
         public float mLeafRotation = 0.0f;
 
         public float mMaxRotation = mRandom.nextInt(120);
+    }
+
+    public static class Builder {
+        private Context mContext;
+
+        public Builder(Context mContext) {
+            this.mContext = mContext;
+        }
+
+        public ElectricFanLoadingRenderer build() {
+            ElectricFanLoadingRenderer loadingRenderer = new ElectricFanLoadingRenderer(mContext);
+            return loadingRenderer;
+        }
     }
 }
