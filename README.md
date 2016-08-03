@@ -6,6 +6,7 @@
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-LoadingDrawable-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/3450)
 
  LoadingDrawable is some android animations implement of drawable: a library can be used in the pull-down to refresh, the placeholders of image loading and the time-consuming tasks. This project idea is from the [link] (http://mp.weixin.qq.com/s?__biz=MjM5MDMxOTE5NA==&mid=402703079&idx=2&sn=2fcc6746a866dcc003c68ead9b68e595&scene=2&srcid=0302A7p723KK8E5gSzLKb2ZL&from=timeline&isappinstalled=0#wechat_redirect).<br/> 
+ 
  The following content show a brief overview of LoadingDrawable
  
  * It extends `Drawable` and implement the interface `Animatable`
@@ -41,20 +42,20 @@
  * GhostsEyeLoadingEyeRenderer
 
 #### Scenery
- * DayNightLoadingRenderer
  * ElectricFanLoadingRenderer
-
-#### Circle Rotate
- * GearLoadingRenderer
- * WhorlLoadingRenderer
- * LevelLoadingRenderer
- * MaterialLoadingRenderer
+ * DayNightLoadingRenderer
 
 #### Circle Jump
+ * CollisionLoadingRenderer
  * SwapLoadingRenderer
  * GuardLoadingRenderer
  * DanceLoadingRenderer
- * CollisionLoadingRenderer
+
+#### Circle Rotate
+ * WhorlLoadingRenderer
+ * MaterialLoadingRenderer
+ * GearLoadingRenderer
+ * LevelLoadingRenderer
 
 ## Usage
  Define the `LoadingView` in XML and specify the `LoadingRenderer` style:
