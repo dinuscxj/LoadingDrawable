@@ -221,6 +221,8 @@ public class LevelLoadingRenderer extends LoadingRenderer {
         this.mStrokeWidth = builder.mStrokeWidth > 0 ? builder.mStrokeWidth : this.mStrokeWidth;
         this.mCenterRadius = builder.mCenterRadius > 0 ? builder.mCenterRadius : this.mCenterRadius;
 
+        this.mDuration = builder.mDuration > 0 ? builder.mDuration : this.mDuration;
+
         this.mLevelColors = builder.mLevelColors != null ? builder.mLevelColors : this.mLevelColors;
 
         setupPaint();
@@ -234,6 +236,8 @@ public class LevelLoadingRenderer extends LoadingRenderer {
         private int mHeight;
         private int mStrokeWidth;
         private int mCenterRadius;
+
+        private int mDuration;
 
         @Size(3)
         private int[] mLevelColors;
@@ -259,6 +263,11 @@ public class LevelLoadingRenderer extends LoadingRenderer {
 
         public Builder setCenterRadius(int centerRadius) {
             this.mCenterRadius = centerRadius;
+            return this;
+        }
+
+        public Builder setDuration(int duration) {
+            this.mDuration = duration;
             return this;
         }
 

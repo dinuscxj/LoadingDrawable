@@ -236,6 +236,8 @@ public class MaterialLoadingRenderer extends LoadingRenderer {
         this.mStrokeWidth = builder.mStrokeWidth > 0 ? builder.mStrokeWidth : this.mStrokeWidth;
         this.mCenterRadius = builder.mCenterRadius > 0 ? builder.mCenterRadius : this.mCenterRadius;
 
+        this.mDuration = builder.mDuration > 0 ? builder.mDuration : this.mDuration;
+
         this.mColors = builder.mColors != null && builder.mColors.length > 0 ? builder.mColors : this.mColors;
 
         setColorIndex(0);
@@ -250,6 +252,8 @@ public class MaterialLoadingRenderer extends LoadingRenderer {
         private int mHeight;
         private int mStrokeWidth;
         private int mCenterRadius;
+
+        private int mDuration;
 
         private int[] mColors;
 
@@ -274,6 +278,11 @@ public class MaterialLoadingRenderer extends LoadingRenderer {
 
         public Builder setCenterRadius(int centerRadius) {
             this.mCenterRadius = centerRadius;
+            return this;
+        }
+
+        public Builder setDuration(int duration) {
+            this.mDuration = duration;
             return this;
         }
 
