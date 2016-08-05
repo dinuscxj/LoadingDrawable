@@ -8,16 +8,15 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.support.annotation.IntRange;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
-import android.view.animation.LinearInterpolator;
 
 import app.dinus.com.loadingdrawable.DensityUtil;
 import app.dinus.com.loadingdrawable.render.LoadingRenderer;
 
 public class GearLoadingRenderer extends LoadingRenderer {
-    private static final Interpolator LINEAR_INTERPOLATOR = new LinearInterpolator();
     private static final Interpolator ACCELERATE_INTERPOLATOR = new AccelerateInterpolator();
     private static final Interpolator DECELERATE_INTERPOLATOR = new DecelerateInterpolator();
 
@@ -26,7 +25,8 @@ public class GearLoadingRenderer extends LoadingRenderer {
     private static final int MAX_ALPHA = 255;
     private static final int DEGREE_360 = 360;
 
-    private static final float MAX_SWIPE_DEGREES = 0.17f * DEGREE_360;
+    private static final int DEFAULT_GEAR_SWIPE_DEGREES = 60;
+
     private static final float FULL_GROUP_ROTATION = 3.0f * DEGREE_360;
 
     private static final float START_SCALE_DURATION_OFFSET = 0.3f;
@@ -61,6 +61,9 @@ public class GearLoadingRenderer extends LoadingRenderer {
 
     private int mColor;
 
+    private int mGearCount;
+    private int mGearSwipeDegrees;
+
     private float mStrokeInset;
 
     private float mRotationCount;
@@ -82,6 +85,8 @@ public class GearLoadingRenderer extends LoadingRenderer {
         init(context);
         setupPaint();
         addRenderListener(mAnimatorListener);
+
+        mDuration = 10000;
     }
 
     private void init(Context context) {
@@ -89,6 +94,9 @@ public class GearLoadingRenderer extends LoadingRenderer {
         mCenterRadius = DensityUtil.dip2px(context, DEFAULT_CENTER_RADIUS);
 
         mColor = DEFAULT_COLOR;
+
+        mGearCount = GEAR_COUNT;
+        mGearSwipeDegrees = DEFAULT_GEAR_SWIPE_DEGREES;
     }
 
     private void setupPaint() {
@@ -115,8 +123,8 @@ public class GearLoadingRenderer extends LoadingRenderer {
         mPaint.setStrokeWidth(mStrokeWidth * mScale);
 
         if (mSwipeDegrees != 0) {
-            for (int i = 0; i < GEAR_COUNT; i++) {
-                canvas.drawArc(mTempBounds, mStartDegrees + DEGREE_360 / GEAR_COUNT * i, mSwipeDegrees, false, mPaint);
+            for (int i = 0; i < mGearCount; i++) {
+                canvas.drawArc(mTempBounds, mStartDegrees + DEGREE_360 / mGearCount * i, mSwipeDegrees, false, mPaint);
             }
         }
 
@@ -136,14 +144,14 @@ public class GearLoadingRenderer extends LoadingRenderer {
         // single ring animation
         if (renderProgress <= START_TRIM_DURATION_OFFSET && renderProgress > START_SCALE_DURATION_OFFSET) {
             float startTrimProgress = (renderProgress - START_SCALE_DURATION_OFFSET) / (START_TRIM_DURATION_OFFSET - START_SCALE_DURATION_OFFSET);
-            mStartDegrees = mOriginStartDegrees + MAX_SWIPE_DEGREES * LINEAR_INTERPOLATOR.getInterpolation(startTrimProgress);
+            mStartDegrees = mOriginStartDegrees + mGearSwipeDegrees * startTrimProgress;
         }
 
         // Moving the end trim starts between 50% to 80% of a single ring
         // animation completes
         if (renderProgress <= END_TRIM_DURATION_OFFSET && renderProgress > START_TRIM_DURATION_OFFSET) {
             float endTrimProgress = (renderProgress - START_TRIM_DURATION_OFFSET) / (END_TRIM_DURATION_OFFSET - START_TRIM_DURATION_OFFSET);
-            mEndDegrees = mOriginEndDegrees + MAX_SWIPE_DEGREES * LINEAR_INTERPOLATOR.getInterpolation(endTrimProgress);
+            mEndDegrees = mOriginEndDegrees + mGearSwipeDegrees * endTrimProgress;
         }
 
         // Scaling down the end size starts after 80% of a single ring
@@ -187,7 +195,7 @@ public class GearLoadingRenderer extends LoadingRenderer {
 
     private void storeOriginals() {
         mOriginEndDegrees = mEndDegrees;
-        mOriginStartDegrees = mStartDegrees;
+        mOriginStartDegrees = mEndDegrees;
     }
 
     private void resetOriginals() {
@@ -197,7 +205,7 @@ public class GearLoadingRenderer extends LoadingRenderer {
         mEndDegrees = 0;
         mStartDegrees = 0;
 
-        mSwipeDegrees = 0;
+        mSwipeDegrees = 1;
     }
 
     private void apply(Builder builder) {
@@ -209,6 +217,9 @@ public class GearLoadingRenderer extends LoadingRenderer {
         this.mDuration = builder.mDuration > 0 ? builder.mDuration : this.mDuration;
 
         this.mColor = builder.mColor != 0 ? builder.mColor : this.mColor;
+
+        this.mGearCount = builder.mGearCount > 0 ? builder.mGearCount : this.mGearCount;
+        this.mGearSwipeDegrees = builder.mGearSwipeDegrees > 0 ? builder.mGearSwipeDegrees : this.mGearSwipeDegrees;
 
         setupPaint();
         initStrokeInset(this.mWidth, this.mHeight);
@@ -225,6 +236,9 @@ public class GearLoadingRenderer extends LoadingRenderer {
         private int mDuration;
 
         private int mColor;
+
+        private int mGearCount;
+        private int mGearSwipeDegrees;
 
         public Builder(Context mContext) {
             this.mContext = mContext;
@@ -257,6 +271,16 @@ public class GearLoadingRenderer extends LoadingRenderer {
 
         public Builder setColor(int color) {
             this.mColor = color;
+            return this;
+        }
+
+        public Builder setGearCount(int gearCount) {
+            this.mGearCount = gearCount;
+            return this;
+        }
+
+        public Builder setGearSwipeDegrees(@IntRange(from = 0, to = 360) int gearSwipeDegrees) {
+            this.mGearSwipeDegrees = gearSwipeDegrees;
             return this;
         }
 
