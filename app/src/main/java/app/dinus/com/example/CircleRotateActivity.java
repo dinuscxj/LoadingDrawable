@@ -24,14 +24,5 @@ public class CircleRotateActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_circle_rotate);
-
-        LoadingView loadingView = (LoadingView) findViewById(R.id.gear_view);
-
-        LoadingRenderer loadingRenderer = new GearLoadingRenderer.Builder(this)
-                .setColor(Color.BLUE)
-                .setGearCount(3)
-                .setGearSwipeDegrees(100)
-                .build();
-        loadingView.setLoadingRenderer(loadingRenderer);
     }
 }
