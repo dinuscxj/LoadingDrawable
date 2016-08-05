@@ -68,11 +68,9 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
     private float mEndDegrees;
     private float mStartDegrees;
     private float mSwipeDegrees;
-    private float mRotationIncrement;
     private float mOriginEndDegrees;
     private float mOriginStartDegrees;
-    private float mOriginRotationIncrement;
-    
+
     private float mStrokeWidth;
     private float mCenterRadius;
 
@@ -156,7 +154,6 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
         }
 
         mGroupRotation = ((FULL_GROUP_ROTATION / NUM_POINTS) * renderProgress) + (FULL_GROUP_ROTATION * (mRotationCount / NUM_POINTS));
-        mRotationIncrement = mOriginRotationIncrement + (MAX_ROTATION_INCREMENT * renderProgress);
     }
 
     @Override
@@ -185,18 +182,15 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
 
     private void storeOriginals() {
         mOriginEndDegrees = mEndDegrees;
-        mOriginStartDegrees = mStartDegrees;
-        mOriginRotationIncrement = mRotationIncrement;
+        mOriginStartDegrees = mEndDegrees;
     }
 
     private void resetOriginals() {
         mOriginEndDegrees = 0;
         mOriginStartDegrees = 0;
-        mOriginRotationIncrement = 0;
 
         mEndDegrees = 0;
         mStartDegrees = 0;
-        mRotationIncrement = 0;
 
         mSwipeDegrees = 0;
     }
