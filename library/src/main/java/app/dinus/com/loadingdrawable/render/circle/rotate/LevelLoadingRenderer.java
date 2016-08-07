@@ -30,7 +30,6 @@ public class LevelLoadingRenderer extends LoadingRenderer {
 
     private static final float MAX_SWIPE_DEGREES = 0.8f * DEGREE_360;
     private static final float FULL_GROUP_ROTATION = 3.0f * DEGREE_360;
-    private static final float MAX_ROTATION_INCREMENT = 0.25f * DEGREE_360;
 
     private static final float[] LEVEL_SWEEP_ANGLE_OFFSETS = new float[]{1.0f, 7.0f / 8.0f, 5.0f / 8.0f};
 
@@ -126,8 +125,7 @@ public class LevelLoadingRenderer extends LoadingRenderer {
 
     @Override
     protected void computeRender(float renderProgress) {
-        // Moving the start trim only occurs in the first 50% of a
-        // single ring animation
+        // Moving the start trim only occurs in the first 50% of a single ring animation
         if (renderProgress <= START_TRIM_DURATION_OFFSET) {
             float startTrimProgress = (renderProgress) / START_TRIM_DURATION_OFFSET;
             mStartDegrees = mOriginStartDegrees + MAX_SWIPE_DEGREES * MATERIAL_INTERPOLATOR.getInterpolation(startTrimProgress);
@@ -143,8 +141,7 @@ public class LevelLoadingRenderer extends LoadingRenderer {
             mLevelSwipeDegrees[2] = -mSwipeDegrees * LEVEL_SWEEP_ANGLE_OFFSETS[2] * (1.0f + level3Increment);
         }
 
-        // Moving the end trim starts after 50% of a single ring
-        // animation completes
+        // Moving the end trim starts after 50% of a single ring animation
         if (renderProgress > START_TRIM_DURATION_OFFSET) {
             float endTrimProgress = (renderProgress - START_TRIM_DURATION_OFFSET) / (END_TRIM_DURATION_OFFSET - START_TRIM_DURATION_OFFSET);
             mEndDegrees = mOriginEndDegrees + MAX_SWIPE_DEGREES * MATERIAL_INTERPOLATOR.getInterpolation(endTrimProgress);

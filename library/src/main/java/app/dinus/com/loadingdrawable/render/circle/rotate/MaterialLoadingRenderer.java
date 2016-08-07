@@ -22,7 +22,6 @@ public class MaterialLoadingRenderer extends LoadingRenderer {
 
     private static final float MAX_SWIPE_DEGREES = 0.8f * DEGREE_360;
     private static final float FULL_GROUP_ROTATION = 3.0f * DEGREE_360;
-    private static final float MAX_ROTATION_INCREMENT = 0.25f * DEGREE_360;
 
     private static final float COLOR_START_DELAY_OFFSET = 0.8f;
     private static final float END_TRIM_DURATION_OFFSET = 1.0f;
@@ -119,16 +118,14 @@ public class MaterialLoadingRenderer extends LoadingRenderer {
     protected void computeRender(float renderProgress) {
         updateRingColor(renderProgress);
 
-        // Moving the start trim only occurs in the first 50% of a
-        // single ring animation
+        // Moving the start trim only occurs in the first 50% of a single ring animation
         if (renderProgress <= START_TRIM_DURATION_OFFSET) {
             float startTrimProgress = renderProgress / START_TRIM_DURATION_OFFSET;
             mStartDegrees = mOriginStartDegrees + MAX_SWIPE_DEGREES
                     * MATERIAL_INTERPOLATOR.getInterpolation(startTrimProgress);
         }
 
-        // Moving the end trim starts after 50% of a single ring
-        // animation completes
+        // Moving the end trim starts after 50% of a single ring animation completes
         if (renderProgress > START_TRIM_DURATION_OFFSET) {
             float endTrimProgress = (renderProgress - START_TRIM_DURATION_OFFSET)
                     / (END_TRIM_DURATION_OFFSET - START_TRIM_DURATION_OFFSET);

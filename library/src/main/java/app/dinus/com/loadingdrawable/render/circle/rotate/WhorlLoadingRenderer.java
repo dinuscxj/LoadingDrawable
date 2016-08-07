@@ -25,7 +25,6 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
 
     private static final float MAX_SWIPE_DEGREES = 0.6f * DEGREE_360;
     private static final float FULL_GROUP_ROTATION = 3.0f * DEGREE_360;
-    private static final float MAX_ROTATION_INCREMENT = 0.25f * DEGREE_360;
 
     private static final float START_TRIM_DURATION_OFFSET = 0.5f;
     private static final float END_TRIM_DURATION_OFFSET = 1.0f;
@@ -135,15 +134,13 @@ public class WhorlLoadingRenderer extends LoadingRenderer {
 
     @Override
     protected void computeRender(float renderProgress) {
-        // Moving the start trim only occurs in the first 50% of a
-        // single ring animation
+        // Moving the start trim only occurs in the first 50% of a single ring animation
         if (renderProgress <= START_TRIM_DURATION_OFFSET) {
             float startTrimProgress = (renderProgress) / (1.0f - START_TRIM_DURATION_OFFSET);
             mStartDegrees = mOriginStartDegrees + MAX_SWIPE_DEGREES * MATERIAL_INTERPOLATOR.getInterpolation(startTrimProgress);
         }
 
-        // Moving the end trim starts after 50% of a single ring
-        // animation completes
+        // Moving the end trim starts after 50% of a single ring animation
         if (renderProgress > START_TRIM_DURATION_OFFSET) {
             float endTrimProgress = (renderProgress - START_TRIM_DURATION_OFFSET) / (END_TRIM_DURATION_OFFSET - START_TRIM_DURATION_OFFSET);
             mEndDegrees = mOriginEndDegrees + MAX_SWIPE_DEGREES * MATERIAL_INTERPOLATOR.getInterpolation(endTrimProgress);

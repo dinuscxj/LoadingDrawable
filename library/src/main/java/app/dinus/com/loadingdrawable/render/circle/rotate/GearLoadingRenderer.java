@@ -133,29 +133,25 @@ public class GearLoadingRenderer extends LoadingRenderer {
 
     @Override
     protected void computeRender(float renderProgress) {
-        // Scaling up the start size only occurs in the first 20% of a
-        // single ring animation
+        // Scaling up the start size only occurs in the first 20% of a single ring animation
         if (renderProgress <= START_SCALE_DURATION_OFFSET) {
             float startScaleProgress = (renderProgress) / START_SCALE_DURATION_OFFSET;
             mScale = DECELERATE_INTERPOLATOR.getInterpolation(startScaleProgress);
         }
 
-        // Moving the start trim only occurs between 20% to 50% of a
-        // single ring animation
+        // Moving the start trim only occurs between 20% to 50% of a single ring animation
         if (renderProgress <= START_TRIM_DURATION_OFFSET && renderProgress > START_SCALE_DURATION_OFFSET) {
             float startTrimProgress = (renderProgress - START_SCALE_DURATION_OFFSET) / (START_TRIM_DURATION_OFFSET - START_SCALE_DURATION_OFFSET);
             mStartDegrees = mOriginStartDegrees + mGearSwipeDegrees * startTrimProgress;
         }
 
-        // Moving the end trim starts between 50% to 80% of a single ring
-        // animation completes
+        // Moving the end trim starts between 50% to 80% of a single ring animation
         if (renderProgress <= END_TRIM_DURATION_OFFSET && renderProgress > START_TRIM_DURATION_OFFSET) {
             float endTrimProgress = (renderProgress - START_TRIM_DURATION_OFFSET) / (END_TRIM_DURATION_OFFSET - START_TRIM_DURATION_OFFSET);
             mEndDegrees = mOriginEndDegrees + mGearSwipeDegrees * endTrimProgress;
         }
 
-        // Scaling down the end size starts after 80% of a single ring
-        // animation completes
+        // Scaling down the end size starts after 80% of a single ring animation
         if (renderProgress > END_TRIM_DURATION_OFFSET) {
             float endScaleProgress = (renderProgress - END_TRIM_DURATION_OFFSET) / (END_SCALE_DURATION_OFFSET - END_TRIM_DURATION_OFFSET);
             mScale = 1.0f - ACCELERATE_INTERPOLATOR.getInterpolation(endScaleProgress);
