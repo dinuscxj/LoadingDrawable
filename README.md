@@ -82,6 +82,8 @@ Learn more about LoadingDrawable on the [Wiki Home] (https://github.com/dinuscxj
 
  * star this repo
  * send me some feedback. Thanks!
+ 
+ ***QQ Group:*** **342748245**
 
 ## License
     Copyright 2015-2019 dinus
