@@ -85,8 +85,6 @@ public class GearLoadingRenderer extends LoadingRenderer {
         init(context);
         setupPaint();
         addRenderListener(mAnimatorListener);
-
-        mDuration = 10000;
     }
 
     private void init(Context context) {
