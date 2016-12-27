@@ -54,7 +54,9 @@ public class LoadingView extends ImageView {
     @Override
     protected void onVisibilityChanged(View changedView, int visibility) {
         super.onVisibilityChanged(changedView, visibility);
-        if (visibility == View.VISIBLE) {
+
+        final boolean visible = visibility == VISIBLE && getVisibility() == VISIBLE;
+        if (visible) {
             startAnimation();
         } else {
             stopAnimation();

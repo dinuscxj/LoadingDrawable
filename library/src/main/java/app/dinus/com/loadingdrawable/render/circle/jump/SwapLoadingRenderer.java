@@ -36,8 +36,8 @@ public class SwapLoadingRenderer extends LoadingRenderer {
     private float mBallCenterY;
     private float mBallRadius;
     private float mBallInterval;
-    private float mSwapBallCenterX;
-    private float mSwapBallCenterY;
+    private float mSwapBallOffsetX;
+    private float mSwapBallOffsetY;
     private float mASwapThreshold;
 
     private float mStrokeWidth;
@@ -82,16 +82,16 @@ public class SwapLoadingRenderer extends LoadingRenderer {
         for (int i = 0; i < mBallCount; i++) {
             if (i == mSwapIndex) {
                 mPaint.setStyle(Paint.Style.FILL);
-                canvas.drawCircle(mBallRadius * (i * 2 + 1) + mBallSideOffsets + i * mBallInterval + mSwapBallCenterX
-                        , mBallCenterY - mSwapBallCenterY, mBallRadius, mPaint);
+                canvas.drawCircle(mBallSideOffsets + mBallRadius * (i * 2 + 1) + i * mBallInterval + mSwapBallOffsetX
+                        , mBallCenterY - mSwapBallOffsetY, mBallRadius, mPaint);
             } else if (i == (mSwapIndex + 1) % mBallCount) {
                 mPaint.setStyle(Paint.Style.STROKE);
-                canvas.drawCircle(mBallRadius * (i * 2 + 1) + mBallSideOffsets + i * mBallInterval - mSwapBallCenterX
-                        , mBallCenterY + mSwapBallCenterY, mBallRadius - mStrokeWidth / 2, mPaint);
+                canvas.drawCircle(mBallSideOffsets + mBallRadius * (i * 2 + 1) + i * mBallInterval - mSwapBallOffsetX
+                        , mBallCenterY + mSwapBallOffsetY, mBallRadius - mStrokeWidth / 2, mPaint);
             } else {
                 mPaint.setStyle(Paint.Style.STROKE);
-                canvas.drawCircle(mBallRadius * (i * 2 + 1) + mBallSideOffsets + i * mBallInterval, mBallCenterY,
-                        mBallRadius - mStrokeWidth / 2, mPaint);
+                canvas.drawCircle(mBallSideOffsets + mBallRadius * (i * 2 + 1) + i * mBallInterval, mBallCenterY
+                        , mBallRadius - mStrokeWidth / 2, mPaint);
             }
         }
 
@@ -110,17 +110,19 @@ public class SwapLoadingRenderer extends LoadingRenderer {
                 ? (mBallRadius * 2 * (mBallCount - 1) + mBallInterval * (mBallCount - 1)) / 2
                 : (mBallRadius * 2 + mBallInterval) / 2;
 
-        mSwapBallCenterX = mSwapIndex == mBallCount - 1
+        // Calculate the X offset of the swap ball
+        mSwapBallOffsetX = mSwapIndex == mBallCount - 1
                 ? -swapTraceProgress * swapTraceRadius * 2
                 : swapTraceProgress * swapTraceRadius * 2;
 
-        // (r, r) as the origin of coordinates
+        // if mSwapIndex == mBallCount - 1 then (swapTraceRadius, swapTraceRadius) as the origin of coordinates
+        // else (-swapTraceRadius, -swapTraceRadius) as the origin of coordinates
         float xCoordinate = mSwapIndex == mBallCount - 1
-                ? mSwapBallCenterX + swapTraceRadius
-                : mSwapBallCenterX - swapTraceRadius;
+                ? mSwapBallOffsetX + swapTraceRadius
+                : mSwapBallOffsetX - swapTraceRadius;
 
-        // Calculate the coordinate y
-        mSwapBallCenterY = (float) (mSwapIndex % 2 == 0 && mSwapIndex != mBallCount - 1
+        // Calculate the Y offset of the swap ball
+        mSwapBallOffsetY = (float) (mSwapIndex % 2 == 0 && mSwapIndex != mBallCount - 1
                 ? Math.sqrt(Math.pow(swapTraceRadius, 2.0f) - Math.pow(xCoordinate, 2.0f))
                 : -Math.sqrt(Math.pow(swapTraceRadius, 2.0f) - Math.pow(xCoordinate, 2.0f)));
 

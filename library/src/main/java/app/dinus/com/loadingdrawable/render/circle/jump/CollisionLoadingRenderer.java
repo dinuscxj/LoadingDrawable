@@ -50,9 +50,6 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
     private int[] mColors;
     private float[] mPositions;
 
-    private float mEndXOffsetProgress;
-    private float mStartXOffsetProgress;
-
     private float mOvalVerticalRadius;
 
     private float mBallRadius;
@@ -60,6 +57,14 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
     private float mBallSideOffsets;
     private float mBallMoveXOffsets;
     private float mBallQuadCoefficient;
+
+    private float mLeftBallMoveXOffsets;
+    private float mLeftBallMoveYOffsets;
+    private float mRightBallMoveXOffsets;
+    private float mRightBallMoveYOffsets;
+
+    private float mLeftOvalShapeRate;
+    private float mRightOvalShapeRate;
 
     private int mBallCount;
 
@@ -103,40 +108,7 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
     protected void draw(Canvas canvas) {
         int saveCount = canvas.save();
 
-        for (int i = 0; i < mBallCount; i++) {
-            //yMoveOffset = mBallQuadCoefficient * xMoveOffset ^ 2
-            if (i == 0 && mStartXOffsetProgress != 0) {
-                float xMoveOffset = mBallMoveXOffsets * mStartXOffsetProgress;
-                float yMoveOffset = (float) (Math.pow(xMoveOffset, 2) * mBallQuadCoefficient);
-                mPaint.setAlpha(MAX_ALPHA);
-                canvas.drawCircle(mBallSideOffsets - mBallRadius - xMoveOffset, mBallCenterY - yMoveOffset, mBallRadius, mPaint);
-
-                float leftStartProgress = 1.0f - mStartXOffsetProgress;
-                mOvalRect.set(mBallSideOffsets - mBallRadius - mBallRadius * leftStartProgress - xMoveOffset,
-                        mHeight - mOvalVerticalRadius - mOvalVerticalRadius * leftStartProgress,
-                        mBallSideOffsets - mBallRadius + mBallRadius * leftStartProgress - xMoveOffset,
-                        mHeight - mOvalVerticalRadius + mOvalVerticalRadius * leftStartProgress);
-                mPaint.setAlpha(OVAL_ALPHA);
-                canvas.drawOval(mOvalRect, mPaint);
-                continue;
-            }
-
-            if (i == mBallCount - 1 && mEndXOffsetProgress != 0) {
-                float xMoveOffset = mBallMoveXOffsets * mEndXOffsetProgress;
-                float yMoveOffset = (float) (Math.pow(xMoveOffset, 2) * mBallQuadCoefficient);
-                mPaint.setAlpha(MAX_ALPHA);
-                canvas.drawCircle(mBallRadius * (mBallCount * 2 - 3) + mBallSideOffsets + xMoveOffset, mBallCenterY - yMoveOffset, mBallRadius, mPaint);
-
-                float leftEndProgress = 1.0f - mEndXOffsetProgress;
-                mOvalRect.set(mBallRadius * (mBallCount * 2 - 3) - mBallRadius * leftEndProgress + mBallSideOffsets + xMoveOffset,
-                        mHeight - mOvalVerticalRadius - mOvalVerticalRadius * leftEndProgress,
-                        mBallRadius * (mBallCount * 2 - 3) + mBallRadius * leftEndProgress + mBallSideOffsets + xMoveOffset,
-                        mHeight - mOvalVerticalRadius + mOvalVerticalRadius * leftEndProgress);
-                mPaint.setAlpha(OVAL_ALPHA);
-                canvas.drawOval(mOvalRect, mPaint);
-                continue;
-            }
-
+        for (int i = 1; i < mBallCount - 1; i++) {
             mPaint.setAlpha(MAX_ALPHA);
             canvas.drawCircle(mBallRadius * (i * 2 - 1) + mBallSideOffsets, mBallCenterY, mBallRadius, mPaint);
 
@@ -146,6 +118,30 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
             canvas.drawOval(mOvalRect, mPaint);
         }
 
+        //draw the first ball
+        mPaint.setAlpha(MAX_ALPHA);
+        canvas.drawCircle(mBallSideOffsets - mBallRadius - mLeftBallMoveXOffsets,
+                mBallCenterY - mLeftBallMoveYOffsets, mBallRadius, mPaint);
+
+        mOvalRect.set(mBallSideOffsets - mBallRadius - mBallRadius * mLeftOvalShapeRate - mLeftBallMoveXOffsets,
+                mHeight - mOvalVerticalRadius - mOvalVerticalRadius * mLeftOvalShapeRate,
+                mBallSideOffsets - mBallRadius + mBallRadius * mLeftOvalShapeRate - mLeftBallMoveXOffsets,
+                mHeight - mOvalVerticalRadius + mOvalVerticalRadius * mLeftOvalShapeRate);
+        mPaint.setAlpha(OVAL_ALPHA);
+        canvas.drawOval(mOvalRect, mPaint);
+
+        //draw the last ball
+        mPaint.setAlpha(MAX_ALPHA);
+        canvas.drawCircle(mBallRadius * (mBallCount * 2 - 3) + mBallSideOffsets + mRightBallMoveXOffsets,
+                mBallCenterY - mRightBallMoveYOffsets, mBallRadius, mPaint);
+
+        mOvalRect.set(mBallRadius * (mBallCount * 2 - 3) - mBallRadius * mRightOvalShapeRate + mBallSideOffsets + mRightBallMoveXOffsets,
+                mHeight - mOvalVerticalRadius - mOvalVerticalRadius * mRightOvalShapeRate,
+                mBallRadius * (mBallCount * 2 - 3) + mBallRadius * mRightOvalShapeRate + mBallSideOffsets + mRightBallMoveXOffsets,
+                mHeight - mOvalVerticalRadius + mOvalVerticalRadius * mRightOvalShapeRate);
+        mPaint.setAlpha(OVAL_ALPHA);
+        canvas.drawOval(mOvalRect, mPaint);
+
         canvas.restoreToCount(saveCount);
     }
 
@@ -154,30 +150,49 @@ public class CollisionLoadingRenderer extends LoadingRenderer {
         // Moving the left ball to the left sides only occurs in the first 25% of a jump animation
         if (renderProgress <= START_LEFT_DURATION_OFFSET) {
             float startLeftOffsetProgress = renderProgress / START_LEFT_DURATION_OFFSET;
-            mStartXOffsetProgress = DECELERATE_INTERPOLATOR.getInterpolation(startLeftOffsetProgress);
+            computeLeftBallMoveOffsets(DECELERATE_INTERPOLATOR.getInterpolation(startLeftOffsetProgress));
             return;
         }
 
         // Moving the left ball to the origin location only occurs between 25% and 50% of a jump ring animation
         if (renderProgress <= START_RIGHT_DURATION_OFFSET) {
             float startRightOffsetProgress = (renderProgress - START_LEFT_DURATION_OFFSET) / (START_RIGHT_DURATION_OFFSET - START_LEFT_DURATION_OFFSET);
-            mStartXOffsetProgress = ACCELERATE_INTERPOLATOR.getInterpolation(1.0f - startRightOffsetProgress);
+            computeLeftBallMoveOffsets(ACCELERATE_INTERPOLATOR.getInterpolation(1.0f - startRightOffsetProgress));
             return;
         }
 
         // Moving the right ball to the right sides only occurs between 50% and 75% of a jump animation
         if (renderProgress <= END_RIGHT_DURATION_OFFSET) {
             float endRightOffsetProgress = (renderProgress - START_RIGHT_DURATION_OFFSET) / (END_RIGHT_DURATION_OFFSET - START_RIGHT_DURATION_OFFSET);
-            mEndXOffsetProgress = DECELERATE_INTERPOLATOR.getInterpolation(endRightOffsetProgress);
+            computeRightBallMoveOffsets(DECELERATE_INTERPOLATOR.getInterpolation(endRightOffsetProgress));
             return;
         }
 
         // Moving the right ball to the origin location only occurs after 75% of a jump animation
         if (renderProgress <= END_LEFT_DURATION_OFFSET) {
             float endRightOffsetProgress = (renderProgress - END_RIGHT_DURATION_OFFSET) / (END_LEFT_DURATION_OFFSET - END_RIGHT_DURATION_OFFSET);
-            mEndXOffsetProgress = ACCELERATE_INTERPOLATOR.getInterpolation(1 - endRightOffsetProgress);
+            computeRightBallMoveOffsets(ACCELERATE_INTERPOLATOR.getInterpolation(1 - endRightOffsetProgress));
             return;
         }
+
+    }
+
+    private void computeLeftBallMoveOffsets(float progress) {
+        mRightBallMoveXOffsets = 0.0f;
+        mRightBallMoveYOffsets = 0.0f;
+
+        mLeftOvalShapeRate = 1.0f - progress;
+        mLeftBallMoveXOffsets = mBallMoveXOffsets * progress;
+        mLeftBallMoveYOffsets = (float) (Math.pow(mLeftBallMoveXOffsets, 2) * mBallQuadCoefficient);
+    }
+
+    private void computeRightBallMoveOffsets(float progress) {
+        mLeftBallMoveXOffsets = 0.0f;
+        mLeftBallMoveYOffsets = 0.0f;
+
+        mRightOvalShapeRate = 1.0f - progress;
+        mRightBallMoveXOffsets = mBallMoveXOffsets * progress;
+        mRightBallMoveYOffsets = (float) (Math.pow(mRightBallMoveXOffsets, 2) * mBallQuadCoefficient);
     }
 
     @Override
